@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 dark:from-gray-900 dark:to-gray-800">
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 px-4">
+    <section class="relative pt-32 pb-20 px-4" data-aos="fade-up">
         <div class="container mx-auto max-w-6xl">
             <div class="text-center mb-16">
                 <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
@@ -93,7 +93,7 @@
 
 
     <!-- System Requirements Section -->
-    <section class="py-20 px-4 bg-white dark:bg-gray-900">
+    <section class="py-20 px-4 bg-white dark:bg-gray-900" data-aos="fade-up">
         <div class="container mx-auto max-w-6xl">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
@@ -138,7 +138,7 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="py-20 px-4 bg-gray-50 dark:bg-gray-800">
+    <section class="py-20 px-4 bg-gray-50 dark:bg-gray-800" data-aos="fade-up">
         <div class="container mx-auto max-w-4xl">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">

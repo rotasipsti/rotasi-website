@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-<section class="pt-32 pb-16 bg-card">
+<section class="pt-32 pb-16 bg-card" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl md:text-5xl font-bold mb-6 text-center">KONTAK KAMI</h1>
@@ -15,7 +15,7 @@
     </div>
 </section>
 
-<section class="py-16">
+<section class="py-16" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-5xl mx-auto">
             <div class="grid md:grid-cols-2 gap-12">
@@ -146,7 +146,7 @@
     </div>
 </section>
 
-<section class="py-16 bg-card">
+<section class="py-16 bg-card" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-bold mb-6 text-center">Lokasi Kami</h2>

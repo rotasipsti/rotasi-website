@@ -93,7 +93,7 @@
                     
                     <div class="mt-4 text-center text-sm">
                         Sudah punya akun? 
-                        <a href="{{ route('login.mentor') }}" class="text-primary hover:underline">Login disini</a>
+                        <a href="{{ route('login.u') }}" class="text-primary hover:underline">Login disini</a>
                     </div>
                 </form>
             </div>

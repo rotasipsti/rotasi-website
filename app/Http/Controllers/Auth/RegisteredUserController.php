@@ -144,11 +144,8 @@ class RegisteredUserController extends Controller
         }
 
         $loginRoute = match ($role) {
-            'acara' => 'login.acara',
             'admin' => 'login.admin',
-            'mentor' => 'login.mentor',
-            'keamanan' => 'login.keamanan',
-            'panitia' => 'login.panitia',
+            'acara', 'mentor', 'keamanan', 'panitia' => 'login.u',
             default => 'login',
         };
 

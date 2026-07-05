@@ -14,7 +14,7 @@
                 </p>
             </div>
             <div class="p-6 pt-0">
-                <form method="POST" action="{{ route('login') }}" class="mt-6">
+                <form method="POST" action="{{ route('login.admin') }}" class="mt-6">
                     @csrf
                     
                     <div class="space-y-4">
@@ -35,6 +35,12 @@
                                 </button>
                             </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        </div>
+                        <div class="flex items-center space-x-2 mt-5">
+                            <input type="checkbox" id="remember" name="remember" class="h-4 w-4 rounded border-input bg-background text-primary shadow focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
+                            <label for="remember" class="text-sm text-muted-foreground cursor-pointer select-none">
+                                Ingat saya dalam 7 hari
+                            </label>
                         </div>
                     </div>
 

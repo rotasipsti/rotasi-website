@@ -22,11 +22,13 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    Route::get('accounts/u/login', function () { return view('auth.u.login'); })->name('login.u');
+    Route::post('accounts/u/login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('accounts/u/register', function () { return view('auth.u.register'); })->name('register.u');
+
     Route::prefix('accounts/divisi-acara')->group(function () {
         Route::get('register', function () { return view('auth.acara.register'); })->name('register.acara');
         Route::post('register', [RegisteredUserController::class, 'store']);
-        Route::get('login', function () { return view('auth.acara.login'); })->name('login.acara');
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
     Route::prefix('accounts/admin')->group(function () {
@@ -37,22 +39,16 @@ Route::middleware('guest')->group(function () {
     Route::prefix('accounts/divisi-mentor')->group(function () {
         Route::get('register', function () { return view('auth.mentor.register'); })->name('register.mentor');
         Route::post('register', [RegisteredUserController::class, 'store']);
-        Route::get('login', function () { return view('auth.mentor.login'); })->name('login.mentor');
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
     Route::prefix('accounts/divisi-keamanan')->group(function () {
         Route::get('register', function () { return view('auth.keamanan.register'); })->name('register.keamanan');
         Route::post('register', [RegisteredUserController::class, 'store']);
-        Route::get('login', function () { return view('auth.keamanan.login'); })->name('login.keamanan');
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
     Route::prefix('accounts/panitia')->group(function () {
         Route::get('register', function () { return view('auth.panitia.register'); })->name('register.panitia');
         Route::post('register', [RegisteredUserController::class, 'store']);
-        Route::get('login', function () { return view('auth.panitia.login'); })->name('login.panitia');
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])

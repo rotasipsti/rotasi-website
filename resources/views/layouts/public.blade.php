@@ -22,6 +22,9 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body class="font-sans bg-background theme-transition text-foreground antialiased" x-data="{
     scrolled: false,
@@ -286,5 +289,19 @@
     </script>
     
     @yield('scripts')
+    
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                once: true,
+                duration: 1000,
+                offset: 50,
+                easing: 'ease-out-cubic',
+                delay: 100,
+            });
+        });
+    </script>
 </body>
 </html>

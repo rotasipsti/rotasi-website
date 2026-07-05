@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-<section class="pt-32 pb-16 bg-card">
+<section class="pt-32 pb-16 bg-card" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl md:text-5xl font-bold mb-6 text-center font-bebas-neue tracking-wider">TENTANG ROTASI</h1>
@@ -21,7 +21,7 @@ Program ini dirancang untuk memperkenalkan mahasiswa baru dengan lingkungan kamp
     </div>
 </section>
 
-<section class="py-16">
+<section class="py-16" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl font-bold mb-6 text-center font-bebas-neue tracking-wider">SEJARAH DAN FILOSOFI</h2>
@@ -40,7 +40,7 @@ Setiap tahun, ROTASI mengangkat tema yang berbeda namun tetap berlandaskan pada 
     </div>
 </section>
 
-<section class="py-16 bg-card">
+<section class="py-16 bg-card" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl font-bold mb-6 text-center font-bebas-neue tracking-wider">NILAI-NILAI DASAR</h2>
@@ -112,7 +112,7 @@ Setiap tahun, ROTASI mengangkat tema yang berbeda namun tetap berlandaskan pada 
     </div>
 </section>
 
-<section class="py-16">
+<section class="py-16" data-aos="fade-up">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl font-bold mb-6 text-center font-bebas-neue tracking-wider">TUJUAN KADERISASI</h2>

@@ -63,14 +63,8 @@ class AuthenticatedSessionController extends Controller
 
         if ($role === 'admin') {
             return redirect()->route('login.admin');
-        } elseif ($role === 'mentor') {
-            return redirect()->route('login.mentor');
-        } elseif ($role === 'acara') {
-            return redirect()->route('login.acara');
-        } elseif ($role === 'keamanan') {
-            return redirect()->route('login.keamanan');
-        } elseif ($role === 'panitia') {
-            return redirect()->route('login.panitia');
+        } elseif (in_array($role, ['mentor', 'acara', 'keamanan', 'panitia'])) {
+            return redirect()->route('login.u');
         }
 
         return redirect()->route('login');

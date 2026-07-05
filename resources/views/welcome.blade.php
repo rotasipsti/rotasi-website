@@ -32,7 +32,7 @@
 
     <!-- Countdown Section -->
     <section class="py-16 bg-card">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4" data-aos="fade-up">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6 font-bebas-neue tracking-wider">{{ $countdownTitle }}</h2>
                 
@@ -67,7 +67,7 @@
     <section class="py-16">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
+                <div data-aos="fade-right">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4 font-bebas-neue tracking-wider">TENTANG ROTASI</h2>
                     <div class="w-24 h-1 bg-primary mb-6"></div>
                     <p class="text-muted-foreground mb-6">
@@ -103,7 +103,7 @@
                         Selengkapnya <i data-lucide="chevron-right" class="ml-2 h-4 w-4"></i>
                     </a>
                 </div>
-                <div class="relative h-[400px] rounded-lg overflow-hidden">
+                <div class="relative h-[400px] rounded-lg overflow-hidden" data-aos="fade-left">
                     <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
                     <img src="./rotasii2024.jpg" alt="Kegiatan ROTASI 2024" class="absolute inset-0 w-full h-full object-cover" />
                 </div>
@@ -114,7 +114,7 @@
     <!-- Timeline Preview -->
     <section class="py-16 bg-card">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12" data-aos="fade-up">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 font-bebas-neue tracking-wider">ALUR & TAHAPAN KEGIATAN</h2>
                 <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
                 <p class="text-muted-foreground max-w-2xl mx-auto">
@@ -127,7 +127,7 @@
                 <div class="timeline-container relative">
                     <!-- CSS for timeline-container is in globals.css which we ported -->
                     
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
                         <div class="timeline-content w-full md:w-5/12 bg-background p-6 rounded-lg shadow">
                             <h3 class="font-bold text-xl">Pra-ROTASI</h3>
                             <div class="flex items-center gap-2 text-sm text-primary mb-2">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
                         <div class="timeline-content w-full md:w-5/12 bg-background p-6 rounded-lg shadow">
                             <h3 class="font-bold text-xl">ROTASI Tahap I</h3>
                             <div class="flex items-center gap-2 text-sm text-primary mb-2">
@@ -149,7 +149,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item">
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
                         <div class="timeline-content w-full md:w-5/12 bg-background p-6 rounded-lg shadow">
                             <h3 class="font-bold text-xl">ROTASI Tahap II</h3>
                             <div class="flex items-center gap-2 text-sm text-primary mb-2">
@@ -163,7 +163,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-12">
+            <div class="text-center mt-12" data-aos="zoom-in">
                 <a href="#" class="inline-flex items-center bg-maroon hover:bg-maroon-light text-white px-6 py-2.5 rounded-md font-medium transition-colors">
                     Lihat Timeline Lengkap <i data-lucide="chevron-right" class="ml-2 h-4 w-4"></i>
                 </a>
@@ -174,7 +174,7 @@
     <!-- Features Section -->
     <section class="py-16">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12" data-aos="fade-up">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 font-bebas-neue tracking-wider">FITUR WEBSITE ROTASI</h2>
                 <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
                 <p class="text-muted-foreground max-w-2xl mx-auto">
@@ -184,7 +184,7 @@
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Feature 1 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="100">
                     <div class="p-6">
                         <div class="mb-4"><i data-lucide="calendar" class="h-10 w-10 text-primary"></i></div>
                         <h3 class="text-xl font-bold mb-2">Informasi Kegiatan</h3>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
                 <!-- Feature 2 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="200">
                     <div class="p-6">
                         <div class="mb-4"><i data-lucide="users" class="h-10 w-10 text-primary"></i></div>
                         <h3 class="text-xl font-bold mb-2">Pendaftaran Online</h3>
@@ -200,7 +200,7 @@
                     </div>
                 </div>
                 <!-- Feature 3 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="300">
                     <div class="p-6">
                         <div class="mb-4"><i data-lucide="book-open" class="h-10 w-10 text-primary"></i></div>
                         <h3 class="text-xl font-bold mb-2">Manajemen Tugas</h3>
@@ -208,7 +208,7 @@
                     </div>
                 </div>
                 <!-- Feature 4 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="400">
                     <div class="p-6">
                         <div class="mb-4"><i data-lucide="award" class="h-10 w-10 text-primary"></i></div>
                         <h3 class="text-xl font-bold mb-2">Sertifikat Digital</h3>
@@ -216,7 +216,7 @@
                     </div>
                 </div>
                 <!-- Feature 5 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="500">
                     <div class="p-6">
                         <div class="mb-4"><img src="/rotasi logo.png" class="h-10 w-10" alt="Logo"/></div>
                         <h3 class="text-xl font-bold mb-2">Nilai-nilai ROTASI</h3>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
                 <!-- Feature 6 -->
-                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors">
+                <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow hover:border-primary/50 transition-colors" data-aos="fade-up" data-aos-delay="600">
                     <div class="p-6">
                         <div class="mb-4"><img src="/HIMA-PSTI.svg" class="h-10 w-10" alt="HIMA"/></div>
                         <h3 class="text-xl font-bold mb-2">Profil HIMA PSTI</h3>
@@ -237,7 +237,7 @@
 
     <!-- CTA Section -->
     <section class="py-16 bg-maroon">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4" data-aos="fade-up">
             <div class="max-w-3xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white font-bebas-neue tracking-wider">BERGABUNGLAH DENGAN ROTASI</h2>
                 <p class="text-white/80 mb-8">
