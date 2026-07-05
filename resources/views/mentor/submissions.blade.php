@@ -1,0 +1,54 @@
+@extends('admin.layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold">Submission Sektor {{ auth()->user()->sektor }}</h1>
+        <p class="text-muted-foreground">Daftar tugas yang telah dikumpulkan oleh peserta bimbingan Anda</p>
+    </div>
+
+    <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
+        <div class="p-6">
+            <div class="space-y-4">
+                @forelse($submissions as $sub)
+                    <div class="border rounded-lg p-4 bg-background">
+                        <div class="flex flex-col md:flex-row justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-sm text-muted-foreground">{{ $sub->submitted_at->format('d M Y, H:i') }}</span>
+                                </div>
+                                
+                                <h3 class="font-semibold text-lg">{{ $sub->task->title }}</h3>
+                                <p class="text-sm font-medium mb-2">Oleh: {{ $sub->participant->name }} (NIM: {{ $sub->participant->nim }})</p>
+                                
+                                @if($sub->submission_text)
+                                    <div class="bg-muted p-3 rounded text-sm mb-3">
+                                        {{ $sub->submission_text }}
+                                    </div>
+                                @endif
+                                
+
+                            </div>
+                            <div class="flex flex-col justify-center gap-2 min-w-[120px] mt-4 md:mt-0">
+                                @if($sub->file_url)
+                                    <a href="{{ $sub->file_url }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
+                                        <i data-lucide="download" class="mr-2 h-4 w-4"></i> 
+                                        Download Tugas
+                                    </a>
+                                @else
+                                    <span class="text-sm text-muted-foreground text-center italic">Tidak ada lampiran</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-muted-foreground">
+                        Belum ada tugas yang dikumpulkan oleh peserta.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+</div>
+@endsection

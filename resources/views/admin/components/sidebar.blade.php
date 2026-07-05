@@ -1,0 +1,132 @@
+<aside class="fixed top-16 bottom-0 left-0 z-40 w-64 bg-card border-r border-border/50 transform transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    
+    <div class="py-4 overflow-y-auto h-full">
+        <nav class="space-y-1 px-3">
+            
+            <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard*') || request()->routeIs('admin.dashboard') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                <i data-lucide="layout-dashboard" class="mr-3 h-5 w-5"></i>
+                Dashboard
+            </a>
+
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.cms.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.*') && !request()->routeIs('admin.cms.downloads.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="globe" class="mr-3 h-5 w-5"></i>
+                    Konten Publik (CMS)
+                </a>
+
+                <a href="{{ route('admin.cms.downloads.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.downloads.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Manajemen Unduhan
+                </a>
+
+                <a href="{{ route('admin.passwords.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.passwords.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="key" class="mr-3 h-5 w-5"></i>
+                    Password Manajemen
+                </a>
+                
+                <a href="{{ route('admin.approvals.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.approvals.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="user-check" class="mr-3 h-5 w-5"></i>
+                    Persetujuan Akun
+                </a>
+                
+                <a href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="users" class="mr-3 h-5 w-5"></i>
+                    Data Akun
+                </a>
+            @elseif(auth()->user()->role === 'mentor')
+                <a href="{{ route('mentor.peserta') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.peserta') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="users" class="mr-3 h-5 w-5"></i>
+                    Peserta
+                </a>
+                <a href="{{ route('mentor.approvals') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.approvals') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="user-check" class="mr-3 h-5 w-5"></i>
+                    Persetujuan Akun
+                </a>
+                <a href="{{ route('mentor.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="check-square" class="mr-3 h-5 w-5"></i>
+                    Submission Sektor
+                </a>
+                <a href="{{ route('mentor.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="history" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin
+                </a>
+            @elseif(auth()->user()->role === 'acara')
+                <a href="{{ route('acara.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('acara.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
+                    Manajemen Tugas
+                </a>
+                <a href="{{ route('acara.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('acara.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download-cloud" class="mr-3 h-5 w-5"></i>
+                    Data Pengumpulan
+                </a>
+                <a href="{{ route('acara.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('acara.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="history" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin
+                </a>
+            @elseif(auth()->user()->role === 'peserta')
+                <a href="{{ route('peserta.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('peserta.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="book-open" class="mr-3 h-5 w-5"></i>
+                    Tugas Saya
+                </a>
+                <a href="{{ route('peserta.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('peserta.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="upload" class="mr-3 h-5 w-5"></i>
+                    Riwayat Pengumpulan
+                </a>
+                <a href="{{ route('peserta.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('peserta.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
+                </a>
+            @elseif(auth()->user()->role === 'keamanan')
+                <a href="{{ route('keamanan.exit.scanner') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('keamanan.exit.scanner') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="scan" class="mr-3 h-5 w-5"></i>
+                    Scanner QR Code
+                </a>
+                <a href="{{ route('keamanan.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('keamanan.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="history" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin
+                </a>
+            @elseif(auth()->user()->role === 'panitia')
+                <a href="{{ route('panitia.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('panitia.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="history" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin
+                </a>
+            @endif
+
+            <div class="my-2 border-t border-border/50"></div>
+            
+            @php
+                $role = auth()->user()->role;
+                $profileRouteName = 'peserta.profile.edit';
+                
+                if ($role === 'admin') {
+                    $profileRouteName = 'admin.profile.edit';
+                } elseif ($role === 'mentor') {
+                    $profileRouteName = 'mentor.profile.edit';
+                } elseif ($role === 'acara') {
+                    $profileRouteName = 'acara.profile.edit';
+                } elseif ($role === 'keamanan') {
+                    $profileRouteName = 'keamanan.profile.edit';
+                } elseif ($role === 'panitia') {
+                    $profileRouteName = 'panitia.profile.edit';
+                }
+            @endphp
+            <a href="{{ route($profileRouteName) }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs($profileRouteName) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                <i data-lucide="user" class="mr-3 h-5 w-5"></i>
+                Profil Akun
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- Mobile overlay -->
+<div x-show="sidebarOpen" 
+     @click="sidebarOpen = false"
+     x-transition:enter="transition-opacity ease-linear duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition-opacity ease-linear duration-300"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden" 
+     style="display: none;"></div>
