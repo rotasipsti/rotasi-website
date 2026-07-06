@@ -14,7 +14,7 @@
 
 
             <p class="mb-6 text-muted-foreground">
-                Daftar pendaftar dengan peran <strong>Mentor</strong> dan <strong>Divisi Acara</strong> yang masih menunggu persetujuan Anda untuk dapat masuk ke dalam sistem.
+                Daftar pemintaan pendaftaran <strong>akun panitia</strong> yang masih menunggu persetujuan Anda untuk dapat menggunakan akun.
             </p>
 
             <div class="overflow-x-auto">
