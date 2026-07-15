@@ -126,6 +126,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('cms')->name('cms.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CMSController::class, 'index'])->name('index');
+            Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class)->except(['create', 'show', 'edit']);
             Route::get('/downloads', [\App\Http\Controllers\Admin\CMSController::class, 'downloads'])->name('downloads.index');
             Route::post('/timeline', [\App\Http\Controllers\Admin\CMSController::class, 'storeTimeline'])->name('timeline.store');
         Route::delete('/timeline/{timeline}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyTimeline'])->name('timeline.destroy');

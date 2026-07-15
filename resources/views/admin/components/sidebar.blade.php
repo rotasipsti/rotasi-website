@@ -10,7 +10,7 @@
             </a>
 
             @if(auth()->user()->role === 'admin')
-                <a href="{{ route('admin.cms.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.*') && !request()->routeIs('admin.cms.downloads.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                <a href="{{ route('admin.cms.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.*') && !request()->routeIs('admin.cms.downloads.*') && !request()->routeIs('admin.cms.banners.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="globe" class="mr-3 h-5 w-5"></i>
                     Konten Publik (CMS)
                 </a>
@@ -18,6 +18,11 @@
                 <a href="{{ route('admin.cms.downloads.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.downloads.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
                     Manajemen Unduhan
+                </a>
+
+                <a href="{{ route('admin.cms.banners.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.banners.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="image" class="mr-3 h-5 w-5"></i>
+                    Manajemen Banner
                 </a>
 
                 <a href="{{ route('admin.passwords.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.passwords.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
