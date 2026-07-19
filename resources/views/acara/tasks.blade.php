@@ -17,9 +17,25 @@
         taskId: '',
         title: '',
         description: '',
-        task_type: 'individu',
-        sector: '0',
         due_date: '',
+        selectionMode: false,
+        selectedTasks: [],
+        selectAll: false,
+        toggleSelectionMode() {
+            this.selectionMode = !this.selectionMode;
+            if (!this.selectionMode) {
+                this.selectedTasks = [];
+                this.selectAll = false;
+            }
+        },
+        toggleAll() {
+            if (this.selectAll) {
+                this.selectedTasks = [];
+            } else {
+                this.selectedTasks = {{ json_encode($tasks->pluck('id')) }};
+            }
+            this.selectAll = !this.selectAll;
+        },
         
         openCreate() {
             this.isEdit = false;
@@ -43,12 +59,43 @@
             this.dialogOpen = true;
         }
     }">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold">Daftar Tugas ({{ count($tasks) }})</h2>
-            <button @click="openCreate()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 shadow">
-                <i data-lucide="plus-circle" class="mr-2 h-4 w-4"></i> 
-                Buat Tugas Baru
-            </button>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-semibold">Daftar Tugas ({{ count($tasks) }})</h2>
+                @if(count($tasks) > 0)
+                    <div x-show="selectionMode" x-transition style="display: none;" class="flex items-center gap-2 bg-card border border-border/50 px-3 py-1.5 rounded-md shadow-sm">
+                        <input type="checkbox" id="selectAll" class="rounded border-input text-primary focus:ring-primary h-4 w-4 cursor-pointer" @click="toggleAll()" :checked="selectAll">
+                        <label for="selectAll" class="text-sm font-medium cursor-pointer">Pilih Semua</label>
+                    </div>
+                @endif
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div x-show="selectionMode" x-transition style="display: none;">
+                    <form action="{{ route('tasks.bulk-destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas yang Anda pilih? Tindakan ini tidak dapat dibatalkan.');">
+                        @csrf
+                        @method('DELETE')
+                        <template x-for="id in selectedTasks" :key="id">
+                            <input type="hidden" name="task_ids[]" :value="id">
+                        </template>
+                        <button type="submit" :disabled="selectedTasks.length === 0" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 shadow disabled:opacity-50">
+                            <i data-lucide="trash-2" class="mr-2 h-4 w-4"></i> Hapus (<span x-text="selectedTasks.length"></span>)
+                        </button>
+                    </form>
+                </div>
+                
+                @if(count($tasks) > 0)
+                    <button @click="toggleSelectionMode()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent text-foreground h-10 px-4 shadow">
+                        <i data-lucide="check-square" class="mr-2 h-4 w-4" x-show="!selectionMode"></i> 
+                        <i data-lucide="x" class="mr-2 h-4 w-4" x-show="selectionMode" style="display: none;"></i> 
+                        <span x-text="selectionMode ? 'Batal' : 'Hapus Tugas'"></span>
+                    </button>
+                @endif
+
+                <button x-show="!selectionMode" @click="openCreate()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 shadow">
+                    <i data-lucide="plus-circle" class="mr-2 h-4 w-4"></i> 
+                    Buat Tugas Baru
+                </button>
+            </div>
         </div>
 
         <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
@@ -57,8 +104,11 @@
                     @forelse($tasks as $task)
                         <div class="border rounded-lg p-4 bg-background">
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                                <div class="flex items-center gap-2 min-w-0 flex-1">
-                                    <i data-lucide="file-text" class="h-4 w-4 text-muted-foreground"></i>
+                                <div class="flex items-center gap-3 min-w-0 flex-1">
+                                    <div x-show="selectionMode" x-transition style="display: none;" class="flex items-center justify-center">
+                                        <input type="checkbox" value="{{ $task->id }}" x-model="selectedTasks" @change="selectAll = selectedTasks.length === {{ count($tasks) }}" class="rounded border-input text-primary focus:ring-primary h-4 w-4 cursor-pointer">
+                                    </div>
+                                    <i data-lucide="file-text" class="h-4 w-4 text-muted-foreground hidden sm:block"></i>
                                     <h3 class="font-semibold">{{ $task->title }}</h3>
                                 </div>
                                 <div class="flex gap-2">
@@ -96,7 +146,7 @@
                                     </span>
                                 </div>
                                 
-                                <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-center gap-2" x-show="!selectionMode" x-transition>
                                     @php
                                         $taskData = [
                                             'id' => $task->id,

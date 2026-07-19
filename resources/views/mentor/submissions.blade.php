@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto">
     <div class="mb-6">
         <h1 class="text-2xl font-bold">Submission Sektor {{ auth()->user()->sektor }}</h1>
-        <p class="text-muted-foreground">Daftar tugas yang telah dikumpulkan oleh peserta bimbingan Anda</p>
+        <p class="text-muted-foreground">Daftar tugas yang telah dikumpulkan oleh mentee Anda</p>
     </div>
 
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
@@ -29,14 +29,18 @@
                                 
 
                             </div>
-                            <div class="flex flex-col justify-center gap-2 min-w-[120px] mt-4 md:mt-0">
+                            <div class="flex flex-col justify-center gap-2 mt-4 md:mt-0 min-w-[140px] shrink-0">
                                 @if($sub->file_url)
-                                    <a href="{{ $sub->file_url }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
+                                    <a href="{{ $sub->file_url }}" target="_blank" class="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4">
+                                        <i data-lucide="eye" class="mr-2 h-4 w-4"></i> 
+                                        Lihat Tugas
+                                    </a>
+                                    <a href="{{ $sub->file_url }}" download class="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
                                         <i data-lucide="download" class="mr-2 h-4 w-4"></i> 
                                         Download Tugas
                                     </a>
                                 @else
-                                    <span class="text-sm text-muted-foreground text-center italic">Tidak ada lampiran</span>
+                                    <span class="text-sm text-muted-foreground text-center italic w-full">Tidak ada lampiran</span>
                                 @endif
                             </div>
                         </div>

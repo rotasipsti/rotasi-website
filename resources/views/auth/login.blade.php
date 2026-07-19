@@ -21,7 +21,7 @@
                             </div>
                             <div class="mt-1 space-y-1">
                                 @foreach ($errors->all() as $error)
-                                    <p>{{ str_contains($error, 'These credentials') ? 'Email, password, atau sektor yang Anda pilih tidak tepat.' : $error }}</p>
+                                    <p>{{ str_contains($error, 'These credentials') ? 'Email atau password yang Anda masukkan tidak tepat.' : $error }}</p>
                                 @endforeach
                             </div>
                         </div>
@@ -33,16 +33,7 @@
                             <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email" required autofocus class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2" />
                         </div>
                         
-                        <div>
-                            <label for="sektor" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Pilih Sektor</label>
-                            <select id="sektor" name="sektor" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2">
-                                <option value="" disabled selected>Pilih sektor</option>
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}">Sektor {{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        
+
                         <div x-data="{ showPassword: false }">
                             <label for="password" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password Akun</label>
                             <div class="relative mt-2">

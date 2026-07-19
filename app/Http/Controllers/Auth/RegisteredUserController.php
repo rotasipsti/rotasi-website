@@ -44,21 +44,7 @@ class RegisteredUserController extends Controller
         }
 
         // Custom password validation based on role
-        if ($role === 'peserta') {
-            $request->validate([
-                'sektor' => 'required|integer',
-                'sectorPassword' => 'required|string',
-            ]);
-            
-            $sector = \App\Models\SectorPassword::where('sector_number', $request->sektor)
-                        ->where('uuid_password', $request->sectorPassword)->first();
-            
-            if (!$sector) {
-                throw ValidationException::withMessages([
-                    'sectorPassword' => 'Password sektor tidak valid.',
-                ]);
-            }
-        } elseif (in_array($role, ['mentor', 'admin'])) {
+        if (in_array($role, ['mentor', 'admin'])) {
             if ($role === 'mentor') {
                 $request->validate([
                     'sektor' => 'required|integer',
@@ -97,17 +83,8 @@ class RegisteredUserController extends Controller
         $randStr = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
         $prefix = 'USR';
 
-        if ($role === 'peserta' && isset($sector)) {
-            $sectorName = $sector->sector_name;
-            $words = explode(' ', $sectorName);
-            if (count($words) >= 2) {
-                $prefix = strtoupper(substr($words[0], 0, 2) . substr($words[1], 0, 1));
-            } else {
-                $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $sectorName), 0, 3));
-            }
-            if (strlen($prefix) < 3) {
-                $prefix = str_pad($prefix, 3, 'X');
-            }
+        if ($role === 'peserta') {
+            $prefix = 'PST';
         } elseif ($role === 'acara') {
             $prefix = 'ACR';
         } elseif ($role === 'mentor') {
@@ -150,7 +127,7 @@ class RegisteredUserController extends Controller
         };
 
         $approvalMessage = $role === 'peserta' 
-            ? 'Pendaftaran berhasil. Akun Anda sedang menunggu persetujuan.' 
+            ? 'Pendaftaran berhasil. Akun Anda berhasil dibuat. Silakan login untuk melanjutkan.' 
             : 'Pendaftaran berhasil. Akun Anda sedang menunggu persetujuan Admin.';
 
         return back()->with('register_success', true)

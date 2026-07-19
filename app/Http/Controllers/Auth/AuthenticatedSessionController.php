@@ -27,14 +27,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $user = $request->user();
-        if (!$user->is_approved && $user->role !== 'admin') {
+        if (!$user->is_approved && !in_array($user->role, ['admin', 'peserta'])) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            $msg = $user->role === 'peserta' 
-                ? 'Akun Anda belum disetujui. Silahkan hubungi Admin.' 
-                : 'Akun Anda belum disetujui. Silahkan hubungi Admin.';
+            $msg = 'Akun Anda belum disetujui. Silahkan hubungi Admin.';
 
             return redirect()->back()->with('error_alert', $msg);
         }

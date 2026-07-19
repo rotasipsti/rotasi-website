@@ -48,22 +48,28 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
-    
-    Route::post('/submissions', [SubmissionController::class, 'store'])->name('submissions.store');
-    Route::post('/submissions/{submission}/evaluate', [SubmissionController::class, 'evaluate'])->name('submissions.evaluate');
+    Route::post('/dashboard/select-sector', [DashboardController::class, 'storeSector'])->name('peserta.select-sector');
 
-    // Peserta Routes
-    Route::get('/dashboard/tasks', [DashboardController::class, 'pesertaTasks'])->name('peserta.tasks');
-    Route::get('/dashboard/submissions', [DashboardController::class, 'pesertaSubmissions'])->name('peserta.submissions');
-    Route::get('/dashboard/downloads', [DashboardController::class, 'pesertaDocuments'])->name('peserta.downloads');
+    Route::middleware(\App\Http\Middleware\EnsurePesertaApproved::class)->group(function () {
+        Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+        Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
+        Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        
+        Route::post('/submissions', [SubmissionController::class, 'store'])->name('submissions.store');
+        Route::post('/submissions/{submission}/evaluate', [SubmissionController::class, 'evaluate'])->name('submissions.evaluate');
 
-    // Peserta Profile Route
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('peserta.profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('peserta.profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('peserta.profile.destroy');
+        // Peserta Routes
+        Route::get('/dashboard/tasks', [DashboardController::class, 'pesertaTasks'])->name('peserta.tasks');
+        Route::get('/dashboard/submissions', [DashboardController::class, 'pesertaSubmissions'])->name('peserta.submissions');
+        Route::get('/dashboard/downloads', [DashboardController::class, 'pesertaDocuments'])->name('peserta.downloads');
+
+        // Peserta Profile Route
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('peserta.profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('peserta.profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('peserta.profile.destroy');
+    });
+
     
     // Mentor Routes
     Route::get('/accounts/divisi-mentor/dashboard', [DashboardController::class, 'mentorDashboard'])->name('dashboard.mentor');
@@ -117,9 +123,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('/passwords/{id}', [\App\Http\Controllers\Admin\SectorPasswordController::class, 'destroy'])->name('passwords.destroy');
 
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::delete('/users/bulk-delete', [\App\Http\Controllers\Admin\UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
+        Route::delete('/users/role-delete', [\App\Http\Controllers\Admin\UserController::class, 'destroyByRole'])->name('users.destroy-role');
         Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
 
         Route::get('/approvals', [\App\Http\Controllers\Admin\ApprovalController::class, 'index'])->name('approvals.index');
+        Route::post('/approvals/bulk-approve', [\App\Http\Controllers\Admin\ApprovalController::class, 'bulkApprove'])->name('approvals.bulk-approve');
+        Route::post('/approvals/approve-all', [\App\Http\Controllers\Admin\ApprovalController::class, 'approveAll'])->name('approvals.approve-all');
         Route::post('/approvals/{id}/approve', [\App\Http\Controllers\Admin\ApprovalController::class, 'approve'])->name('approvals.approve');
         Route::delete('/approvals/{id}/reject', [\App\Http\Controllers\Admin\ApprovalController::class, 'reject'])->name('approvals.reject');
 

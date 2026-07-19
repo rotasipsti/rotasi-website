@@ -38,4 +38,27 @@ class ApprovalController extends Controller
 
         return redirect()->back()->with('success', 'Pendaftaran akun ' . $user->name . ' berhasil ditolak dan dihapus.');
     }
+
+    public function bulkApprove(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        User::whereIn('id', $request->user_ids)
+            ->where('is_approved', false)
+            ->update(['is_approved' => true]);
+
+        return redirect()->back()->with('success', count($request->user_ids) . ' Akun berhasil disetujui.');
+    }
+
+    public function approveAll(Request $request)
+    {
+        $count = User::where('is_approved', false)
+            ->whereIn('role', ['mentor', 'acara', 'keamanan', 'panitia'])
+            ->update(['is_approved' => true]);
+
+        return redirect()->back()->with('success', $count . ' Akun berhasil disetujui secara keseluruhan.');
+    }
 }

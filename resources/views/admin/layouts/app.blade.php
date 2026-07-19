@@ -117,12 +117,41 @@
     </script>
     @endif
 
-    @if($errors->any())
+    @if(session('error'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
-                title: '<h2 class="text-xl font-bold font-inter mt-2">Gagal Menyimpan</h2>',
-                html: '<p class="text-sm mt-1">Pastikan semua kolom (termasuk foto/gambar) sudah diisi dengan benar.</p>',
+                title: '<h2 class="text-xl font-bold font-inter mt-2">Terjadi Kesalahan</h2>',
+                html: '<p class="text-sm mt-1">{{ session("error") }}</p>',
+                icon: 'error',
+                confirmButtonText: 'Tutup',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'bg-card border border-border/50 rounded-xl shadow-2xl !p-6',
+                    title: 'text-foreground',
+                    htmlContainer: 'text-muted-foreground !m-0 !mt-2',
+                    confirmButton: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-md text-sm font-medium transition-colors border-none mt-4',
+                    icon: '!border-destructive !text-destructive !m-0 !mx-auto'
+                },
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a',
+            });
+        });
+    </script>
+    @endif
+
+    @if($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let errorHtml = '<ul class="text-sm mt-1 text-left list-disc list-inside">';
+            @foreach($errors->all() as $error)
+                errorHtml += '<li>{{ $error }}</li>';
+            @endforeach
+            errorHtml += '</ul>';
+
+            Swal.fire({
+                title: '<h2 class="text-xl font-bold font-inter mt-2">Validasi Gagal</h2>',
+                html: errorHtml,
                 icon: 'error',
                 confirmButtonText: 'Tutup',
                 buttonsStyling: false,

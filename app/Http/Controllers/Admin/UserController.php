@@ -43,4 +43,34 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Akun berhasil dihapus secara permanen.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        // Exclude admin from bulk delete
+        $deleted = User::whereIn('id', $request->user_ids)
+                       ->where('role', '!=', 'admin')
+                       ->delete();
+
+        return redirect()->back()->with('success', $deleted . ' Akun berhasil dihapus secara permanen.');
+    }
+
+    public function destroyByRole(Request $request)
+    {
+        $request->validate([
+            'role' => 'required|string',
+        ]);
+
+        if ($request->role === 'admin') {
+            return redirect()->back()->with('error', 'Akun admin tidak dapat dihapus massal.');
+        }
+
+        $deleted = User::where('role', $request->role)->delete();
+
+        return redirect()->back()->with('success', $deleted . ' Akun dengan role ' . $request->role . ' berhasil dihapus secara permanen.');
+    }
 }

@@ -56,4 +56,16 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->back()->with('success', 'Tugas berhasil dihapus.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'task_ids' => 'required|array',
+            'task_ids.*' => 'exists:tasks,id',
+        ]);
+
+        Task::whereIn('id', $request->task_ids)->delete();
+
+        return redirect()->back()->with('success', count($request->task_ids) . ' Tugas berhasil dihapus.');
+    }
 }

@@ -26,23 +26,67 @@ class DashboardController extends Controller
         }
 
         $data = [];
-        $data['tasks'] = Task::where('sector', $user->sektor)
-                            ->orWhere('sector', 0)
-                            ->orWhere('task_type', 'angkatan')
-                            ->orderBy('due_date', 'asc')
-                            ->get();
-                            
-        $data['submissions'] = TaskSubmission::where('participant_id', $user->id)
-                            ->with('task')
-                            ->get();
-                            
-        $data['mentor'] = User::where('role', 'mentor')
-                            ->where('sektor', $user->sektor)
-                            ->first();
+        if (!is_null($user->sektor) && $user->is_approved) {
+            $data['tasks'] = Task::where('sector', $user->sektor)
+                                ->orWhere('sector', 0)
+                                ->orWhere('task_type', 'angkatan')
+                                ->orderBy('due_date', 'asc')
+                                ->get();
+                                
+            $data['submissions'] = TaskSubmission::where('participant_id', $user->id)
+                                ->with('task')
+                                ->get();
+                                
+            $data['mentor'] = User::where('role', 'mentor')
+                                ->where('sektor', $user->sektor)
+                                ->first();
 
-        $data['downloads'] = \App\Models\Download::orderBy('order')->get();
+            $data['downloads'] = \App\Models\Download::orderBy('order')->get();
+        }
                             
         return view('peserta.dashboard', $data);
+    }
+    
+    public function storeSector(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->role !== 'peserta' || !is_null($user->sektor)) {
+            abort(403);
+        }
+
+        $request->validate([
+            'sektor' => 'required|integer',
+            'sectorPassword' => 'required|string',
+        ]);
+
+        $sector = \App\Models\SectorPassword::where('sector_number', $request->sektor)
+                    ->where('uuid_password', $request->sectorPassword)->first();
+
+        if (!$sector) {
+            return back()->with('error', 'Password sektor tidak valid.');
+        }
+
+        $sectorName = $sector->sector_name;
+        $words = explode(' ', $sectorName);
+        if (count($words) >= 2) {
+            $prefix = strtoupper(substr($words[0], 0, 2) . substr($words[1], 0, 1));
+        } else {
+            $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $sectorName), 0, 3));
+        }
+        if (strlen($prefix) < 3) {
+            $prefix = str_pad($prefix, 3, 'X');
+        }
+
+        // Update prefix of custom_id
+        $parts = explode('-', $user->custom_id);
+        if (count($parts) === 2) {
+            $user->custom_id = $prefix . '-' . $parts[1];
+        }
+
+        $user->sektor = $request->sektor;
+        $user->save();
+
+        return redirect()->route('dashboard')->with('success', 'Berhasil memilih sektor. Akun Anda sedang menunggu persetujuan.');
     }
     
     public function pesertaTasks()
