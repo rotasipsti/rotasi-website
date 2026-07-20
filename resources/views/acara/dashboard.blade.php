@@ -43,25 +43,6 @@
             </div>
         </div>
 
-        <!-- Aksi Cepat -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4">Aksi Cepat</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a href="{{ route('acara.tasks') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <i data-lucide="file-text" class="h-5 w-5 text-blue-600"></i>
-                    </div>
-                    <span class="text-sm font-medium">Manajemen Tugas</span>
-                </a>
-                
-                <a href="{{ route('acara.submissions') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <i data-lucide="check-square" class="h-5 w-5 text-green-600"></i>
-                    </div>
-                    <span class="text-sm font-medium">Data Pengumpulan</span>
-                </a>
-            </div>
-        </div>
         <!-- Recent Submissions -->
         <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
             <div class="p-6">
@@ -113,6 +94,26 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Aksi Cepat -->
+        <div class="mt-8 mb-8">
+            <h2 class="text-xl font-bold mb-4">Aksi Cepat</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="{{ route('acara.tasks') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="h-5 w-5 text-blue-600"></i>
+                    </div>
+                    <span class="text-sm font-medium">Manajemen Tugas</span>
+                </a>
+                
+                <a href="{{ route('acara.submissions') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <i data-lucide="check-square" class="h-5 w-5 text-green-600"></i>
+                    </div>
+                    <span class="text-sm font-medium">Data Pengumpulan</span>
+                </a>
             </div>
         </div>
 

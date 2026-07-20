@@ -31,7 +31,7 @@ Route::get('/galeri', function () {
 });
 
 Route::get('/download', function () {
-    $downloads = \App\Models\Download::orderBy('order')->get();
+    $downloads = \App\Models\Download::where('target_role', 'semua')->orderBy('order')->get();
     return view('public.download', compact('downloads'));
 });
 
@@ -49,6 +49,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
     Route::post('/dashboard/select-sector', [DashboardController::class, 'storeSector'])->name('peserta.select-sector');
+    Route::get('/dashboard/documents', [DashboardController::class, 'sharedDocuments'])->name('shared.downloads');
 
     Route::middleware(\App\Http\Middleware\EnsurePesertaApproved::class)->group(function () {
         Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
@@ -62,7 +63,6 @@ Route::middleware('auth')->group(function () {
         // Peserta Routes
         Route::get('/dashboard/tasks', [DashboardController::class, 'pesertaTasks'])->name('peserta.tasks');
         Route::get('/dashboard/submissions', [DashboardController::class, 'pesertaSubmissions'])->name('peserta.submissions');
-        Route::get('/dashboard/downloads', [DashboardController::class, 'pesertaDocuments'])->name('peserta.downloads');
 
         // Peserta Profile Route
         Route::get('/profile', [ProfileController::class, 'edit'])->name('peserta.profile.edit');

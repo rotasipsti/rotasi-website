@@ -119,12 +119,20 @@ class DashboardController extends Controller
         return view('peserta.submissions', $data);
     }
 
-    public function pesertaDocuments()
+    public function sharedDocuments()
     {
         $user = auth()->user();
-        if ($user->role !== 'peserta') abort(403);
+        if ($user->role === 'admin') abort(403);
+
+        $targetRoles = ['semua', $user->role];
         
-        $data['downloads'] = \App\Models\Download::orderBy('order')->get();
+        if (!in_array($user->role, ['admin', 'peserta'])) {
+            $targetRoles[] = 'seluruh_panitia';
+        }
+        
+        $data['downloads'] = \App\Models\Download::whereIn('target_role', $targetRoles)
+                                ->orderBy('order')
+                                ->get();
                             
         return view('peserta.downloads', $data);
     }

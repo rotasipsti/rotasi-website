@@ -56,6 +56,10 @@
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin
                 </a>
+                <a href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
+                </a>
             @elseif(auth()->user()->role === 'acara')
                 <a href="{{ route('acara.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('acara.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
@@ -69,6 +73,10 @@
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin
                 </a>
+                <a href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
+                </a>
             @elseif(auth()->user()->role === 'peserta')
                 <a href="{{ route('peserta.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('peserta.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="book-open" class="mr-3 h-5 w-5"></i>
@@ -78,7 +86,7 @@
                     <i data-lucide="upload" class="mr-3 h-5 w-5"></i>
                     Riwayat Pengumpulan
                 </a>
-                <a href="{{ route('peserta.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('peserta.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                <a href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
                     Dokumen & Berkas
                 </a>
@@ -91,10 +99,18 @@
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin
                 </a>
+                <a href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
+                </a>
             @elseif(auth()->user()->role === 'panitia')
                 <a href="{{ route('panitia.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('panitia.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin
+                </a>
+                <a href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
                 </a>
             @endif
 

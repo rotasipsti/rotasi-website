@@ -218,6 +218,7 @@ class CMSController extends Controller
         $request->validate([
             'title' => 'required',
             'file_url' => 'required|url',
+            'target_role' => 'nullable|string'
         ]);
 
         $download = new Download();
@@ -225,6 +226,7 @@ class CMSController extends Controller
         $download->desc = $request->desc;
         $download->url = $request->file_url;
         $download->type = 'url';
+        $download->target_role = $request->target_role ?? 'semua';
         $download->order = $request->order ?? 0;
         $download->save();
 

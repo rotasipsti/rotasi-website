@@ -132,11 +132,11 @@
                 <span class="text-sm font-medium">Pengumpulan</span>
             </a>
 
-            <a href="{{ route('peserta.downloads') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+            <a href="{{ route('shared.downloads') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
                 <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <i data-lucide="download" class="h-5 w-5 text-purple-600"></i>
                 </div>
-                <span class="text-sm font-medium">Unduh Materi</span>
+                <span class="text-sm font-medium">Dokumen & Berkas</span>
             </a>
         </div>
     </div>

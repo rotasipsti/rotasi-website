@@ -55,39 +55,6 @@
         </div>
     </div>
 
-    <!-- Aksi Cepat -->
-    <div class="mb-8">
-        <h2 class="text-xl font-bold mb-4">Aksi Cepat</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <a href="{{ route('mentor.peserta') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <i data-lucide="users" class="h-5 w-5 text-blue-600"></i>
-                </div>
-                <span class="text-sm font-medium">Daftar Peserta</span>
-            </a>
-            
-            <a href="{{ route('mentor.approvals') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <i data-lucide="check-circle" class="h-5 w-5 text-yellow-600"></i>
-                </div>
-                <span class="text-sm font-medium">Persetujuan Akun</span>
-            </a>
-
-            <a href="{{ route('mentor.submissions') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <i data-lucide="clipboard-check" class="h-5 w-5 text-green-600"></i>
-                </div>
-                <span class="text-sm font-medium">Penilaian Tugas</span>
-            </a>
-            
-            <a href="{{ route('mentor.exit.history') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
-                <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    <i data-lucide="log-out" class="h-5 w-5 text-orange-600"></i>
-                </div>
-                <span class="text-sm font-medium">Riwayat Izin</span>
-            </a>
-        </div>
-    </div>
     <!-- Recent Submissions -->
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
         <div class="p-6">
@@ -139,6 +106,40 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Aksi Cepat -->
+    <div class="mt-8 mb-8">
+        <h2 class="text-xl font-bold mb-4">Aksi Cepat</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <a href="{{ route('mentor.peserta') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i data-lucide="users" class="h-5 w-5 text-blue-600"></i>
+                </div>
+                <span class="text-sm font-medium">Daftar Peserta</span>
+            </a>
+            
+            <a href="{{ route('mentor.approvals') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i data-lucide="check-circle" class="h-5 w-5 text-yellow-600"></i>
+                </div>
+                <span class="text-sm font-medium">Persetujuan Akun</span>
+            </a>
+
+            <a href="{{ route('mentor.submissions') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i data-lucide="clipboard-check" class="h-5 w-5 text-green-600"></i>
+                </div>
+                <span class="text-sm font-medium">Submissions Tugas</span>
+            </a>
+            
+            <a href="{{ route('mentor.exit.history') }}" class="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-card hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm text-center group">
+                <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i data-lucide="log-out" class="h-5 w-5 text-orange-600"></i>
+                </div>
+                <span class="text-sm font-medium">Riwayat Izin</span>
+            </a>
         </div>
     </div>
 </div>
