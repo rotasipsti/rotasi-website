@@ -1,4 +1,4 @@
-<aside class="fixed top-16 bottom-0 left-0 z-40 w-64 bg-card border-r border-border/50 transform transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0"
+<aside class="hidden md:block fixed top-16 bottom-0 left-0 z-40 w-64 bg-card border-r border-border/50 transform transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     
     <div class="py-4 overflow-y-auto h-full">

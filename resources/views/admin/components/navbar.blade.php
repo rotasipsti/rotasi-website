@@ -3,7 +3,7 @@
         
         <!-- Left side -->
         <div class="flex items-center gap-4">
-            <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-muted-foreground hover:text-foreground">
+            <button @click="sidebarOpen = !sidebarOpen" class="hidden text-muted-foreground hover:text-foreground">
                 <i data-lucide="menu" class="h-6 w-6"></i>
             </button>
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2">

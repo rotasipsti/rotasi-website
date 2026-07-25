@@ -38,7 +38,7 @@
                         <select name="target_role" required class="w-full rounded-md border-input bg-background h-10 px-3">
                             <option value="semua">Semua (Panitia & Peserta)</option>
                             <option value="seluruh_panitia">Seluruh Panitia</option>
-                            <option value="peserta">Peserta</option>
+                            <option value="peserta">Seluruh Peserta</option>
                             <option value="mentor">Mentor</option>
                             <option value="acara">Acara</option>
                             <option value="keamanan">Keamanan</option>

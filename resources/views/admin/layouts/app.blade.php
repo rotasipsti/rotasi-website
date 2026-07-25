@@ -23,7 +23,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col" x-data="{ sidebarOpen: false }">
+<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-16 md:pb-0" x-data="{ sidebarOpen: false }">
     
     <!-- Admin Navbar -->
     @include('admin.components.navbar')
@@ -43,6 +43,9 @@
             
         </div>
     </div>
+
+    <!-- Bottom Navigation for Mobile -->
+    @include('admin.components.bottom-nav')
 
     <!-- Init Lucide Icons -->
     <script>

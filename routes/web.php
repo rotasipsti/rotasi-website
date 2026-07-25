@@ -65,9 +65,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/submissions', [DashboardController::class, 'pesertaSubmissions'])->name('peserta.submissions');
 
         // Peserta Profile Route
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('peserta.profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('peserta.profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('peserta.profile.destroy');
+        Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('peserta.profile.edit');
+        Route::patch('/dashboard/profile', [ProfileController::class, 'update'])->name('peserta.profile.update');
+        Route::delete('/dashboard/profile', [ProfileController::class, 'destroy'])->name('peserta.profile.destroy');
     });
 
     
