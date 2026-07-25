@@ -27,16 +27,26 @@
         <div x-data="{
                 activeSlide: 0,
                 slides: {{ $banners->count() }},
+                autoPlayInterval: null,
                 next() {
                     this.activeSlide = this.activeSlide === this.slides - 1 ? 0 : this.activeSlide + 1;
                 },
                 prev() {
                     this.activeSlide = this.activeSlide === 0 ? this.slides - 1 : this.activeSlide - 1;
                 },
-                init() {
+                startAutoPlay() {
                     if(this.slides > 1) {
-                        setInterval(() => { this.next() }, 5000);
+                        this.autoPlayInterval = setInterval(() => { this.next() }, 5000);
                     }
+                },
+                resetAutoPlay() {
+                    if (this.autoPlayInterval) {
+                        clearInterval(this.autoPlayInterval);
+                        this.startAutoPlay();
+                    }
+                },
+                init() {
+                    this.startAutoPlay();
                 }
             }" 
             class="relative w-full rounded-xl overflow-hidden group" style="aspect-ratio: 3/1; max-height: 280px;">
@@ -71,17 +81,17 @@
 
             <!-- Arrows -->
             @if($banners->count() > 1)
-                <button @click="prev()" class="absolute left-4 top-1/2 -mt-5 hover:-translate-y-0 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Previous banner">
+                <button @click="prev(); resetAutoPlay()" class="absolute left-4 top-1/2 -mt-5 hover:-translate-y-0 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Previous banner">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
-                <button @click="next()" class="absolute right-4 top-1/2 -mt-5 hover:-translate-y-0 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Next banner">
+                <button @click="next(); resetAutoPlay()" class="absolute right-4 top-1/2 -mt-5 hover:-translate-y-0 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" aria-label="Next banner">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </button>
 
                 <!-- Indicators -->
                 <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
                     @foreach($banners as $index => $banner)
-                        <button @click="activeSlide = {{ $index }}" 
+                        <button @click="activeSlide = {{ $index }}; resetAutoPlay()" 
                                 :class="{'bg-white w-6': activeSlide === {{ $index }}, 'bg-white/50 w-2': activeSlide !== {{ $index }}}"
                                 class="h-2 rounded-full transition-all duration-300" aria-label="Slide {{ $index + 1 }}"></button>
                     @endforeach
