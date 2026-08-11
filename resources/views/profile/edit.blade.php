@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div x-data="{ showQrModal: false }" class="max-w-7xl mx-auto space-y-6">
+<div x-data="{ showQrModal: false, showProfileForm: false, showPasswordForm: false }" class="max-w-7xl mx-auto space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
             <h1 class="text-3xl font-bold">Profil Akun</h1>
@@ -10,17 +10,41 @@
     </div>
 
     @if (session('status') === 'profile-updated')
-        <div class="mb-4 p-4 rounded-md bg-green-50 border border-green-200 text-green-700 flex items-center gap-2">
-            <i data-lucide="check-circle" class="h-5 w-5"></i>
-            Profil berhasil diperbarui.
-        </div>
+        <div x-data x-init="Swal.fire({
+            title: '<h2 class=\'text-xl font-bold font-inter mt-2\'>Berhasil</h2>',
+            html: '<p class=\'text-sm mt-1\'>Profil berhasil diperbarui.</p>',
+            icon: 'success',
+            confirmButtonText: 'Tutup',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'bg-card border border-border/50 rounded-xl shadow-2xl !p-6',
+                title: 'text-foreground',
+                htmlContainer: 'text-muted-foreground !m-0 !mt-2',
+                confirmButton: 'bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors border-none mt-4',
+                icon: '!border-green-500 !text-green-500 !m-0 !mx-auto'
+            },
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+            color: document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a',
+        })"></div>
     @endif
     
     @if (session('status') === 'password-updated')
-        <div class="mb-4 p-4 rounded-md bg-green-50 border border-green-200 text-green-700 flex items-center gap-2">
-            <i data-lucide="check-circle" class="h-5 w-5"></i>
-            Kata sandi berhasil diperbarui.
-        </div>
+        <div x-data x-init="Swal.fire({
+            title: '<h2 class=\'text-xl font-bold font-inter mt-2\'>Berhasil</h2>',
+            html: '<p class=\'text-sm mt-1\'>Kata sandi berhasil diperbarui.</p>',
+            icon: 'success',
+            confirmButtonText: 'Tutup',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'bg-card border border-border/50 rounded-xl shadow-2xl !p-6',
+                title: 'text-foreground',
+                htmlContainer: 'text-muted-foreground !m-0 !mt-2',
+                confirmButton: 'bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors border-none mt-4',
+                icon: '!border-green-500 !text-green-500 !m-0 !mx-auto'
+            },
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+            color: document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a',
+        })"></div>
     @endif
 
     <div class="flex flex-col space-y-6">
@@ -76,16 +100,21 @@
 
         <!-- Edit Profil -->
             <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
-                <div class="p-6 border-b border-border/50 flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <i data-lucide="user-cog" class="h-5 w-5"></i>
+                <div class="p-6 border-b border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                            <i data-lucide="user-cog" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Ubah Profil</h3>
+                            <p class="text-sm text-muted-foreground">Perbarui foto, nama, dan email akun Anda.</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-semibold">Ubah Profil</h3>
-                        <p class="text-sm text-muted-foreground">Perbarui foto, nama, dan email akun Anda.</p>
-                    </div>
+                    <button @click="showProfileForm = !showProfileForm" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 transition-colors w-full sm:w-auto">
+                        <span x-text="showProfileForm ? 'Tutup' : 'Ubah Data Akun'"></span>
+                    </button>
                 </div>
-                <div class="p-6">
+                <div class="p-6" x-show="showProfileForm" x-transition style="display: none;">
                     @php
                         $role = auth()->user()->role;
                         $updateRoute = route('peserta.profile.update');
@@ -165,16 +194,21 @@
 
             <!-- Edit Password -->
             <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
-                <div class="p-6 border-b border-border/50 flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">
-                        <i data-lucide="shield-check" class="h-5 w-5"></i>
+                <div class="p-6 border-b border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
+                            <i data-lucide="shield-check" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Ubah Kata Sandi</h3>
+                            <p class="text-sm text-muted-foreground">Pastikan akun Anda menggunakan kata sandi yang kuat.</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-semibold">Ubah Kata Sandi</h3>
-                        <p class="text-sm text-muted-foreground">Pastikan akun Anda menggunakan kata sandi yang kuat.</p>
-                    </div>
+                    <button @click="showPasswordForm = !showPasswordForm" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 transition-colors w-full sm:w-auto">
+                        <span x-text="showPasswordForm ? 'Tutup' : 'Ubah Kata Sandi'"></span>
+                    </button>
                 </div>
-                <div class="p-6">
+                <div class="p-6" x-show="showPasswordForm" x-transition style="display: none;">
                     <form method="post" action="{{ route('password.update') }}" class="space-y-6">
                         @csrf
                         @method('put')

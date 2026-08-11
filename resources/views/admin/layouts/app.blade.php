@@ -22,6 +22,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
+    @livewireStyles
 </head>
 <body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-16 md:pb-0" x-data="{ sidebarOpen: false }">
     
@@ -36,9 +37,31 @@
         <div class="flex-1 flex flex-col w-full md:ml-64 transition-all duration-300 min-h-[calc(100vh-4rem)]">
             
             <!-- Main Content Area -->
-            <main class="flex-1 p-4 md:p-8 relative">
+            <main class="flex-1 p-4 md:p-8 relative"
+                  x-data="{ navigating: false }" 
+                  x-on:livewire:navigating.window="navigating = true" 
+                  x-on:livewire:navigated.window="navigating = false">
 
-                @yield('content')
+                <div x-show="!navigating">
+                    @yield('content')
+                </div>
+
+                <!-- Skeleton UI (shown during navigation) -->
+                <div x-show="navigating" style="display: none;" class="w-full">
+                    <div class="animate-pulse flex flex-col space-y-6">
+                        <div class="h-8 bg-muted rounded w-1/4"></div>
+                        <div class="h-4 bg-muted rounded w-3/4"></div>
+                        <div class="space-y-3 pt-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="h-32 bg-muted rounded"></div>
+                                <div class="h-32 bg-muted rounded"></div>
+                                <div class="h-32 bg-muted rounded"></div>
+                                <div class="h-32 bg-muted rounded"></div>
+                            </div>
+                            <div class="h-48 bg-muted rounded mt-6"></div>
+                        </div>
+                    </div>
+                </div>
             </main>
             
         </div>
@@ -171,5 +194,6 @@
         });
     </script>
     @endif
+    @livewireScripts
 </body>
 </html>

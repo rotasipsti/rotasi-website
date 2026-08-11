@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -28,8 +29,28 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main x-data="{ navigating: false }" 
+                  x-on:livewire:navigating.window="navigating = true" 
+                  x-on:livewire:navigated.window="navigating = false">
+                  
+                <div x-show="!navigating">
+                    {{ $slot }}
+                </div>
+
+                <!-- Skeleton UI (shown during navigation) -->
+                <div x-show="navigating" style="display: none;" class="p-6 max-w-7xl mx-auto w-full">
+                    <div class="animate-pulse flex flex-col space-y-6">
+                        <div class="h-8 bg-gray-200 rounded w-1/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div class="space-y-3 pt-6">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="h-32 bg-gray-200 rounded col-span-2"></div>
+                                <div class="h-32 bg-gray-200 rounded col-span-1"></div>
+                            </div>
+                            <div class="h-24 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
         
@@ -75,5 +96,6 @@
                 });
             });
         </script>
+        @livewireScripts
     </body>
 </html>

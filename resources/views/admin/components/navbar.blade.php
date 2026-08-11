@@ -6,7 +6,7 @@
             <button @click="sidebarOpen = !sidebarOpen" class="hidden text-muted-foreground hover:text-foreground">
                 <i data-lucide="menu" class="h-6 w-6"></i>
             </button>
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+            <a wire:navigate href="{{ route('dashboard') }}" class="flex items-center gap-2">
                 <img src="/rotasi logo.png" alt="ROTASI Logo" class="h-8 w-auto" />
                 <span class="font-bebas-neue text-2xl tracking-wider hidden sm:block text-foreground">ROTASI</span>
             </a>
@@ -52,7 +52,7 @@
                                 $profileRouteName = 'acara.profile.edit';
                             }
                         @endphp
-                        <a href="{{ route($profileRouteName) }}" class="flex items-center px-4 py-2 text-sm hover:bg-accent">
+                        <a wire:navigate href="{{ route($profileRouteName) }}" class="flex items-center px-4 py-2 text-sm hover:bg-accent">
                             <i data-lucide="user" class="h-4 w-4 mr-2"></i> Profil
                         </a>
                         <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?')">
