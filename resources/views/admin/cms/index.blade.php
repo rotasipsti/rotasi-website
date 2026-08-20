@@ -38,6 +38,9 @@
                             <button @click="tab = 'pagecontent'" :class="tab === 'pagecontent' ? 'bg-background text-foreground shadow' : 'hover:bg-background/50 text-muted-foreground'" class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1.5 text-sm font-medium transition-all">
                                 Pengaturan Teks
                             </button>
+                            <button @click="tab = 'visibility'" :class="tab === 'visibility' ? 'bg-background text-foreground shadow' : 'hover:bg-background/50 text-muted-foreground'" class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1.5 text-sm font-medium transition-all">
+                                Visibilitas Halaman
+                            </button>
                         </div>
                     </div>
 
@@ -678,6 +681,55 @@
                                 <div class="mt-6 flex justify-end">
                                     <button type="submit" class="bg-primary text-primary-foreground px-6 py-2 rounded-md font-bold text-lg flex items-center gap-2 shadow-md hover:bg-primary/90">
                                         <i data-lucide="save" class="h-5 w-5"></i> Simpan Semua Teks
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Visibility Tab -->
+                        <div x-show="tab === 'visibility'" style="display: none;">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-bold">Pengaturan Visibilitas Halaman Publik</h3>
+                            </div>
+                            
+                            <form action="{{ route('admin.cms.pagecontent.update') }}" method="POST">
+                                @csrf
+                                <div class="space-y-6">
+                                    @php
+                                        $publicPages = [
+                                            'beranda' => 'Beranda',
+                                            'tentang' => 'Tentang Kami',
+                                            'tahapan' => 'Tahapan',
+                                            'struktur' => 'Struktur / Kepanitiaan',
+                                            'galeri' => 'Galeri',
+                                            'download' => 'Download',
+                                            'kontak' => 'Kontak'
+                                        ];
+                                    @endphp
+
+                                    @foreach($publicPages as $key => $name)
+                                    <div class="bg-muted/50 p-4 rounded-lg border">
+                                        <h4 class="font-bold text-md mb-4">{{ $name }}</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-semibold mb-2">Tampilkan Halaman?</label>
+                                                <select name="page_{{ $key }}_visible" class="w-full rounded-md border-border bg-background">
+                                                    <option value="true" {{ ($pageContents['page_'.$key.'_visible']->value ?? 'true') === 'true' ? 'selected' : '' }}>Ya, Tampilkan</option>
+                                                    <option value="false" {{ ($pageContents['page_'.$key.'_visible']->value ?? 'true') === 'false' ? 'selected' : '' }}>Sembunyikan</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-semibold mb-2">Redirect URL (opsional)</label>
+                                                <input type="text" name="page_{{ $key }}_redirect" value="{{ $pageContents['page_'.$key.'_redirect']->value ?? '' }}" class="w-full rounded-md border-border bg-background" placeholder="Contoh: /tentang (Kosongkan untuk Error 404)" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <button type="submit" class="bg-primary text-primary-foreground px-6 py-2 rounded-md font-bold text-lg flex items-center gap-2 shadow-md hover:bg-primary/90">
+                                        <i data-lucide="save" class="h-5 w-5"></i> Simpan Pengaturan
                                     </button>
                                 </div>
                             </form>

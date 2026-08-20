@@ -11,10 +11,19 @@
 
     <!-- Riwayat Izin Keluar -->
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow mt-6 overflow-hidden">
-        <div class="p-4 sm:p-6 border-b border-border/50 bg-muted/20">
+        <div class="p-4 sm:p-6 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h3 class="font-semibold text-lg flex items-center gap-2">
                 <i data-lucide="history" class="h-5 w-5 text-primary"></i> {{ $title ?? 'Riwayat Izin Keluar Anda' }}
             </h3>
+            @if($user->role === 'keamanan' && isset($exit_permissions) && $exit_permissions->count() > 0)
+            <form action="{{ route('keamanan.exit.bulk-destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat izin keluar? Tindakan ini tidak dapat dibatalkan.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="inline-flex items-center rounded-md border border-red-200 px-3 py-1.5 text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors shadow-sm">
+                    <i data-lucide="trash-2" class="h-4 w-4 mr-2"></i> Hapus Semua
+                </button>
+            </form>
+            @endif
         </div>
         <div class="p-0">
             @if(isset($exit_permissions) && $exit_permissions->count() > 0)

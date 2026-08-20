@@ -4,38 +4,94 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_beranda_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_beranda_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     $countdownDate = \App\Models\PageContent::where('key', 'home_countdown_date')->value('value') ?? '2025-10-01T00:00';
     $countdownTitle = \App\Models\PageContent::where('key', 'home_countdown_title')->value('value') ?? 'MENUJU ROTASI OKTOBER 2025';
     return view('welcome', compact('countdownDate', 'countdownTitle'));
 });
 
 Route::get('/tentang', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_tentang_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_tentang_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     return view('public.tentang');
 });
 
 Route::get('/tahapan', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_tahapan_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_tahapan_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     $timelines = \App\Models\Timeline::orderBy('order')->get();
     return view('public.tahapan', compact('timelines'));
 });
 
 Route::get('/struktur', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_struktur_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_struktur_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     $stakeholders = \App\Models\Stakeholder::orderBy('order')->get();
     $divisions = \App\Models\Division::with('members')->orderBy('order')->get();
     return view('public.struktur', compact('stakeholders', 'divisions'));
 });
 
 Route::get('/galeri', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_galeri_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_galeri_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     $galleries = \App\Models\Gallery::orderBy('order')->get();
     $testimonials = \App\Models\Testimonial::orderBy('order')->get();
     return view('public.galeri', compact('galleries', 'testimonials'));
 });
 
 Route::get('/download', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_download_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_download_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     $downloads = \App\Models\Download::where('target_role', 'semua')->orderBy('order')->get();
     return view('public.download', compact('downloads'));
 });
 
 Route::get('/kontak', function () {
+    $isVisible = \App\Models\PageContent::where('key', 'page_kontak_visible')->value('value') ?? 'true';
+    if ($isVisible === 'false') {
+        $redirectUrl = \App\Models\PageContent::where('key', 'page_kontak_redirect')->value('value');
+        if (empty($redirectUrl)) {
+            abort(404);
+        }
+        return redirect($redirectUrl);
+    }
     return view('public.kontak');
 });
 
@@ -99,6 +155,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/divisi-keamanan/scanner', [App\Http\Controllers\ExitPermissionController::class, 'scanner'])->name('keamanan.exit.scanner');
     Route::get('/accounts/divisi-keamanan/user-info/{id}', [App\Http\Controllers\ExitPermissionController::class, 'getUserInfo'])->name('keamanan.user.info');
     Route::post('/accounts/divisi-keamanan/exit-permissions', [App\Http\Controllers\ExitPermissionController::class, 'store'])->name('keamanan.exit.store');
+    Route::delete('/accounts/divisi-keamanan/exit-permissions/bulk-delete', [App\Http\Controllers\ExitPermissionController::class, 'bulkDestroy'])->name('keamanan.exit.bulk-destroy');
     Route::delete('/accounts/divisi-keamanan/exit-permissions/{id}', [App\Http\Controllers\ExitPermissionController::class, 'destroy'])->name('keamanan.exit.destroy');
     Route::get('/accounts/divisi-keamanan/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('keamanan.exit.history');
 

@@ -68,6 +68,18 @@ class ExitPermissionController extends Controller
         return redirect()->back()->with('success', 'Izin keluar berhasil dicatat.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['keamanan', 'admin'])) {
+            return redirect()->back()->with('error', 'Akses ditolak.');
+        }
+
+        ExitPermission::query()->delete();
+
+        return redirect()->back()->with('success', 'Semua riwayat izin keluar berhasil dihapus.');
+    }
+
     public function destroy($id)
     {
         $exit_permission = ExitPermission::findOrFail($id);
