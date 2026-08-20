@@ -5,9 +5,9 @@
     <div class="max-w-2xl mx-auto w-full">
         <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
             <div class="flex flex-col space-y-1.5 p-6 text-center">
-                <h3 class="font-semibold leading-none tracking-tight text-2xl">Login Peserta ROTASI</h3>
+                <h3 class="font-semibold leading-none tracking-tight text-2xl">Login Akun ROTASI</h3>
                 <p class="text-sm text-muted-foreground">
-                    Masukkan data untuk login sebagai peserta
+                    Masukkan data untuk login akun ROTASI
                 </p>
             </div>
             <div class="p-6 pt-0">
