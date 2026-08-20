@@ -248,6 +248,18 @@ class DashboardController extends Controller
         return view('acara.dashboard', $data);
     }
 
+    public function adminSubmissions()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'admin') abort(403);
+        
+        $submissions = TaskSubmission::with(['task', 'participant'])
+                            ->orderBy('submitted_at', 'desc')
+                            ->paginate(15);
+                            
+        return view('admin.submissions', compact('submissions'));
+    }
+
     public function acaraTasks()
     {
         $user = auth()->user();

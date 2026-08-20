@@ -59,6 +59,10 @@
             <i data-lucide="users" class="h-5 w-5 mb-1"></i>
             <span class="text-[10px] font-medium whitespace-nowrap">Akun</span>
         </a>
+        <a wire:navigate href="{{ route('admin.submissions') }}" class="flex-shrink-0 flex flex-col items-center justify-center w-20 py-2 {{ request()->routeIs('admin.submissions') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+            <i data-lucide="download-cloud" class="h-5 w-5 mb-1"></i>
+            <span class="text-[10px] font-medium whitespace-nowrap">Pengumpulan</span>
+        </a>
         <a wire:navigate href="{{ route('admin.system-info.index') }}" class="flex-shrink-0 flex flex-col items-center justify-center w-20 py-2 {{ request()->routeIs('admin.system-info.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
             <i data-lucide="server" class="h-5 w-5 mb-1"></i>
             <span class="text-[10px] font-medium whitespace-nowrap">Server</span>

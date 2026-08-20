@@ -40,6 +40,11 @@
                     Data Akun
                 </a>
                 
+                <a wire:navigate href="{{ route('admin.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download-cloud" class="mr-3 h-5 w-5"></i>
+                    Data Pengumpulan
+                </a>
+                
                 <a wire:navigate href="{{ route('admin.system-info.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.system-info.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="server" class="mr-3 h-5 w-5"></i>
                     Informasi Sistem
