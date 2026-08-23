@@ -4,6 +4,8 @@
 <!-- Cropper.js -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<!-- html2canvas for ID Card Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
     /* Nonaktifkan global transition untuk elemen cropper agar dragging tidak delay */
     .cropper-container * {
@@ -19,6 +21,34 @@
     cropper: null,
     imageSrc: '',
     previewUrl: '',
+    downloadQrCard() {
+        const card = document.getElementById('qr-id-card');
+        const btn = document.getElementById('btn-download-qr');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i data-lucide=\'loader-2\' class=\'mr-2 h-4 w-4 animate-spin\'></i> Memproses...';
+        btn.disabled = true;
+
+        html2canvas(card, {
+            scale: 3, 
+            useCORS: true, 
+            backgroundColor: null
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Digital-ID-Card-ROTASI-{{ date("Y") }}-{{ str_replace(" ", "-", ucwords(strtolower($user->name))) }}.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            lucide.createIcons();
+        }).catch(err => {
+            console.error('Error generating card', err);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            lucide.createIcons();
+            alert('Gagal mengunduh kartu. Silakan coba lagi.');
+        });
+    },
     handleFileChange(event) {
         const file = event.target.files[0];
         if (file) {
@@ -222,7 +252,7 @@
                                 </div>
                                 <div class="flex-1 w-full">
                                     <input type="file" id="profile_photo" name="profile_photo" accept="image/*" @change="handleFileChange" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-primary file:text-primary-foreground file:px-3 file:py-1 file:rounded-sm file:text-xs file:font-medium file:cursor-pointer placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-                                    <p class="text-xs text-muted-foreground mt-1">Format: JPG, PNG, GIF (Maks. 2MB)</p>
+                                    <p class="text-xs text-muted-foreground mt-1">Format: JPG, JPEG, PNG, HEIF, WEBP, JFIF, SVG, GIF (Maks. 2MB)</p>
                                     @error('profile_photo')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
@@ -375,12 +405,56 @@
                             </div>
                         </div>
                         <div class="bg-muted/30 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-border/50">
-                            <a href="{{ $qrUrl }}&download=1" target="_blank" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 sm:ml-3 sm:w-auto">
-                                <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh QR Code
-                            </a>
+                            <button id="btn-download-qr" @click="downloadQrCard()" type="button" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 sm:ml-3 sm:w-auto transition-colors disabled:opacity-50">
+                                <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh QR
+                            </button>
                             <button @click="showQrModal = false" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-background px-3 py-2 text-sm font-semibold text-foreground shadow-sm ring-1 ring-inset ring-border hover:bg-accent sm:mt-0 sm:w-auto transition-colors">
                                 Tutup
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden ID Card Template for Download -->
+            <div style="position: absolute; left: -9999px; top: -9999px; pointer-events: none;">
+                <div id="qr-id-card" style="width: 400px; height: 600px; position: relative; background-color: #0f172a; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; box-sizing: border-box;"> 
+                    
+                    <!-- Background Decor Elements Removed as requested -->
+                    <!-- Foreground Content -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10; padding: 32px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-sizing: border-box;">
+                        
+                        <!-- Header -->
+                        <div style="text-align: center; width: 100%; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: block;">
+                            <h2 style="font-size: 40px; font-weight: bold; text-transform: uppercase; margin: 0; color: #ffffff; font-family: 'Bebas Neue', 'Inter', sans-serif; line-height: 1; letter-spacing: 0.1em; text-align: center;">ROTASI {{ date('Y') }}</h2>
+                            <p style="font-size: 12px; text-transform: uppercase; margin: 8px 0 0 0; color: #94a3b8; font-family: 'Inter', sans-serif; letter-spacing: 0.1em; text-align: center;">Digital ID Card</p>
+                        </div>
+                        
+                        <!-- QR Code -->
+                        <div style="padding: 16px; background-color: #ffffff; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 16px; margin: auto;">
+                            <img src="{{ $qrUrl }}" crossorigin="anonymous" alt="QR Code" style="width: 224px; height: 224px; object-fit: contain; display: block; margin: 0 auto;">
+                        </div>
+                        
+                        <!-- User Info -->
+                        <div style="text-align: center; width: 100%; margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center;">
+                            <h3 style="font-size: 24px; font-weight: bold; margin: 0 0 18px 0; text-transform: uppercase; color: #ffffff; font-family: 'Inter', sans-serif; line-height: 1.2; text-align: center;">{{ $user->name }}</h3>
+                            <!-- Role Badge (Manually padded) -->
+                            <div style="display: inline-block; padding: 0px 13px 13px 13px; font-size: 14px; font-weight: 600; text-transform: uppercase; margin: 0 0 16px 0; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); background-color: rgba(239, 68, 68, 0.15); border-radius: 9999px; font-family: 'Inter', sans-serif; line-height: 1;">
+                                {{ $user->role }}
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; width: 100%; text-align: left; padding: 16px; margin-top: 6px; background-color: rgba(255,255,255,0.05); border-radius: 12px; font-family: 'Inter', sans-serif; box-sizing: border-box;">
+                                <div>
+                                    <p style="font-size: 10px; text-transform: uppercase; margin: 0 0 4px 0; color: #94a3b8; text-align: left;">ID Akun</p>
+                                    <p style="font-size: 14px; font-family: monospace; font-weight: 600; margin: 0; color: #ffffff; text-align: left;">{{ $user->custom_id ?? $user->id }}</p>
+                                </div>
+                                @if($user->nim)
+                                <div style="text-align: right;">
+                                    <p style="font-size: 10px; text-transform: uppercase; margin: 0 0 4px 0; color: #94a3b8; text-align: right;">NIM</p>
+                                    <p style="font-size: 14px; font-family: monospace; font-weight: 600; margin: 0; color: #ffffff; text-align: right;">{{ $user->nim }}</p>
+                                </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
