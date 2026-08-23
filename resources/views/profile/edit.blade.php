@@ -252,7 +252,7 @@
                                 </div>
                                 <div class="flex-1 w-full">
                                     <input type="file" id="profile_photo" name="profile_photo" accept="image/*" @change="handleFileChange" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-primary file:text-primary-foreground file:px-3 file:py-1 file:rounded-sm file:text-xs file:font-medium file:cursor-pointer placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-                                    <p class="text-xs text-muted-foreground mt-1">Format: JPG, JPEG, PNG, HEIF, WEBP, JFIF, SVG, GIF (Maks. 2MB)</p>
+                                    <p class="text-xs text-muted-foreground mt-1">Format: JPG, JPEG, PNG, HEIC, WEBP, JFIF, SVG, GIF (Maks. 2MB)</p>
                                     @error('profile_photo')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
