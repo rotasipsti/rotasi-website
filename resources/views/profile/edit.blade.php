@@ -1,7 +1,77 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div x-data="{ showQrModal: false, showProfileForm: false, showPasswordForm: false }" class="max-w-7xl mx-auto space-y-6">
+<!-- Cropper.js -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<style>
+    /* Nonaktifkan global transition untuk elemen cropper agar dragging tidak delay */
+    .cropper-container * {
+        transition: none !important;
+    }
+</style>
+
+<div x-data="{ 
+    showQrModal: false, 
+    showProfileForm: false, 
+    showPasswordForm: false,
+    showCropModal: false,
+    cropper: null,
+    imageSrc: '',
+    previewUrl: '',
+    handleFileChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.imageSrc = e.target.result;
+                this.showCropModal = true;
+                this.$nextTick(() => {
+                    this.initCropper();
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    },
+    initCropper() {
+        if (this.cropper) {
+            this.cropper.destroy();
+        }
+        const image = document.getElementById('cropper-image');
+        this.cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+        });
+    },
+    cropImage() {
+        if (this.cropper) {
+            this.cropper.getCroppedCanvas({
+                width: 400,
+                height: 400
+            }).toBlob((blob) => {
+                const fileInput = document.getElementById('profile_photo');
+                const fileName = fileInput.files[0]?.name || 'cropped-image.jpg';
+                const file = new File([blob], fileName, { type: 'image/jpeg', lastModified: new Date().getTime() });
+                
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                this.previewUrl = URL.createObjectURL(blob);
+                this.showCropModal = false;
+            }, 'image/jpeg', 0.9);
+        }
+    },
+    cancelCrop() {
+        this.showCropModal = false;
+        document.getElementById('profile_photo').value = '';
+        if (this.cropper) {
+            this.cropper.destroy();
+            this.cropper = null;
+        }
+    }
+}" class="max-w-7xl mx-auto space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
             <h1 class="text-3xl font-bold">Profil Akun</h1>
@@ -139,14 +209,19 @@
                             <label for="profile_photo" class="block text-sm font-medium">Foto Profil</label>
                             <div class="flex items-center gap-4">
                                 <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground overflow-hidden border border-border/50 shrink-0">
-                                    @if($user->profile_photo_path)
-                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->profile_photo_path) }}" alt="{{ $user->name }}" class="h-full w-full object-cover">
-                                    @else
-                                        <i data-lucide="image" class="h-6 w-6"></i>
-                                    @endif
+                                    <template x-if="previewUrl">
+                                        <img :src="previewUrl" class="h-full w-full object-cover">
+                                    </template>
+                                    <template x-if="!previewUrl">
+                                        @if($user->profile_photo_path)
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($user->profile_photo_path) }}" alt="{{ $user->name }}" class="h-full w-full object-cover">
+                                        @else
+                                            <i data-lucide="image" class="h-6 w-6"></i>
+                                        @endif
+                                    </template>
                                 </div>
                                 <div class="flex-1 w-full">
-                                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-primary file:text-primary-foreground file:px-3 file:py-1 file:rounded-sm file:text-xs file:font-medium file:cursor-pointer placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
+                                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*" @change="handleFileChange" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-primary file:text-primary-foreground file:px-3 file:py-1 file:rounded-sm file:text-xs file:font-medium file:cursor-pointer placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
                                     <p class="text-xs text-muted-foreground mt-1">Format: JPG, PNG, GIF (Maks. 2MB)</p>
                                     @error('profile_photo')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -312,5 +387,36 @@
             </div>
         </div>
     @endif
+
+    <!-- Modal Crop Image -->
+    <div x-show="showCropModal" style="display: none;" class="relative z-50" aria-labelledby="crop-modal-title" role="dialog" aria-modal="true">
+        <div x-show="showCropModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+                <div x-show="showCropModal" @click.away="cancelCrop()" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="relative transform overflow-hidden rounded-xl bg-card text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-border/50">
+                    <div class="bg-card px-4 pb-4 pt-5 sm:p-6 sm:pb-4 relative">
+                        <button @click="cancelCrop()" type="button" class="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors rounded-sm opacity-70 ring-offset-background hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
+                            <i data-lucide="x" class="h-4 w-4"></i>
+                        </button>
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg font-semibold leading-6 text-foreground mb-4" id="crop-modal-title">Sesuaikan Foto Profil</h3>
+                            <div class="mt-2 w-full max-h-[60vh] overflow-hidden rounded-lg bg-black/10 flex justify-center items-center">
+                                <img id="cropper-image" :src="imageSrc" class="max-w-full max-h-[60vh] object-contain">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-muted/30 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-border/50">
+                        <button @click="cropImage()" type="button" class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 sm:ml-3 sm:w-auto">
+                            <i data-lucide="crop" class="mr-2 h-4 w-4"></i> Potong & Simpan
+                        </button>
+                        <button @click="cancelCrop()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-background px-3 py-2 text-sm font-semibold text-foreground shadow-sm ring-1 ring-inset ring-border hover:bg-accent sm:mt-0 sm:w-auto transition-colors">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
