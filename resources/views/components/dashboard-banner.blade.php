@@ -28,10 +28,13 @@
                 activeSlide: 0,
                 slides: {{ $banners->count() }},
                 autoPlayInterval: null,
+                direction: 'next',
                 next() {
+                    this.direction = 'next';
                     this.activeSlide = this.activeSlide === this.slides - 1 ? 0 : this.activeSlide + 1;
                 },
                 prev() {
+                    this.direction = 'prev';
                     this.activeSlide = this.activeSlide === 0 ? this.slides - 1 : this.activeSlide - 1;
                 },
                 startAutoPlay() {
@@ -52,15 +55,15 @@
             class="relative w-full rounded-xl overflow-hidden group" style="aspect-ratio: 3/1; max-height: 280px;">
             
             <!-- Slides -->
-            <div class="w-full h-full relative">
+            <div class="w-full h-full relative group/slider" :data-direction="direction">
                 @foreach($banners as $index => $banner)
                     <div x-show="activeSlide === {{ $index }}"
                          x-transition:enter="transition ease-out duration-500"
-                         x-transition:enter-start="opacity-0 translate-x-full"
+                         x-transition:enter-start="opacity-0 group-data-[direction=next]/slider:translate-x-full group-data-[direction=prev]/slider:-translate-x-full"
                          x-transition:enter-end="opacity-100 translate-x-0"
                          x-transition:leave="transition ease-in duration-500 absolute inset-0"
                          x-transition:leave-start="opacity-100 translate-x-0"
-                         x-transition:leave-end="opacity-0 -translate-x-full"
+                         x-transition:leave-end="opacity-0 group-data-[direction=next]/slider:-translate-x-full group-data-[direction=prev]/slider:translate-x-full"
                          class="w-full h-full absolute top-0 left-0">
                         @if($banner->action_url)
                             <a href="{{ $banner->action_url }}" target="_blank" class="block w-full h-full cursor-pointer hover:opacity-95 transition-opacity">
