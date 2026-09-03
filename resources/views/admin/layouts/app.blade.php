@@ -24,7 +24,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     @livewireStyles
 </head>
-<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-16 md:pb-0" x-data="{ sidebarOpen: false }">
+<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-0" x-data="{ sidebarOpen: false }">
     
     <!-- Admin Navbar -->
     @include('admin.components.navbar')
@@ -62,6 +62,9 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Spacer for Mobile Bottom Nav -->
+                <div class="md:hidden w-full" style="height: calc(120px + env(safe-area-inset-bottom));"></div>
             </main>
             
         </div>

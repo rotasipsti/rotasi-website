@@ -688,8 +688,16 @@
 
                         <!-- Visibility Tab -->
                         <div x-show="tab === 'visibility'" style="display: none;">
-                            <div class="flex justify-between items-center mb-6">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                 <h3 class="text-lg font-bold">Pengaturan Visibilitas Halaman Publik</h3>
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="setAllVisibility('true')" class="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1.5 rounded-md text-sm font-semibold transition-colors border border-primary/20 flex items-center gap-1">
+                                        <i data-lucide="eye" class="h-4 w-4"></i> Tampilkan Semua
+                                    </button>
+                                    <button type="button" onclick="setAllVisibility('false')" class="bg-destructive/10 text-destructive hover:bg-destructive/20 px-3 py-1.5 rounded-md text-sm font-semibold transition-colors border border-destructive/20 flex items-center gap-1">
+                                        <i data-lucide="eye-off" class="h-4 w-4"></i> Sembunyikan Semua
+                                    </button>
+                                </div>
                             </div>
                             
                             <form action="{{ route('admin.cms.pagecontent.update') }}" method="POST">
@@ -740,4 +748,13 @@
             </div>
     </div>
 </div>
+
+<script>
+    function setAllVisibility(value) {
+        const selects = document.querySelectorAll('select[name^="page_"][name$="_visible"]');
+        selects.forEach(select => {
+            select.value = value;
+        });
+    }
+</script>
 @endsection
