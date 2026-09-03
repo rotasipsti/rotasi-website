@@ -371,7 +371,7 @@
 
     <!-- Modal QR Code -->
     @if(in_array($user->role, ['panitia', 'acara', 'mentor', 'keamanan']))
-        <div x-show="showQrModal" style="display: none;" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div x-show="showQrModal" style="display: none;" class="relative z-[60]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div x-show="showQrModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"></div>
 
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
