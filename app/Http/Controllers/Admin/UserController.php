@@ -73,4 +73,86 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', $deleted . ' Akun dengan role ' . $request->role . ' berhasil dihapus secara permanen.');
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|string|in:admin,panitia,keamanan,acara,mentor,peserta,savior',
+            'sektor' => 'nullable|string',
+            'nim' => 'nullable|string',
+        ]);
+
+        $prefix = 'USR';
+        $role = $request->role;
+
+        if ($role === 'peserta') {
+            $prefix = 'PST';
+            if ($request->sektor) {
+                $sector = \App\Models\SectorPassword::where('sector_number', $request->sektor)->first();
+                if ($sector) {
+                    $words = explode(' ', $sector->sector_name);
+                    if (count($words) > 1) {
+                        $prefix = strtoupper(substr($words[0], 0, 2) . substr($words[1], 0, 1));
+                    } else {
+                        $prefix = strtoupper(substr($words[0], 0, 3));
+                    }
+                }
+            }
+        } elseif ($role === 'acara') {
+            $prefix = 'ACR';
+        } elseif ($role === 'mentor') {
+            $prefix = 'MNT';
+        } elseif ($role === 'admin') {
+            $prefix = 'ADM';
+        } elseif ($role === 'keamanan') {
+            $prefix = 'KMN';
+        } elseif ($role === 'panitia') {
+            $prefix = 'PNT';
+        }
+
+        $numberPart = '';
+        if ($role === 'peserta') {
+            $sektorNum = $request->sektor ?? 0;
+            $prefixNum = '0' . $sektorNum;
+            $randomLength = 10 - strlen($prefixNum);
+            $randomDigits = '';
+            for ($i = 0; $i < $randomLength; $i++) {
+                $randomDigits .= rand(0, 9);
+            }
+            $numberPart = $prefixNum . $randomDigits;
+        } else {
+            $rolePrefixMap = [
+                'panitia' => '1',
+                'acara' => '2',
+                'mentor' => '3',
+                'keamanan' => '4',
+                'admin' => '8',
+            ];
+            $firstDigit = $rolePrefixMap[$role] ?? '9';
+            $randomDigits = '';
+            for ($i = 0; $i < 9; $i++) {
+                $randomDigits .= rand(0, 9);
+            }
+            $numberPart = $firstDigit . $randomDigits;
+        }
+
+        $customId = $prefix . '-' . $numberPart;
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'nim' => $request->nim,
+            'role' => $role,
+            'is_approved' => true,
+            'sektor' => $request->sektor ?? null,
+            'custom_id' => $customId,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'login_password_hash' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'Akun ' . $user->name . ' berhasil ditambahkan dan langsung disetujui.');
+    }
 }

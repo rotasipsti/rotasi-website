@@ -181,6 +181,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/passwords/{id}', [\App\Http\Controllers\Admin\SectorPasswordController::class, 'destroy'])->name('passwords.destroy');
 
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
         Route::delete('/users/bulk-delete', [\App\Http\Controllers\Admin\UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
         Route::delete('/users/role-delete', [\App\Http\Controllers\Admin\UserController::class, 'destroyByRole'])->name('users.destroy-role');
         Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');

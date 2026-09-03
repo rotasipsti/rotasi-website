@@ -79,12 +79,21 @@ class RegisteredUserController extends Controller
         }
 
         $customId = '';
-        $dateStr = date('Ym');
-        $randStr = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
         $prefix = 'USR';
 
         if ($role === 'peserta') {
             $prefix = 'PST';
+            if ($request->sektor) {
+                $sector = \App\Models\SectorPassword::where('sector_number', $request->sektor)->first();
+                if ($sector) {
+                    $words = explode(' ', $sector->sector_name);
+                    if (count($words) > 1) {
+                        $prefix = strtoupper(substr($words[0], 0, 2) . substr($words[1], 0, 1));
+                    } else {
+                        $prefix = strtoupper(substr($words[0], 0, 3));
+                    }
+                }
+            }
         } elseif ($role === 'acara') {
             $prefix = 'ACR';
         } elseif ($role === 'mentor') {
@@ -97,7 +106,33 @@ class RegisteredUserController extends Controller
             $prefix = 'PNT';
         }
 
-        $customId = $prefix . '-' . $dateStr . $randStr;
+        $numberPart = '';
+        if ($role === 'peserta') {
+            $sektorNum = $request->sektor ?? 0;
+            $prefixNum = '0' . $sektorNum;
+            $randomLength = 10 - strlen($prefixNum);
+            $randomDigits = '';
+            for ($i = 0; $i < $randomLength; $i++) {
+                $randomDigits .= rand(0, 9);
+            }
+            $numberPart = $prefixNum . $randomDigits;
+        } else {
+            $rolePrefixMap = [
+                'panitia' => '1',
+                'acara' => '2',
+                'mentor' => '3',
+                'keamanan' => '4',
+                'admin' => '8',
+            ];
+            $firstDigit = $rolePrefixMap[$role] ?? '9';
+            $randomDigits = '';
+            for ($i = 0; $i < 9; $i++) {
+                $randomDigits .= rand(0, 9);
+            }
+            $numberPart = $firstDigit . $randomDigits;
+        }
+
+        $customId = $prefix . '-' . $numberPart;
 
         $isApproved = in_array($role, ['admin']);
 
