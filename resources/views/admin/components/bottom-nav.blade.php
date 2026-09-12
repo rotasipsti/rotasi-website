@@ -148,6 +148,12 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Submission</span>
                  </a>
+                 <a wire:navigate href="{{ route('mentor.tasks') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('mentor.tasks') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('mentor.tasks') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="file-text" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Tugas</span>
+                 </a>
                  <a wire:navigate href="{{ route('mentor.exit.history') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('mentor.exit.history') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('mentor.exit.history') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="history" class="h-5 w-5"></i>

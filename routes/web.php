@@ -105,9 +105,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
     Route::post('/dashboard/select-sector', [DashboardController::class, 'storeSector'])->name('peserta.select-sector');
-    Route::get('/dashboard/documents', [DashboardController::class, 'sharedDocuments'])->name('shared.downloads');
-
     Route::middleware(\App\Http\Middleware\EnsurePesertaApproved::class)->group(function () {
+        Route::get('/dashboard/documents', [DashboardController::class, 'sharedDocuments'])->name('shared.downloads');
+        
         Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
         Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
         Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/divisi-mentor/peserta', [DashboardController::class, 'mentorPeserta'])->name('mentor.peserta');
     Route::get('/accounts/divisi-mentor/approvals', [DashboardController::class, 'mentorApprovals'])->name('mentor.approvals');
     Route::get('/accounts/divisi-mentor/submissions', [DashboardController::class, 'mentorSubmissions'])->name('mentor.submissions');
+    Route::get('/accounts/divisi-mentor/tasks', [DashboardController::class, 'mentorTasks'])->name('mentor.tasks');
     Route::get('/accounts/divisi-mentor/profile', [ProfileController::class, 'edit'])->name('mentor.profile.edit');
     Route::patch('/accounts/divisi-mentor/profile', [ProfileController::class, 'update'])->name('mentor.profile.update');
     Route::delete('/accounts/divisi-mentor/profile', [ProfileController::class, 'destroy'])->name('mentor.profile.destroy');

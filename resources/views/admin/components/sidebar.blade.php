@@ -62,6 +62,10 @@
                     <i data-lucide="check-square" class="mr-3 h-5 w-5"></i>
                     Submission Sektor
                 </a>
+                <a wire:navigate href="{{ route('mentor.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
+                    Tugas Sektor
+                </a>
                 <a wire:navigate href="{{ route('mentor.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('mentor.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin

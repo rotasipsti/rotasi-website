@@ -16,6 +16,9 @@
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="text-sm text-muted-foreground">{{ $sub->submitted_at->format('d M Y, H:i') }}</span>
+                                    @if($sub->submitted_at > $sub->task->due_date)
+                                        <span class="inline-flex items-center rounded-full border border-red-200 bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">Terlambat</span>
+                                    @endif
                                 </div>
                                 
                                 <h3 class="font-semibold text-lg">{{ $sub->task->title }}</h3>

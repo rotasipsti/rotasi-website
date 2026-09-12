@@ -230,6 +230,21 @@ class DashboardController extends Controller
         return view('mentor.submissions', $data);
     }
     
+    public function mentorTasks()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'mentor') abort(403);
+        
+        $data = [];
+        $data['tasks'] = Task::where('sector', $user->sektor)
+                            ->orWhere('sector', 0)
+                            ->orWhere('task_type', 'angkatan')
+                            ->orderBy('due_date', 'asc')
+                            ->get();
+                            
+        return view('mentor.tasks', $data);
+    }
+    
     public function acaraDashboard()
     {
         $user = auth()->user();
