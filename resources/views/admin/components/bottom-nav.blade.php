@@ -116,6 +116,12 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Pengumpulan</span>
                  </a>
+                 <a wire:navigate href="{{ route('admin.exit.history') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.exit.history') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.exit.history') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="history" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Izin</span>
+                 </a>
                  <a wire:navigate href="{{ route('admin.system-info.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.system-info.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.system-info.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="server" class="h-5 w-5"></i>

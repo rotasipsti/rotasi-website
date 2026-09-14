@@ -15,7 +15,7 @@
             <h3 class="font-semibold text-lg flex items-center gap-2">
                 <i data-lucide="history" class="h-5 w-5 text-primary"></i> {{ $title ?? 'Riwayat Izin Keluar Anda' }}
             </h3>
-            @if($user->role === 'keamanan' && isset($exit_permissions) && $exit_permissions->count() > 0)
+            @if(in_array($user->role, ['keamanan', 'admin']) && isset($exit_permissions) && $exit_permissions->count() > 0)
             <form action="{{ route('keamanan.exit.bulk-destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat izin keluar? Tindakan ini tidak dapat dibatalkan.');">
                 @csrf
                 @method('DELETE')
@@ -33,12 +33,12 @@
                         <div class="p-4 space-y-3 hover:bg-muted/30 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    @if($user->role === 'keamanan')
+                                    @if(in_array($user->role, ['keamanan', 'admin']))
                                         <p class="font-semibold text-sm">{{ $log->user->name }} <span class="text-xs font-normal text-muted-foreground">({{ $log->user->custom_id ?? $log->user->id }})</span></p>
                                     @endif
                                     <p class="text-xs text-muted-foreground flex items-center gap-1 mt-1"><i data-lucide="clock" class="h-3 w-3"></i> {{ $log->exit_time->format('d M Y, H:i') }} WIB</p>
                                 </div>
-                                @if($user->role === 'keamanan')
+                                @if(in_array($user->role, ['keamanan', 'admin']))
                                 <form action="{{ route('keamanan.exit.destroy', $log->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus riwayat ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -61,12 +61,12 @@
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border/50">
                             <tr>
-                                @if($user->role === 'keamanan')
+                                @if(in_array($user->role, ['keamanan', 'admin']))
                                     <th class="px-6 py-4 font-medium">Nama</th>
                                 @endif
                                 <th class="px-6 py-4 font-medium">Tanggal & Waktu Keluar</th>
                                 <th class="px-6 py-4 font-medium">Alasan / Keterangan</th>
-                                @if($user->role === 'keamanan')
+                                @if(in_array($user->role, ['keamanan', 'admin']))
                                 <th class="px-6 py-4 font-medium text-right">Aksi</th>
                                 @endif
                             </tr>
@@ -74,7 +74,7 @@
                         <tbody class="divide-y divide-border/50">
                             @foreach($exit_permissions as $log)
                                 <tr class="hover:bg-muted/30 transition-colors">
-                                    @if($user->role === 'keamanan')
+                                    @if(in_array($user->role, ['keamanan', 'admin']))
                                         <td class="px-6 py-4">
                                             <div class="font-medium">{{ $log->user->name }}</div>
                                             <div class="text-xs text-muted-foreground">{{ $log->user->custom_id ?? $log->user->id }} • {{ ucfirst($log->user->role) }}</div>
@@ -87,7 +87,7 @@
                                     <td class="px-6 py-4 max-w-xs break-words">
                                         {{ $log->reason }}
                                     </td>
-                                    @if($user->role === 'keamanan')
+                                    @if(in_array($user->role, ['keamanan', 'admin']))
                                     <td class="px-6 py-4 text-right">
                                         <form action="{{ route('keamanan.exit.destroy', $log->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus riwayat ini?');">
                                             @csrf

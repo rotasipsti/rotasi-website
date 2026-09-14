@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/exit-history', [\App\Http\Controllers\ExitPermissionController::class, 'history'])->name('exit.history');
         
         Route::get('/system-info', [\App\Http\Controllers\Admin\SystemInfoController::class, 'index'])->name('system-info.index');
         Route::get('/submissions', [DashboardController::class, 'adminSubmissions'])->name('submissions');

@@ -17,7 +17,7 @@ class ExitPermissionController extends Controller
     {
         $user = auth()->user();
         
-        if ($user->role === 'keamanan') {
+        if (in_array($user->role, ['keamanan', 'admin'])) {
             $exit_permissions = ExitPermission::with('user')
                                 ->orderBy('exit_time', 'desc')
                                 ->paginate(15);

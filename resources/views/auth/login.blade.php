@@ -46,11 +46,16 @@
                             </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
-                        <div class="flex items-center space-x-2 mt-5">
-                            <input type="checkbox" id="remember" name="remember" class="h-4 w-4 rounded border-input bg-background text-primary shadow focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
-                            <label for="remember" class="text-sm text-muted-foreground cursor-pointer select-none">
-                                Ingat saya dalam 7 hari
-                            </label>
+                        <div class="flex items-center justify-between mt-5">
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" id="remember" name="remember" class="h-4 w-4 rounded border-input bg-background text-primary shadow focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
+                                <label for="remember" class="text-sm text-muted-foreground cursor-pointer select-none">
+                                    Ingat saya dalam 7 hari
+                                </label>
+                            </div>
+                            <a href="{{ route('password.request') }}" class="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
+                                Lupa kata sandi?
+                            </a>
                         </div>
                     </div>
 
