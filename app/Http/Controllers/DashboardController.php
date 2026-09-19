@@ -143,13 +143,13 @@ class DashboardController extends Controller
         if ($user->role !== 'mentor') abort(403);
         
         $data = [];
-        $peserta_list = User::whereIn('role', ['peserta', 'savior'])
+        $peserta_list = User::where('role', 'peserta')
                             ->where('sektor', $user->sektor)
                             ->where('is_approved', true)
                             ->get();
         $data['peserta_count'] = count($peserta_list);
 
-        $data['pending_peserta_count'] = User::whereIn('role', ['peserta', 'savior'])
+        $data['pending_peserta_count'] = User::where('role', 'peserta')
                             ->where('sektor', $user->sektor)
                             ->where('is_approved', false)
                             ->count();
@@ -180,7 +180,7 @@ class DashboardController extends Controller
         if ($user->role !== 'mentor') abort(403);
         
         $data = [];
-        $data['peserta_list'] = User::whereIn('role', ['peserta', 'savior'])
+        $data['peserta_list'] = User::where('role', 'peserta')
                             ->where('sektor', $user->sektor)
                             ->where('is_approved', true)
                             ->get();
@@ -202,7 +202,7 @@ class DashboardController extends Controller
         if ($user->role !== 'mentor') abort(403);
         
         $data = [];
-        $data['pending_peserta'] = User::whereIn('role', ['peserta', 'savior'])
+        $data['pending_peserta'] = User::where('role', 'peserta')
                             ->where('sektor', $user->sektor)
                             ->where('is_approved', false)
                             ->get();
@@ -216,7 +216,7 @@ class DashboardController extends Controller
         if ($user->role !== 'mentor') abort(403);
         
         $data = [];
-        $peserta_list = User::whereIn('role', ['peserta', 'savior'])
+        $peserta_list = User::where('role', 'peserta')
                             ->where('sektor', $user->sektor)
                             ->where('is_approved', true)
                             ->get();

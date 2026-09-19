@@ -11,7 +11,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $roles = User::select('role')->distinct()->pluck('role');
-        $activeRole = $request->input('role', $roles->contains('savior') ? 'savior' : ($roles->first() ?? 'savior'));
+        $activeRole = $request->input('role', $roles->contains('peserta') ? 'peserta' : ($roles->first() ?? 'peserta'));
 
         $query = User::where('role', $activeRole);
         
@@ -80,7 +80,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin,panitia,keamanan,acara,mentor,peserta,savior',
+            'role' => 'required|string|in:admin,panitia,keamanan,acara,mentor,peserta',
             'sektor' => 'nullable|string',
             'nim' => 'nullable|string',
         ]);
@@ -125,7 +125,7 @@ class UserController extends Controller
             $numberPart = $prefixNum . $randomDigits;
         } else {
             $rolePrefixMap = [
-                'panitia' => '1',
+                'panitia' => '5',
                 'acara' => '2',
                 'mentor' => '3',
                 'keamanan' => '4',

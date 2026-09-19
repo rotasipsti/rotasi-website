@@ -204,7 +204,6 @@
                                         <option value="keamanan" {{ $activeRole === 'keamanan' ? 'selected' : '' }}>Keamanan</option>
                                         <option value="acara" {{ $activeRole === 'acara' ? 'selected' : '' }}>Acara</option>
                                         <option value="mentor" {{ $activeRole === 'mentor' ? 'selected' : '' }}>Mentor</option>
-                                        <option value="savior" {{ $activeRole === 'savior' ? 'selected' : '' }}>Savior</option>
                                     </select>
                                 </div>
                                 <div>

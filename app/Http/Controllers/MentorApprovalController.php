@@ -12,8 +12,8 @@ class MentorApprovalController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // Pastikan akun yang diapprove adalah role peserta/savior dan dari sektor yang sama
-        if (!in_array($user->role, ['peserta', 'savior']) || $user->sektor != auth()->user()->sektor) {
+        // Pastikan akun yang diapprove adalah role peserta dan dari sektor yang sama
+        if ($user->role !== 'peserta' || $user->sektor != auth()->user()->sektor) {
             abort(403, 'Anda tidak berhak menyetujui akun dari sektor lain.');
         }
 
@@ -27,8 +27,8 @@ class MentorApprovalController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // Pastikan akun yang direject adalah role peserta/savior dan dari sektor yang sama
-        if (!in_array($user->role, ['peserta', 'savior']) || $user->sektor != auth()->user()->sektor) {
+        // Pastikan akun yang direject adalah role peserta dan dari sektor yang sama
+        if ($user->role !== 'peserta' || $user->sektor != auth()->user()->sektor) {
             abort(403, 'Anda tidak berhak menolak akun dari sektor lain.');
         }
 

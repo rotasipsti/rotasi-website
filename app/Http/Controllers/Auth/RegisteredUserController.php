@@ -118,7 +118,7 @@ class RegisteredUserController extends Controller
             $numberPart = $prefixNum . $randomDigits;
         } else {
             $rolePrefixMap = [
-                'panitia' => '1',
+                'panitia' => '5',
                 'acara' => '2',
                 'mentor' => '3',
                 'keamanan' => '4',
