@@ -17,6 +17,9 @@
     showQrModal: false, 
     showProfileForm: false, 
     showPasswordForm: false,
+    showCurrentPassword: false,
+    showNewPassword: false,
+    showConfirmPassword: false,
     showCropModal: false,
     cropper: null,
     imageSrc: '',
@@ -324,7 +327,11 @@
                                 <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                                     <i data-lucide="key" class="h-4 w-4"></i>
                                 </div>
-                                <input type="password" id="update_password_current_password" name="current_password" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="current-password">
+                                <input :type="showCurrentPassword ? 'text' : 'password'" id="update_password_current_password" name="current_password" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-10 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="current-password">
+                                <button type="button" @click="showCurrentPassword = !showCurrentPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none transition-colors">
+                                    <i data-lucide="eye" class="h-4 w-4" x-show="!showCurrentPassword"></i>
+                                    <i data-lucide="eye-off" class="h-4 w-4" x-show="showCurrentPassword" style="display: none;"></i>
+                                </button>
                             </div>
                             @error('current_password', 'updatePassword')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -338,7 +345,11 @@
                                     <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                                         <i data-lucide="lock" class="h-4 w-4"></i>
                                     </div>
-                                    <input type="password" id="update_password_password" name="password" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="new-password">
+                                    <input :type="showNewPassword ? 'text' : 'password'" id="update_password_password" name="password" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-10 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="new-password">
+                                    <button type="button" @click="showNewPassword = !showNewPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none transition-colors">
+                                        <i data-lucide="eye" class="h-4 w-4" x-show="!showNewPassword"></i>
+                                        <i data-lucide="eye-off" class="h-4 w-4" x-show="showNewPassword" style="display: none;"></i>
+                                    </button>
                                 </div>
                                 @error('password', 'updatePassword')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -351,7 +362,11 @@
                                     <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                                         <i data-lucide="check-circle-2" class="h-4 w-4"></i>
                                     </div>
-                                    <input type="password" id="update_password_password_confirmation" name="password_confirmation" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="new-password">
+                                    <input :type="showConfirmPassword ? 'text' : 'password'" id="update_password_password_confirmation" name="password_confirmation" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-10 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" autocomplete="new-password">
+                                    <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none transition-colors">
+                                        <i data-lucide="eye" class="h-4 w-4" x-show="!showConfirmPassword"></i>
+                                        <i data-lucide="eye-off" class="h-4 w-4" x-show="showConfirmPassword" style="display: none;"></i>
+                                    </button>
                                 </div>
                                 @error('password_confirmation', 'updatePassword')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

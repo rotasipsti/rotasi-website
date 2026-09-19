@@ -67,7 +67,11 @@
                                             <i data-lucide="external-link" class="mr-2 h-4 w-4"></i> Buka Tautan
                                         </a>
                                     @elseif($task->attachment_type === 'file')
-                                        <a href="{{ asset('storage/' . $task->attachment_url) }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                        @php
+                                            $filename = basename($task->attachment_url);
+                                            $originalFilename = str_contains($filename, '_') ? substr($filename, strpos($filename, '_') + 1) : $filename;
+                                        @endphp
+                                        <a href="{{ asset('storage/' . $task->attachment_url) }}" download="{{ $originalFilename }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
                                             <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh File
                                         </a>
                                     @endif

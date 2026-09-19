@@ -25,6 +25,31 @@
                     </div>
                 @endif
                 @if(in_array($user->role, ['keamanan', 'admin']) && isset($exit_permissions) && $exit_permissions->count() > 0)
+                <div x-data="{ openExport: false }" class="relative w-full sm:w-auto">
+                    <button @click="openExport = !openExport" @click.away="openExport = false" class="w-full sm:w-auto inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground px-3 py-2 text-sm font-semibold transition-colors shadow-sm">
+                        <i data-lucide="download" class="h-4 w-4 mr-2"></i> Export Data
+                        <i data-lucide="chevron-down" class="h-4 w-4 ml-2 transition-transform duration-200" :class="openExport ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="openExport" style="display: none;" 
+                        x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="transform opacity-0 scale-95"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="transform opacity-100 scale-100"
+                        x-transition:leave-end="transform opacity-0 scale-95"
+                        class="absolute right-0 sm:left-auto left-0 mt-2 w-full sm:w-48 rounded-md border border-border/50 bg-popover text-popover-foreground shadow-md z-50 overflow-hidden p-1">
+                        <a href="{{ route('keamanan.exit.export.excel') }}" class="flex items-center px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm transition-colors">
+                            <i data-lucide="file-spreadsheet" class="h-4 w-4 mr-2 text-green-600"></i> Export Excel (.xlsx)
+                        </a>
+                        <a href="{{ route('keamanan.exit.export.csv') }}" class="flex items-center px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm transition-colors">
+                            <i data-lucide="file-text" class="h-4 w-4 mr-2 text-blue-600"></i> Export CSV (.csv)
+                        </a>
+                        <a href="{{ route('keamanan.exit.export.pdf') }}" target="_blank" class="flex items-center px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm transition-colors">
+                            <i data-lucide="file-text" class="h-4 w-4 mr-2 text-red-600"></i> Export PDF (.pdf)
+                        </a>
+                    </div>
+                </div>
+
                 <form action="{{ route('keamanan.exit.bulk-destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat izin keluar? Tindakan ini tidak dapat dibatalkan.');" class="w-full sm:w-auto">
                     @csrf
                     @method('DELETE')

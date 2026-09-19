@@ -35,7 +35,7 @@
                                     <i data-lucide="file-archive" class="h-4 w-4 flex-shrink-0 text-muted-foreground"></i>
                                     <span class="text-sm truncate">{{ $sub->file_name }}</span>
                                 </div>
-                                <a href="{{ $sub->file_url }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
+                                <a href="{{ $sub->file_url }}" download="{{ $sub->file_name }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
                                     <i data-lucide="download" class="mr-2 h-4 w-4"></i> Download
                                 </a>
                             </div>

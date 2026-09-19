@@ -71,7 +71,7 @@
             this.attachment_type = task.attachment_type || 'none';
             this.attachment_link = task.attachment_type === 'link' ? task.attachment_url : '';
             this.attachment_url = task.attachment_url || '';
-            this.fileName = task.attachment_type === 'file' && task.attachment_url ? task.attachment_url.split('/').pop() : '';
+            this.fileName = task.attachment_type === 'file' && task.attachment_url ? task.attachment_url.split('/').pop().replace(/^[0-9]+_/, '') : '';
             this.dialogOpen = true;
         },
 
@@ -352,7 +352,7 @@
                                         </label>
                                     </div>
                                     <template x-if="isEdit && attachment_type === 'file' && attachment_url && !fileName">
-                                        <p class="text-xs text-muted-foreground mt-2">File saat ini: <span x-text="attachment_url.split('/').pop()" class="font-medium"></span>. Mengunggah file baru akan menggantikan file ini.</p>
+                                        <p class="text-xs text-muted-foreground mt-2">File saat ini: <span x-text="attachment_url.split('/').pop().replace(/^[0-9]+_/, '')" class="font-medium"></span>. Mengunggah file baru akan menggantikan file ini.</p>
                                     </template>
                                 </div>
                             </div>

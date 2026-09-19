@@ -160,6 +160,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/accounts/divisi-keamanan/exit-permissions', [App\Http\Controllers\ExitPermissionController::class, 'store'])->name('keamanan.exit.store');
     Route::delete('/accounts/divisi-keamanan/exit-permissions/bulk-delete', [App\Http\Controllers\ExitPermissionController::class, 'bulkDestroy'])->name('keamanan.exit.bulk-destroy');
     Route::delete('/accounts/divisi-keamanan/exit-permissions/{id}', [App\Http\Controllers\ExitPermissionController::class, 'destroy'])->name('keamanan.exit.destroy');
+    Route::get('/accounts/divisi-keamanan/exit-permissions/export/excel', [App\Http\Controllers\ExitPermissionController::class, 'exportExcel'])->name('keamanan.exit.export.excel');
+    Route::get('/accounts/divisi-keamanan/exit-permissions/export/csv', [App\Http\Controllers\ExitPermissionController::class, 'exportCsv'])->name('keamanan.exit.export.csv');
+    Route::get('/accounts/divisi-keamanan/exit-permissions/export/pdf', [App\Http\Controllers\ExitPermissionController::class, 'exportPdf'])->name('keamanan.exit.export.pdf');
     Route::get('/accounts/divisi-keamanan/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('keamanan.exit.history');
 
     // Panitia Routes

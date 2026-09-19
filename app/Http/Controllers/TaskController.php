@@ -28,7 +28,8 @@ class TaskController extends Controller
             $attachmentUrl = $request->attachment_link;
         } elseif ($attachmentType === 'file' && $request->hasFile('attachment_file')) {
             $file = $request->file('attachment_file');
-            $path = $file->store('tasks_attachments', 'public');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('tasks_attachments', $filename, 'public');
             $attachmentUrl = $path;
         }
 
@@ -81,7 +82,8 @@ class TaskController extends Controller
             $attachmentUrl = $request->attachment_link;
         } elseif ($attachmentType === 'file' && $request->hasFile('attachment_file')) {
             $file = $request->file('attachment_file');
-            $path = $file->store('tasks_attachments', 'public');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('tasks_attachments', $filename, 'public');
             $attachmentUrl = $path;
         } elseif ($attachmentType === 'none') {
             $attachmentUrl = null;

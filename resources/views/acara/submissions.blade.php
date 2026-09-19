@@ -54,7 +54,7 @@
                             <td class="px-6 py-4 text-right">
                                 @if($sub->file_url)
                                     <a href="{{ $sub->file_url }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
-                                        <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh
+                                        <i data-lucide="eye" class="mr-2 h-4 w-4"></i> Lihat
                                     </a>
                                 @else
                                     <span class="text-xs text-muted-foreground italic">Tidak ada file</span>
