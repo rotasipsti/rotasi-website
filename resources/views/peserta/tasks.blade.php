@@ -58,6 +58,21 @@
                                     <i data-lucide="chevron-down" class="h-3 w-3 transition-transform duration-300" :class="expanded ? 'rotate-180' : ''"></i>
                                 </button>
                             </div>
+
+                            @if($task->attachment_type)
+                                <div class="mb-4">
+                                    <h4 class="text-xs font-semibold text-muted-foreground uppercase mb-2">Lampiran Tugas</h4>
+                                    @if($task->attachment_type === 'link')
+                                        <a href="{{ $task->attachment_url }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                            <i data-lucide="external-link" class="mr-2 h-4 w-4"></i> Buka Tautan
+                                        </a>
+                                    @elseif($task->attachment_type === 'file')
+                                        <a href="{{ asset('storage/' . $task->attachment_url) }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                            <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh File
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
                             
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t pt-4">
                                 <div class="flex items-center gap-2 text-sm text-muted-foreground">
@@ -69,13 +84,13 @@
                                     @endif
                                 </div>
                                 
-                                <div>
+                                <div class="w-full sm:w-auto">
                                     @if($status === 'not_submitted')
-                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
+                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
                                             <i data-lucide="upload" class="mr-2 h-4 w-4"></i> Upload Tugas
                                         </button>
                                     @else
-                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
                                             <i data-lucide="edit" class="mr-2 h-4 w-4"></i> Edit Tugas
                                         </button>
                                     @endif

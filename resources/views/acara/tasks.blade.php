@@ -18,6 +18,14 @@
         title: '',
         description: '',
         due_date: '',
+        attachment_type: 'none',
+        attachment_link: '',
+        attachment_url: '',
+        isDragging: false,
+        fileName: '',
+        isUploading: false,
+        uploadProgress: 0,
+        errorMessage: '',
         selectionMode: false,
         selectedTasks: [],
         selectAll: false,
@@ -45,6 +53,10 @@
             this.task_type = 'individu';
             this.sector = '0';
             this.due_date = '';
+            this.attachment_type = 'none';
+            this.attachment_link = '';
+            this.attachment_url = '';
+            this.fileName = '';
             this.dialogOpen = true;
         },
         
@@ -56,7 +68,54 @@
             this.task_type = task.task_type;
             this.sector = task.sector;
             this.due_date = task.due_date_formatted;
+            this.attachment_type = task.attachment_type || 'none';
+            this.attachment_link = task.attachment_type === 'link' ? task.attachment_url : '';
+            this.attachment_url = task.attachment_url || '';
+            this.fileName = task.attachment_type === 'file' && task.attachment_url ? task.attachment_url.split('/').pop() : '';
             this.dialogOpen = true;
+        },
+
+        submitForm(e) {
+            this.isUploading = true;
+            this.errorMessage = '';
+            this.uploadProgress = 0;
+            
+            let formData = new FormData(e.target);
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', e.target.action);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+                }
+            });
+            
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    this.uploadProgress = 100;
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
+                } else {
+                    this.isUploading = false;
+                    this.uploadProgress = 0;
+                    try {
+                        let res = JSON.parse(xhr.responseText);
+                        this.errorMessage = res.message || 'Terjadi kesalahan saat menyimpan.';
+                    } catch(err) {
+                        this.errorMessage = 'Terjadi kesalahan pada server.';
+                    }
+                }
+            };
+            
+            xhr.onerror = () => {
+                this.isUploading = false;
+                this.uploadProgress = 0;
+                this.errorMessage = 'Koneksi terputus. Silakan coba lagi.';
+            };
+            
+            xhr.send(formData);
         }
     }">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -154,7 +213,9 @@
                                             'description' => $task->description,
                                             'task_type' => $task->task_type,
                                             'sector' => $task->sector,
-                                            'due_date_formatted' => $task->due_date->format('Y-m-d\TH:i')
+                                            'due_date_formatted' => $task->due_date->format('Y-m-d\TH:i'),
+                                            'attachment_type' => $task->attachment_type,
+                                            'attachment_url' => $task->attachment_url
                                         ];
                                     @endphp
                                     <button type="button" @click='openEdit(@json($taskData))' class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent h-9 px-3">
@@ -193,7 +254,12 @@
                 <h2 class="text-xl font-bold mb-1" x-text="isEdit ? 'Edit Tugas' : 'Buat Tugas Baru'"></h2>
                 <p class="text-sm text-muted-foreground mb-6" x-text="isEdit ? 'Perbarui informasi tugas yang sudah ada.' : 'Tambahkan tugas baru untuk peserta ROTASI.'"></p>
                 
-                <form :action="isEdit ? '{{ url('tasks') }}/' + taskId : '{{ route('tasks.store') }}'" method="POST">
+                <div x-show="errorMessage" style="display: none;" class="mb-4 p-3 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+                    <i data-lucide="alert-circle" class="h-4 w-4 mt-0.5 shrink-0"></i>
+                    <span x-text="errorMessage"></span>
+                </div>
+
+                <form :action="isEdit ? '{{ url('tasks') }}/' + taskId : '{{ route('tasks.store') }}'" method="POST" enctype="multipart/form-data" @submit.prevent="submitForm">
                     @csrf
                     <template x-if="isEdit">
                         <input type="hidden" name="_method" value="PUT">
@@ -234,12 +300,74 @@
                             <textarea name="description" x-model="description" required class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 min-h-32" placeholder="Jelaskan detail tugas, format pengumpulan, dan lain-lain."></textarea>
                         </div>
                         
+                        <div class="border-t border-border/50 pt-4 mt-2">
+                            <h3 class="text-sm font-semibold mb-3">Lampiran File (Opsional)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm font-medium">Jenis Lampiran</label>
+                                    <select name="attachment_type" x-model="attachment_type" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1">
+                                        <option value="none">Tidak ada</option>
+                                        <option value="link">Tautan (URL)</option>
+                                        <option value="file">Unggah File</option>
+                                    </select>
+                                </div>
+                                
+                                <div x-show="attachment_type === 'link'" style="display: none;">
+                                    <label class="text-sm font-medium">URL Tautan</label>
+                                    <input type="url" name="attachment_link" x-model="attachment_link" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1" placeholder="https://contoh.com/materi">
+                                </div>
+                                
+                                <div x-show="attachment_type === 'file'" style="display: none;">
+                                    <label class="text-sm font-medium">Unggah File (Maks 50MB)</label>
+                                    <div class="mt-2 w-full">
+                                        <label for="attachment_file" 
+                                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors"
+                                            :class="isDragging ? 'border-primary bg-primary/5' : 'border-border/50 bg-muted/30 hover:bg-muted/50'"
+                                            @dragover.prevent="isDragging = true"
+                                            @dragleave.prevent="isDragging = false"
+                                            @drop.prevent="isDragging = false; const files = $event.dataTransfer.files; if(files.length > 0) { $refs.fileInput.files = files; fileName = files[0].name; }">
+                                            
+                                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4" x-show="!isUploading">
+                                                <i data-lucide="upload-cloud" class="w-8 h-8 mb-3 transition-colors" :class="isDragging ? 'text-primary' : 'text-muted-foreground'"></i>
+                                                <p class="mb-1 text-sm text-muted-foreground" x-show="!fileName"><span class="font-semibold">Klik untuk upload</span> atau tarik file ke sini</p>
+                                                <p class="text-xs text-muted-foreground" x-show="!fileName">Semua jenis file didukung</p>
+                                                <p class="text-sm font-medium text-primary break-all" x-show="fileName" x-text="fileName"></p>
+                                            </div>
+
+                                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4 w-full h-full" x-show="isUploading" style="display: none;">
+                                                <div class="w-full max-w-[200px] sm:max-w-[250px] space-y-3 flex flex-col items-center">
+                                                    <!-- Percentage Text -->
+                                                    <div class="text-2xl sm:text-3xl font-bold tracking-widest text-foreground" x-text="uploadProgress + '%'"></div>
+                                                    
+                                                    <!-- Progress Bar Container -->
+                                                    <div class="w-full h-5 sm:h-6 border-[3px] border-foreground rounded-full p-[2px] bg-transparent flex items-center">
+                                                        <div class="h-full bg-foreground rounded-full transition-all duration-300 ease-out" :style="`width: ${uploadProgress}%`"></div>
+                                                    </div>
+                                                    
+                                                    <p class="text-[10px] sm:text-xs text-muted-foreground truncate w-full" x-text="fileName"></p>
+                                                </div>
+                                            </div>
+                                            
+                                            <input id="attachment_file" x-ref="fileInput" name="attachment_file" type="file" class="hidden" @change="fileName = $event.target.files.length > 0 ? $event.target.files[0].name : ''" />
+                                        </label>
+                                    </div>
+                                    <template x-if="isEdit && attachment_type === 'file' && attachment_url && !fileName">
+                                        <p class="text-xs text-muted-foreground mt-2">File saat ini: <span x-text="attachment_url.split('/').pop()" class="font-medium"></span>. Mengunggah file baru akan menggantikan file ini.</p>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="pt-4 flex justify-end gap-2">
-                            <button type="button" @click="dialogOpen = false" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent h-10 px-4">
+                            <button type="button" @click="dialogOpen = false" :disabled="isUploading" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent h-10 px-4 disabled:opacity-50">
                                 Batal
                             </button>
-                            <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6">
-                                <span x-text="isEdit ? 'Simpan Perubahan' : 'Terbitkan Tugas'"></span>
+                            <button type="submit" :disabled="isUploading" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 disabled:opacity-50 min-w-[140px]">
+                                <span x-show="!isUploading" x-text="isEdit ? 'Simpan Perubahan' : 'Terbitkan Tugas'"></span>
+                                <span x-show="isUploading" class="flex items-center gap-2" style="display: none;">
+                                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    Menyimpan...
+                                </span>
                             </button>
                         </div>
                     </div>
