@@ -125,8 +125,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/dashboard/profile', [ProfileController::class, 'update'])->name('peserta.profile.update');
         Route::delete('/dashboard/profile', [ProfileController::class, 'destroy'])->name('peserta.profile.destroy');
     });
-
     
+    // Exit Permissions (General Authenticated)
+    Route::post('/exit-permissions/confirm', [App\Http\Controllers\ExitPermissionController::class, 'confirmReturn'])->name('exit.confirm');
+
     // Mentor Routes
     Route::get('/accounts/divisi-mentor/dashboard', [DashboardController::class, 'mentorDashboard'])->name('dashboard.mentor');
     Route::get('/accounts/divisi-mentor/peserta', [DashboardController::class, 'mentorPeserta'])->name('mentor.peserta');

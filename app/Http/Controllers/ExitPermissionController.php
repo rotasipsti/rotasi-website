@@ -87,4 +87,24 @@ class ExitPermissionController extends Controller
 
         return redirect()->back()->with('success', 'Riwayat izin keluar berhasil dihapus.');
     }
+
+    public function confirmReturn(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $exit_permission = ExitPermission::where('id', $request->token)
+                            ->where('user_id', auth()->id())
+                            ->whereNull('return_time')
+                            ->first();
+
+        if (!$exit_permission) {
+            return response()->json(['success' => false, 'message' => 'Data izin tidak valid atau sudah diselesaikan.']);
+        }
+
+        $exit_permission->update(['return_time' => now()]);
+
+        return response()->json(['success' => true, 'message' => 'Konfirmasi kembali berhasil.']);
+    }
 }
