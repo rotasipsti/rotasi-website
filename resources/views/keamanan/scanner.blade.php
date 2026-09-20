@@ -147,12 +147,9 @@
 
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
-                // Gunakan kamera pertama (biasanya kamera belakang di HP, atau webcam utama di PC)
-                let cameraId = devices[0].id;
-                
-                // Mulai pemindai secara otomatis
+                // Mulai pemindai secara otomatis dengan preferensi kamera belakang
                 html5QrCode.start(
-                    cameraId, 
+                    { facingMode: "environment" }, 
                     {
                         fps: 10,
                         qrbox: { width: 250, height: 250 }
