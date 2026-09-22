@@ -178,6 +178,7 @@ Route::middleware('auth')->group(function () {
     // Stakeholder Routes
     Route::prefix('accounts/stakeholder')->name('stakeholder.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'stakeholderDashboard'])->name('dashboard');
+        Route::get('/sektor', [\App\Http\Controllers\Admin\SectorController::class, 'index'])->name('sektor.index');
         Route::get('/submissions', [DashboardController::class, 'stakeholderSubmissions'])->name('submissions');
         Route::get('/tasks', [DashboardController::class, 'stakeholderTasks'])->name('tasks');
         Route::get('/tasks/{id}/status', [DashboardController::class, 'stakeholderTaskStatus'])->name('tasks.status');

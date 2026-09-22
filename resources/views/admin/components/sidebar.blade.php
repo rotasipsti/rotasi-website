@@ -162,6 +162,10 @@
                     <i data-lucide="users" class="mr-3 h-5 w-5"></i>
                     Data Akun
                 </a>
+                <a wire:navigate href="{{ route('stakeholder.sektor.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.sektor.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="layers" class="mr-3 h-5 w-5"></i>
+                    Data Sektor
+                </a>
                 <a wire:navigate href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
                     Dokumen & Berkas

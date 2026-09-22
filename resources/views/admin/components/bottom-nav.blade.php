@@ -35,6 +35,7 @@
         elseif ($role === 'acara') $profileRouteName = 'acara.profile.edit';
         elseif ($role === 'keamanan') $profileRouteName = 'keamanan.profile.edit';
         elseif ($role === 'panitia') $profileRouteName = 'panitia.profile.edit';
+        elseif ($role === 'stakeholder') $profileRouteName = 'stakeholder.profile.edit';
     @endphp
 
     <!-- Expandable Drawer -->
@@ -275,6 +276,56 @@
                          <i data-lucide="history" class="h-5 w-5"></i>
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Izin</span>
+                 </a>
+                 <a wire:navigate href="{{ route('shared.downloads') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('shared.downloads') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('shared.downloads') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="download" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Dokumen</span>
+                 </a>
+                 <a wire:navigate href="{{ route($profileRouteName) }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs($profileRouteName) ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs($profileRouteName) ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="user" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Profil</span>
+                 </a>
+                 
+             @elseif(auth()->user()->role === 'stakeholder')
+                 <a wire:navigate href="{{ route('stakeholder.users.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.users.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.users.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="users" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Akun</span>
+                 </a>
+                 <a wire:navigate href="{{ route('stakeholder.sektor.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.sektor.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.sektor.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="layers" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Sektor</span>
+                 </a>
+                 <a wire:navigate href="{{ route('stakeholder.submissions') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.submissions') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.submissions') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="download-cloud" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Pengumpulan</span>
+                 </a>
+                 <a wire:navigate href="{{ route('stakeholder.tasks') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.tasks') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.tasks') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="file-text" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Tugas</span>
+                 </a>
+                 <a wire:navigate href="{{ route('stakeholder.exit.history') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.exit.history') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.exit.history') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="user-check" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Izin Individu</span>
+                 </a>
+                 <a wire:navigate href="{{ route('stakeholder.exit.panitia') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('stakeholder.exit.panitia') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('stakeholder.exit.panitia') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="history" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Izin Panitia</span>
                  </a>
                  <a wire:navigate href="{{ route('shared.downloads') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('shared.downloads') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('shared.downloads') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
