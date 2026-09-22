@@ -42,11 +42,12 @@ class TaskController extends Controller
             'attachment_type' => $attachmentType,
             'attachment_url' => $attachmentUrl,
             'created_by' => auth()->id(),
-            'status' => 'active'
+            'status' => 'active',
+            'is_draft' => $request->has('is_draft') ? $request->is_draft : false,
         ]);
 
         if ($request->ajax() || $request->wantsJson()) {
-            session()->flash('success', 'Tugas berhasil dibuat.');
+            session()->flash('success', $request->has('is_draft') && $request->is_draft ? 'Draft tugas berhasil disimpan.' : 'Tugas berhasil dibuat.');
             return response()->json(['success' => true]);
         }
 
@@ -97,10 +98,11 @@ class TaskController extends Controller
             'due_date' => $request->due_date,
             'attachment_type' => $attachmentType,
             'attachment_url' => $attachmentUrl,
+            'is_draft' => $request->has('is_draft') ? $request->is_draft : false,
         ]);
 
         if ($request->ajax() || $request->wantsJson()) {
-            session()->flash('success', 'Tugas berhasil diperbarui.');
+            session()->flash('success', $request->has('is_draft') && $request->is_draft ? 'Draft tugas berhasil diperbarui.' : 'Tugas berhasil diterbitkan/diperbarui.');
             return response()->json(['success' => true]);
         }
 

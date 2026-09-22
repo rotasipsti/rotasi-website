@@ -8,6 +8,20 @@ use Illuminate\Http\Request;
 
 class MentorApprovalController extends Controller
 {
+    public function approveAll(Request $request)
+    {
+        $updated = User::where('role', 'peserta')
+            ->where('sektor', auth()->user()->sektor)
+            ->where('is_approved', false)
+            ->update(['is_approved' => true]);
+
+        if ($updated > 0) {
+            return redirect()->back()->with('success', $updated . ' akun peserta berhasil disetujui.');
+        }
+
+        return redirect()->back()->with('error', 'Tidak ada akun yang perlu disetujui.');
+    }
+
     public function approve(Request $request, $id)
     {
         $user = User::findOrFail($id);

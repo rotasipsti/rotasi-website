@@ -15,7 +15,7 @@
         this.submitted = [];
         this.notSubmitted = [];
         
-        fetch(`/accounts/divisi-mentor/tasks/${id}/status`)
+        fetch(`/accounts/stakeholder/tasks/${id}/status`)
             .then(res => res.json())
             .then(data => {
                 this.submitted = data.submitted;
@@ -29,15 +29,13 @@
             });
     }
 }">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold">Data Tugas Acara</h1>
+        <p class="text-muted-foreground">Detail seluruh tugas yang dibuat oleh divisi acara beserta progres pengumpulan pesertanya.</p>
+    </div>
 
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
         <div class="p-6">
-            <div class="flex items-center gap-2 text-lg font-semibold mb-1">
-                <i data-lucide="file-text" class="h-5 w-5"></i>
-                Tugas Sektor {{ auth()->user()->sektor }}
-            </div>
-            <p class="text-sm text-muted-foreground mb-6">Daftar tugas yang sudah dibuat untuk sektor Anda.</p>
-            
             <div class="space-y-4">
                 @forelse($tasks as $task)
                     <div class="border rounded-lg p-4 bg-background">
@@ -104,9 +102,12 @@
                     </div>
                 @empty
                     <div class="text-center py-8 text-muted-foreground">
-                        Belum ada tugas untuk sektor ini.
+                        Belum ada tugas yang dibuat oleh Divisi Acara.
                     </div>
                 @endforelse
+            </div>
+            <div class="mt-4">
+                {{ $tasks->links() }}
             </div>
         </div>
     </div>
@@ -142,11 +143,12 @@
                             <div class="p-3 text-sm text-muted-foreground text-center bg-muted/20">Belum ada peserta yang mengumpulkan.</div>
                         </template>
                         <template x-for="p in submitted" :key="p.id">
-                            <div class="p-3 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                            <div class="p-3 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-muted/30 transition-colors gap-2">
                                 <div>
                                     <p class="text-sm font-medium" x-text="p.name"></p>
                                     <p class="text-xs text-muted-foreground" x-text="p.nim"></p>
                                 </div>
+                                <div class="text-xs font-semibold px-2 py-1 bg-secondary text-secondary-foreground rounded self-start sm:self-auto" x-text="'Sektor ' + (p.sektor || '-')"></div>
                             </div>
                         </template>
                     </div>
@@ -162,20 +164,18 @@
                             <div class="p-3 text-sm text-muted-foreground text-center bg-muted/20">Semua peserta telah mengumpulkan.</div>
                         </template>
                         <template x-for="p in notSubmitted" :key="p.id">
-                            <div class="p-3 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                            <div class="p-3 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-muted/30 transition-colors gap-2">
                                 <div>
                                     <p class="text-sm font-medium" x-text="p.name"></p>
                                     <p class="text-xs text-muted-foreground" x-text="p.nim"></p>
                                 </div>
+                                <div class="text-xs font-semibold px-2 py-1 bg-secondary text-secondary-foreground rounded self-start sm:self-auto" x-text="'Sektor ' + (p.sektor || '-')"></div>
                             </div>
                         </template>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
-
-
 </div>
 @endsection

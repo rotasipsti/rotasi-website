@@ -2,9 +2,20 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold">Persetujuan Akun Sektor {{ auth()->user()->sektor }}</h1>
-        <p class="text-muted-foreground">Daftar peserta yang mendaftar di sektor Anda dan menunggu persetujuan.</p>
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold">Persetujuan Akun Sektor {{ auth()->user()->sektor }}</h1>
+            <p class="text-muted-foreground">Daftar peserta yang mendaftar di sektor Anda dan menunggu persetujuan.</p>
+        </div>
+        
+        @if(isset($pending_peserta) && count($pending_peserta) > 0)
+        <form action="{{ route('mentor.approvals.approve-all') }}" method="POST" class="w-full sm:w-auto" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui semua akun peserta yang tertunda di sektor Anda?')">
+            @csrf
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white shadow hover:bg-green-600/90 h-10 px-4">
+                <i data-lucide="check-check" class="mr-2 h-4 w-4"></i> Setujui Semua
+            </button>
+        </form>
+        @endif
     </div>
 
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">

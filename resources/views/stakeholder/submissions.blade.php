@@ -4,12 +4,11 @@
 <div class="max-w-7xl mx-auto">
     <div class="mb-8">
         <h1 class="text-3xl font-bold">Data Pengumpulan Tugas</h1>
-        <p class="text-muted-foreground">Detail seluruh peserta yang mengumpulkan tugas berdasarkan sektor</p>
+        <p class="text-muted-foreground">Detail seluruh peserta yang mengumpulkan tugas dari semua sektor</p>
     </div>
 
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow mb-6">
-        <!-- Desktop Table View -->
-        <div class="hidden sm:block overflow-x-auto">
+        <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
                 <thead class="text-xs text-muted-foreground bg-muted uppercase border-b">
                     <tr>
@@ -55,7 +54,7 @@
                             <td class="px-6 py-4 text-right">
                                 @if($sub->file_url)
                                     <a href="{{ $sub->file_url }}" target="_blank" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
-                                        <i data-lucide="eye" class="mr-2 h-4 w-4"></i> Lihat
+                                        <i data-lucide="download" class="mr-2 h-4 w-4"></i> Unduh
                                     </a>
                                 @else
                                     <span class="text-xs text-muted-foreground italic">Tidak ada file</span>
@@ -74,53 +73,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <!-- Mobile Card View -->
-        <div class="sm:hidden grid grid-cols-1 gap-0 divide-y divide-border/50">
-            @forelse($submissions as $sub)
-                <div class="p-4 bg-background hover:bg-muted/30 transition-colors space-y-3">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-medium text-sm">{{ $sub->participant->name }}</div>
-                            <div class="text-xs text-muted-foreground">{{ $sub->participant->nim }} &bull; Sektor {{ $sub->participant->sektor ?? '-' }}</div>
-                        </div>
-                        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold {{ $sub->status === 'evaluated' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                            {{ ucfirst($sub->status) }}
-                        </span>
-                    </div>
-                    
-                    <div class="bg-muted/30 p-3 rounded-md border border-border/50 text-sm">
-                        <div class="font-medium text-primary mb-1">{{ $sub->task->title }}</div>
-                        <div class="text-xs text-muted-foreground mb-2">{{ ucfirst(str_replace('_', ' ', $sub->task->task_type)) }}</div>
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="flex items-center gap-1 text-muted-foreground">
-                                <i data-lucide="clock" class="h-3 w-3"></i> {{ $sub->submitted_at->format('d M Y, H:i') }}
-                            </span>
-                            @if($sub->submitted_at > $sub->task->due_date)
-                                <span class="text-red-600 font-medium">Terlambat</span>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <div class="pt-1">
-                        @if($sub->file_url)
-                            <a href="{{ $sub->file_url }}" target="_blank" class="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 shadow-sm">
-                                <i data-lucide="eye" class="mr-2 h-4 w-4"></i> Lihat File
-                            </a>
-                        @else
-                            <button disabled class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-muted text-muted-foreground h-9 px-4 opacity-70">
-                                Tidak ada file
-                            </button>
-                        @endif
-                    </div>
-                </div>
-            @empty
-                <div class="text-center py-10 text-muted-foreground">
-                    <i data-lucide="inbox" class="mx-auto h-10 w-10 mb-3 opacity-30"></i>
-                    <p class="text-sm">Belum ada data pengumpulan tugas.</p>
-                </div>
-            @endforelse
         </div>
     </div>
     

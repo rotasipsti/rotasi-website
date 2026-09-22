@@ -78,6 +78,12 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Akun</span>
                  </a>
+                 <a wire:navigate href="{{ route('admin.sektor.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.sektor.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.sektor.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="layers" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Sektor</span>
+                 </a>
                  <a wire:navigate href="{{ route($profileRouteName) }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs($profileRouteName) ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs($profileRouteName) ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="user" class="h-5 w-5"></i>
@@ -109,6 +115,12 @@
                          <i data-lucide="user-check" class="h-5 w-5"></i>
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Persetujuan</span>
+                 </a>
+                 <a wire:navigate href="{{ route('admin.tasks') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.tasks') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.tasks') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="file-text" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Tugas</span>
                  </a>
                  <a wire:navigate href="{{ route('admin.submissions') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.submissions') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.submissions') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">

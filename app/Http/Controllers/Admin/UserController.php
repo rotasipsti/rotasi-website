@@ -10,8 +10,8 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = User::select('role')->distinct()->pluck('role');
-        $activeRole = $request->input('role', $roles->contains('peserta') ? 'peserta' : ($roles->first() ?? 'peserta'));
+        $roles = collect(['admin', 'panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
+        $activeRole = $request->input('role', 'peserta');
 
         $query = User::where('role', $activeRole);
         
@@ -80,7 +80,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin,panitia,keamanan,acara,mentor,peserta',
+            'role' => 'required|string|in:admin,panitia,keamanan,acara,mentor,peserta,stakeholder',
             'sektor' => 'nullable|string',
             'nim' => 'nullable|string',
         ]);
@@ -111,6 +111,8 @@ class UserController extends Controller
             $prefix = 'KMN';
         } elseif ($role === 'panitia') {
             $prefix = 'PNT';
+        } elseif ($role === 'stakeholder') {
+            $prefix = 'STH';
         }
 
         $numberPart = '';
@@ -130,6 +132,7 @@ class UserController extends Controller
                 'mentor' => '3',
                 'keamanan' => '4',
                 'admin' => '8',
+                'stakeholder' => '6',
             ];
             $firstDigit = $rolePrefixMap[$role] ?? '9';
             $randomDigits = '';
@@ -154,5 +157,44 @@ class UserController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Akun ' . $user->name . ' berhasil ditambahkan dan langsung disetujui.');
+    }
+    public function resetPassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->login_password_hash = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Kata sandi untuk akun ' . $user->name . ' berhasil direset.');
+    }
+    public function stakeholderIndex(Request $request)
+    {
+        $roles = collect(['panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
+        $activeRole = $request->input('role', 'peserta');
+
+        if ($activeRole === 'admin') {
+            abort(403);
+        }
+
+        $query = User::where('role', $activeRole);
+        
+        if ($activeRole === 'peserta') {
+            $query->orderBy('sektor', 'asc');
+        }
+        
+        $users = $query->orderBy('name', 'asc')
+                       ->paginate(20)
+                       ->withQueryString();
+
+        $roleCounts = User::select('role', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+                          ->where('role', '!=', 'admin')
+                          ->groupBy('role')
+                          ->pluck('total', 'role');
+
+        return view('stakeholder.users.index', compact('roles', 'activeRole', 'users', 'roleCounts'));
     }
 }

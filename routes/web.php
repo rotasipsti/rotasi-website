@@ -134,12 +134,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/divisi-mentor/peserta', [DashboardController::class, 'mentorPeserta'])->name('mentor.peserta');
     Route::get('/accounts/divisi-mentor/approvals', [DashboardController::class, 'mentorApprovals'])->name('mentor.approvals');
     Route::get('/accounts/divisi-mentor/submissions', [DashboardController::class, 'mentorSubmissions'])->name('mentor.submissions');
+    Route::get('/accounts/divisi-mentor/submissions/download', [DashboardController::class, 'mentorSubmissionsDownload'])->name('mentor.submissions.download');
     Route::get('/accounts/divisi-mentor/tasks', [DashboardController::class, 'mentorTasks'])->name('mentor.tasks');
+    Route::get('/accounts/divisi-mentor/tasks/{id}/status', [DashboardController::class, 'mentorTaskStatus'])->name('mentor.tasks.status');
     Route::get('/accounts/divisi-mentor/profile', [ProfileController::class, 'edit'])->name('mentor.profile.edit');
     Route::patch('/accounts/divisi-mentor/profile', [ProfileController::class, 'update'])->name('mentor.profile.update');
     Route::delete('/accounts/divisi-mentor/profile', [ProfileController::class, 'destroy'])->name('mentor.profile.destroy');
     Route::get('/accounts/divisi-mentor/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('mentor.exit.history');
     
+    Route::post('/accounts/divisi-mentor/approvals/approve-all', [\App\Http\Controllers\MentorApprovalController::class, 'approveAll'])->name('mentor.approvals.approve-all');
     Route::post('/accounts/divisi-mentor/approvals/{id}/approve', [\App\Http\Controllers\MentorApprovalController::class, 'approve'])->name('mentor.approvals.approve');
     Route::delete('/accounts/divisi-mentor/approvals/{id}/reject', [\App\Http\Controllers\MentorApprovalController::class, 'reject'])->name('mentor.approvals.reject');
     Route::get('/accounts/divisi-acara/dashboard', [DashboardController::class, 'acaraDashboard'])->name('dashboard.acara');
@@ -172,13 +175,30 @@ Route::middleware('auth')->group(function () {
     Route::delete('/accounts/panitia/profile', [ProfileController::class, 'destroy'])->name('panitia.profile.destroy');
     Route::get('/accounts/panitia/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('panitia.exit.history');
     
+    // Stakeholder Routes
+    Route::prefix('accounts/stakeholder')->name('stakeholder.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'stakeholderDashboard'])->name('dashboard');
+        Route::get('/submissions', [DashboardController::class, 'stakeholderSubmissions'])->name('submissions');
+        Route::get('/tasks', [DashboardController::class, 'stakeholderTasks'])->name('tasks');
+        Route::get('/tasks/{id}/status', [DashboardController::class, 'stakeholderTaskStatus'])->name('tasks.status');
+        Route::get('/exit-history/individu', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('exit.history');
+        Route::get('/exit-history/panitia', [App\Http\Controllers\ExitPermissionController::class, 'stakeholderPanitiaHistory'])->name('exit.panitia');
+        Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'stakeholderIndex'])->name('users.index');
+        
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+    
     // Admin Routes
     Route::prefix('accounts/admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+        Route::get('/sektor', [\App\Http\Controllers\Admin\SectorController::class, 'index'])->name('sektor.index');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::get('/exit-history', [\App\Http\Controllers\ExitPermissionController::class, 'history'])->name('exit.history');
+        Route::get('/tasks', [DashboardController::class, 'adminTasks'])->name('tasks');
         
         Route::get('/system-info', [\App\Http\Controllers\Admin\SystemInfoController::class, 'index'])->name('system-info.index');
         Route::get('/submissions', [DashboardController::class, 'adminSubmissions'])->name('submissions');
@@ -189,6 +209,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
         Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
         Route::delete('/users/bulk-delete', [\App\Http\Controllers\Admin\UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
         Route::delete('/users/role-delete', [\App\Http\Controllers\Admin\UserController::class, 'destroyByRole'])->name('users.destroy-role');
         Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');

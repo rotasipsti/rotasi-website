@@ -23,13 +23,18 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.panitia');
         } elseif ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'stakeholder') {
+            return redirect()->route('stakeholder.dashboard');
         }
 
         $data = [];
         if (!is_null($user->sektor) && $user->is_approved) {
-            $data['tasks'] = Task::where('sector', $user->sektor)
-                                ->orWhere('sector', 0)
-                                ->orWhere('task_type', 'angkatan')
+            $data['tasks'] = Task::where('is_draft', false)
+                                ->where(function($query) use ($user) {
+                                    $query->where('sector', $user->sektor)
+                                          ->orWhere('sector', 0)
+                                          ->orWhere('task_type', 'angkatan');
+                                })
                                 ->orderBy('due_date', 'asc')
                                 ->get();
                                 
@@ -94,9 +99,12 @@ class DashboardController extends Controller
         $user = auth()->user();
         if ($user->role !== 'peserta') abort(403);
         
-        $data['tasks'] = Task::where('sector', $user->sektor)
-                            ->orWhere('sector', 0)
-                            ->orWhere('task_type', 'angkatan')
+        $data['tasks'] = Task::where('is_draft', false)
+                            ->where(function($query) use ($user) {
+                                $query->where('sector', $user->sektor)
+                                      ->orWhere('sector', 0)
+                                      ->orWhere('task_type', 'angkatan');
+                            })
                             ->orderBy('due_date', 'asc')
                             ->get();
                             
@@ -154,9 +162,12 @@ class DashboardController extends Controller
                             ->where('is_approved', false)
                             ->count();
                             
-        $data['tasks_count'] = Task::where('sector', $user->sektor)
-                            ->orWhere('sector', 0)
-                            ->orWhere('task_type', 'angkatan')
+        $data['tasks_count'] = Task::where('is_draft', false)
+                            ->where(function($query) use ($user) {
+                                $query->where('sector', $user->sektor)
+                                      ->orWhere('sector', 0)
+                                      ->orWhere('task_type', 'angkatan');
+                            })
                             ->count();
                             
         $pesertaIds = $peserta_list->pluck('id');
@@ -185,9 +196,12 @@ class DashboardController extends Controller
                             ->where('is_approved', true)
                             ->get();
                             
-        $data['tasks'] = Task::where('sector', $user->sektor)
-                            ->orWhere('sector', 0)
-                            ->orWhere('task_type', 'angkatan')
+        $data['tasks'] = Task::where('is_draft', false)
+                            ->where(function($query) use ($user) {
+                                $query->where('sector', $user->sektor)
+                                      ->orWhere('sector', 0)
+                                      ->orWhere('task_type', 'angkatan');
+                            })
                             ->get();
                             
         $pesertaIds = $data['peserta_list']->pluck('id');
@@ -210,7 +224,7 @@ class DashboardController extends Controller
         return view('mentor.approvals', $data);
     }
     
-    public function mentorSubmissions()
+    public function mentorSubmissions(Request $request)
     {
         $user = auth()->user();
         if ($user->role !== 'mentor') abort(403);
@@ -222,12 +236,110 @@ class DashboardController extends Controller
                             ->get();
                             
         $pesertaIds = $peserta_list->pluck('id');
-        $data['submissions'] = TaskSubmission::whereIn('participant_id', $pesertaIds)
-                            ->with(['task', 'participant'])
-                            ->orderBy('submitted_at', 'desc')
-                            ->get();
+        $query = TaskSubmission::whereIn('participant_id', $pesertaIds)
+                            ->with(['task', 'participant']);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('participant', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->has('task_type') && $request->task_type != '') {
+            $taskType = $request->task_type;
+            $query->whereHas('task', function($q) use ($taskType) {
+                $q->where('task_type', $taskType);
+            });
+        }
+        
+        if ($request->has('status') && $request->status == 'terlambat') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '>', 'tasks.due_date');
+        }
+
+        $data['submissions'] = $query->orderBy('task_submissions.submitted_at', 'desc')->get();
+        $data['search'] = $request->search;
+        $data['task_type_filter'] = $request->task_type;
+        $data['status_filter'] = $request->status;
+        $data['task_types'] = [
+            'individu' => 'Individu',
+            'per_sektor' => 'Per Sektor',
+            'angkatan' => 'Satu Angkatan'
+        ];
                             
         return view('mentor.submissions', $data);
+    }
+    
+    public function mentorSubmissionsDownload(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->role !== 'mentor') abort(403);
+        
+        $peserta_list = User::where('role', 'peserta')
+                            ->where('sektor', $user->sektor)
+                            ->where('is_approved', true)
+                            ->get();
+        $pesertaIds = $peserta_list->pluck('id');
+
+        $query = TaskSubmission::whereIn('participant_id', $pesertaIds)
+                            ->with(['task', 'participant'])
+                            ->whereNotNull('file_url');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('participant', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->has('task_type') && $request->task_type != '') {
+            $taskType = $request->task_type;
+            $query->whereHas('task', function($q) use ($taskType) {
+                $q->where('task_type', $taskType);
+            });
+        }
+        
+        if ($request->has('status') && $request->status == 'terlambat') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '>', 'tasks.due_date');
+        }
+
+        $submissions = $query->get();
+        
+        if ($submissions->isEmpty()) {
+            return back()->with('error', 'Tidak ada file untuk didownload dengan filter tersebut.');
+        }
+
+        $zipFileName = 'submissions_sektor_' . $user->sektor . '_' . time() . '.zip';
+        $zipPath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($submissions as $sub) {
+                $path = str_replace(asset('storage/'), '', $sub->file_url);
+                $path = urldecode($path);
+                $realPath = storage_path('app/public/' . ltrim($path, '/'));
+                
+                if (file_exists($realPath) && !is_dir($realPath)) {
+                    $cleanTask = preg_replace('/[^A-Za-z0-9\-]/', '_', $sub->task->title);
+                    $cleanParticipant = preg_replace('/[^A-Za-z0-9\-]/', '_', $sub->participant->name);
+                    $originalName = $sub->file_name ?? basename($realPath);
+                    
+                    $newName = "{$cleanTask}/{$cleanParticipant}/{$originalName}";
+                    $zip->addFile($realPath, $newName);
+                }
+            }
+            $zip->close();
+            
+            return response()->download($zipPath)->deleteFileAfterSend(true);
+        }
+        
+        return back()->with('error', 'Gagal membuat file ZIP.');
     }
     
     public function mentorTasks()
@@ -236,13 +348,52 @@ class DashboardController extends Controller
         if ($user->role !== 'mentor') abort(403);
         
         $data = [];
-        $data['tasks'] = Task::where('sector', $user->sektor)
-                            ->orWhere('sector', 0)
-                            ->orWhere('task_type', 'angkatan')
+        $data['tasks'] = Task::where('is_draft', false)
+                            ->where(function($query) use ($user) {
+                                $query->where('sector', $user->sektor)
+                                      ->orWhere('sector', 0)
+                                      ->orWhere('task_type', 'angkatan');
+                            })
                             ->orderBy('due_date', 'asc')
                             ->get();
                             
         return view('mentor.tasks', $data);
+    }
+    
+    public function mentorTaskStatus($id)
+    {
+        $user = auth()->user();
+        if ($user->role !== 'mentor') abort(403);
+        
+        $task = Task::findOrFail($id);
+        
+        $participants = User::where('role', 'peserta')
+            ->where('sektor', $user->sektor)
+            ->where('is_approved', true)
+            ->select('id', 'name', 'nim')
+            ->orderBy('name', 'asc')
+            ->get();
+            
+        $submissions = TaskSubmission::where('task_id', $id)
+            ->whereIn('participant_id', $participants->pluck('id'))
+            ->pluck('participant_id')
+            ->toArray();
+            
+        $submitted = [];
+        $not_submitted = [];
+        
+        foreach ($participants as $p) {
+            if (in_array($p->id, $submissions)) {
+                $submitted[] = $p;
+            } else {
+                $not_submitted[] = $p;
+            }
+        }
+        
+        return response()->json([
+            'submitted' => $submitted,
+            'not_submitted' => $not_submitted
+        ]);
     }
     
     public function acaraDashboard()
@@ -338,5 +489,96 @@ class DashboardController extends Controller
         $data['total_tugas'] = Task::count();
         
         return view('admin.dashboard', $data);
+    }
+
+    public function adminTasks()
+    {
+        if (auth()->user()->role !== 'admin') abort(403);
+        
+        $data = [];
+        $data['tasks'] = Task::withCount('submissions')
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(15);
+                            
+        return view('admin.tasks', $data);
+    }
+
+    public function stakeholderDashboard()
+    {
+        if (auth()->user()->role !== 'stakeholder') abort(403);
+        
+        $data = [];
+        $data['total_tasks'] = Task::count();
+        $data['total_submissions'] = TaskSubmission::count();
+        $data['total_permissions'] = \App\Models\ExitPermission::count();
+        $data['recent_submissions'] = TaskSubmission::with(['task', 'participant'])
+                            ->orderBy('submitted_at', 'desc')
+                            ->limit(10)
+                            ->get();
+                            
+        return view('stakeholder.dashboard', $data);
+    }
+
+    public function stakeholderSubmissions()
+    {
+        if (auth()->user()->role !== 'stakeholder') abort(403);
+        
+        $submissions = TaskSubmission::with(['task', 'participant'])
+                            ->orderBy('submitted_at', 'desc')
+                            ->paginate(15);
+                            
+        return view('stakeholder.submissions', compact('submissions'));
+    }
+
+    public function stakeholderTasks()
+    {
+        if (auth()->user()->role !== 'stakeholder') abort(403);
+        
+        $data = [];
+        $data['tasks'] = Task::withCount('submissions')
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(15);
+                            
+        return view('stakeholder.tasks', $data);
+    }
+    public function stakeholderTaskStatus($id)
+    {
+        $user = auth()->user();
+        if ($user->role !== 'stakeholder') abort(403);
+        
+        $task = Task::findOrFail($id);
+        
+        $participantsQuery = User::where('role', 'peserta')
+            ->where('is_approved', true);
+            
+        if ($task->task_type === 'per_sektor' && $task->sector != 0) {
+            $participantsQuery->where('sektor', $task->sector);
+        }
+            
+        $participants = $participantsQuery->select('id', 'name', 'nim', 'sektor')
+            ->orderBy('sektor', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
+            
+        $submissions = TaskSubmission::where('task_id', $id)
+            ->whereIn('participant_id', $participants->pluck('id'))
+            ->pluck('participant_id')
+            ->toArray();
+            
+        $submitted = [];
+        $not_submitted = [];
+        
+        foreach ($participants as $p) {
+            if (in_array($p->id, $submissions)) {
+                $submitted[] = $p;
+            } else {
+                $not_submitted[] = $p;
+            }
+        }
+        
+        return response()->json([
+            'submitted' => $submitted,
+            'not_submitted' => $not_submitted
+        ]);
     }
 }

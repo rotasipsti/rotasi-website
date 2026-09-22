@@ -168,7 +168,7 @@
                             <div class="flex flex-wrap items-center gap-2 mt-2">
                                 <p class="capitalize inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">{{ $user->role }}</p>
                                 
-                                @if(in_array($user->role, ['panitia', 'acara', 'mentor', 'keamanan']))
+                                @if(in_array($user->role, ['panitia', 'acara', 'mentor', 'keamanan', 'stakeholder']))
                                     <button @click="showQrModal = true" type="button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-3 py-1">
                                         <i data-lucide="qr-code" class="mr-1.5 h-3.5 w-3.5"></i> Tampilkan QR
                                     </button>
@@ -232,6 +232,8 @@
                             $updateRoute = route('keamanan.profile.update');
                         } elseif ($role === 'panitia') {
                             $updateRoute = route('panitia.profile.update');
+                        } elseif ($role === 'stakeholder') {
+                            $updateRoute = route('stakeholder.profile.update');
                         }
                     @endphp
                     <form method="post" action="{{ $updateRoute }}" class="space-y-6" enctype="multipart/form-data">
@@ -385,7 +387,7 @@
     </div>
 
     <!-- Modal QR Code -->
-    @if(in_array($user->role, ['panitia', 'acara', 'mentor', 'keamanan']))
+    @if(in_array($user->role, ['panitia', 'acara', 'mentor', 'keamanan', 'stakeholder']))
         <div x-show="showQrModal" style="display: none;" class="relative z-[60]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div x-show="showQrModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"></div>
 

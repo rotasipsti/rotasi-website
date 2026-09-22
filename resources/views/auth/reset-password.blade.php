@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.auth')
 
 @section('content')
 <div class="container mx-auto px-4 py-8 pt-32 min-h-screen flex items-center justify-center">

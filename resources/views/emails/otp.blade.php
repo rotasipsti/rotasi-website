@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kode OTP Reset Password</title>
+    <title>Kode OTP Reset Password Akun ROTASI Digital</title>
 </head>
 <body style="font-family: 'Figtree', Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-w-md; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">

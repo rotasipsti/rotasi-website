@@ -4,7 +4,7 @@
     <div class="py-4 overflow-y-auto h-full">
         <nav class="space-y-1 px-3">
             
-            <a wire:navigate href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard*') || request()->routeIs('admin.dashboard') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+            <a wire:navigate href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard*') || request()->routeIs('admin.dashboard') || request()->routeIs('stakeholder.dashboard') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                 <i data-lucide="layout-dashboard" class="mr-3 h-5 w-5"></i>
                 Dashboard
             </a>
@@ -38,6 +38,16 @@
                 <a wire:navigate href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="users" class="mr-3 h-5 w-5"></i>
                     Data Akun
+                </a>
+                
+                <a wire:navigate href="{{ route('admin.sektor.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.sektor.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="layers" class="mr-3 h-5 w-5"></i>
+                    Data Sektor
+                </a>
+                
+                <a wire:navigate href="{{ route('admin.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
+                    Manajemen Tugas
                 </a>
                 
                 <a wire:navigate href="{{ route('admin.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
@@ -131,6 +141,31 @@
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
                     Dokumen & Berkas
                 </a>
+            @elseif(auth()->user()->role === 'stakeholder')
+                <a wire:navigate href="{{ route('stakeholder.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download-cloud" class="mr-3 h-5 w-5"></i>
+                    Data Pengumpulan
+                </a>
+                <a wire:navigate href="{{ route('stakeholder.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
+                    Tugas Acara
+                </a>
+                <a wire:navigate href="{{ route('stakeholder.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="user-check" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin Individu
+                </a>
+                <a wire:navigate href="{{ route('stakeholder.exit.panitia') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.exit.panitia') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="history" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin Panitia
+                </a>
+                <a wire:navigate href="{{ route('stakeholder.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('stakeholder.users.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="users" class="mr-3 h-5 w-5"></i>
+                    Data Akun
+                </a>
+                <a wire:navigate href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="download" class="mr-3 h-5 w-5"></i>
+                    Dokumen & Berkas
+                </a>
             @endif
 
             <div class="my-2 border-t border-border/50"></div>
@@ -149,6 +184,8 @@
                     $profileRouteName = 'keamanan.profile.edit';
                 } elseif ($role === 'panitia') {
                     $profileRouteName = 'panitia.profile.edit';
+                } elseif ($role === 'stakeholder') {
+                    $profileRouteName = 'stakeholder.profile.edit';
                 }
             @endphp
             <a wire:navigate href="{{ route($profileRouteName) }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs($profileRouteName) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">

@@ -52,7 +52,8 @@
                 </div>
                 <p class="text-sm text-muted-foreground mb-6">10 pengumpulan tugas terakhir oleh peserta</p>
                 
-                <div class="overflow-x-auto">
+                <!-- Desktop Table View -->
+                <div class="hidden sm:block overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-muted-foreground bg-muted uppercase border-b">
                             <tr>
@@ -93,6 +94,43 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="sm:hidden grid grid-cols-1 gap-4">
+                    @forelse($recent_submissions as $sub)
+                        <div class="border border-border/50 rounded-lg p-4 bg-background space-y-3">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="font-medium text-sm">{{ $sub->participant->name }} <span class="text-muted-foreground text-xs font-normal">(Sektor {{ $sub->participant->sektor }})</span></div>
+                                <div>
+                                    @php
+                                        $isLate = $sub->submitted_at > $sub->task->due_date;
+                                        $statusText = $isLate ? 'Terlambat' : ucfirst($sub->status);
+                                        
+                                        if ($isLate) {
+                                            $badgeClass = 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800';
+                                        } elseif ($sub->status === 'evaluated') {
+                                            $badgeClass = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800';
+                                        } else {
+                                            $badgeClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800';
+                                        }
+                                    @endphp
+                                    <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold {{ $badgeClass }}">
+                                        {{ $statusText }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-muted-foreground text-xs block mb-1">Tugas:</span>
+                                <div class="font-medium text-primary">{{ $sub->task->title }}</div>
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-muted-foreground border-t pt-2">
+                                <i data-lucide="clock" class="h-3 w-3"></i> {{ $sub->submitted_at->diffForHumans() }}
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-6 text-muted-foreground text-sm border border-dashed rounded-lg">Belum ada aktivitas pengumpulan.</div>
+                    @endforelse
                 </div>
             </div>
         </div>

@@ -210,4 +210,20 @@ class ExitPermissionController extends Controller
         
         return $pdf->download('riwayat_izin_keluar.pdf');
     }
+    public function stakeholderPanitiaHistory()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'stakeholder') abort(403);
+
+        $exit_permissions = ExitPermission::with('user')
+                            ->whereHas('user', function($q) {
+                                $q->whereIn('role', ['admin', 'panitia', 'keamanan', 'acara', 'mentor', 'stakeholder']);
+                            })
+                            ->orderBy('exit_time', 'desc')
+                            ->paginate(15);
+                            
+        $title = "Riwayat Izin Keluar Seluruh Panitia";
+        
+        return view('stakeholder.exit_history_panitia', compact('exit_permissions', 'title', 'user'));
+    }
 }

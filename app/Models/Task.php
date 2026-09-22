@@ -18,11 +18,13 @@ class Task extends Model
         'task_type',
         'attachment_type',
         'attachment_url',
-        'created_by'
+        'created_by',
+        'is_draft',
     ];
 
     protected $casts = [
         'due_date' => 'datetime',
+        'is_draft' => 'boolean',
     ];
 
     public function creator()

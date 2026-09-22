@@ -51,6 +51,12 @@ class ProfileController extends Controller
             $profileRouteName = 'mentor.profile.edit';
         } elseif ($role === 'acara') {
             $profileRouteName = 'acara.profile.edit';
+        } elseif ($role === 'keamanan') {
+            $profileRouteName = 'keamanan.profile.edit';
+        } elseif ($role === 'panitia') {
+            $profileRouteName = 'panitia.profile.edit';
+        } elseif ($role === 'stakeholder') {
+            $profileRouteName = 'stakeholder.profile.edit';
         }
 
         return Redirect::route($profileRouteName)->with('status', 'profile-updated');

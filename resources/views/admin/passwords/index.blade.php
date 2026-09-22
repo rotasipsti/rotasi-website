@@ -13,7 +13,7 @@
             <h1 class="text-3xl font-bold">Manajemen Password Sektor</h1>
             <p class="text-muted-foreground">Kelola data sektor beserta password registrasinya</p>
         </div>
-        <button @click="showAddModal = true" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium text-sm flex items-center transition-colors">
+        <button @click="showAddModal = true" class="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium text-sm flex items-center justify-center transition-colors">
             <i data-lucide="plus" class="mr-2 h-4 w-4"></i>
             Tambah Sektor
         </button>

@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto" x-data="{ showAddModal: false }">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div class="flex items-center gap-2 text-2xl font-bold">
             <i data-lucide="download" class="h-6 w-6"></i>
             Manajemen Unduhan
         </div>
-        <button @click="showAddModal = true" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow-sm">
+        <button @click="showAddModal = true" class="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-2 shadow-sm">
             <i data-lucide="plus" class="h-4 w-4"></i> Tambah Dokumen
         </button>
     </div>
