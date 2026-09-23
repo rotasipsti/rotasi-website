@@ -251,11 +251,17 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Scanner</span>
                  </a>
+                 <a wire:navigate href="{{ route('keamanan.exit.my-history') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('keamanan.exit.my-history') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('keamanan.exit.my-history') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="user-check" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Izin Individu</span>
+                 </a>
                  <a wire:navigate href="{{ route('keamanan.exit.history') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('keamanan.exit.history') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('keamanan.exit.history') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="history" class="h-5 w-5"></i>
                      </div>
-                     <span class="text-[10px] font-medium leading-tight">Izin</span>
+                     <span class="text-[10px] font-medium leading-tight">Izin Panitia</span>
                  </a>
                  <a wire:navigate href="{{ route($profileRouteName) }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs($profileRouteName) ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs($profileRouteName) ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">

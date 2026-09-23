@@ -167,6 +167,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/divisi-keamanan/exit-permissions/export/csv', [App\Http\Controllers\ExitPermissionController::class, 'exportCsv'])->name('keamanan.exit.export.csv');
     Route::get('/accounts/divisi-keamanan/exit-permissions/export/pdf', [App\Http\Controllers\ExitPermissionController::class, 'exportPdf'])->name('keamanan.exit.export.pdf');
     Route::get('/accounts/divisi-keamanan/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('keamanan.exit.history');
+    Route::get('/accounts/divisi-keamanan/my-exit-history', [App\Http\Controllers\ExitPermissionController::class, 'myHistory'])->name('keamanan.exit.my-history');
 
     // Panitia Routes
     Route::get('/accounts/panitia/dashboard', [DashboardController::class, 'panitiaDashboard'])->name('dashboard.panitia');

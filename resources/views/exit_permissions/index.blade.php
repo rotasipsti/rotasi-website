@@ -16,7 +16,7 @@
                 <i data-lucide="history" class="h-5 w-5 text-primary"></i> {{ $title ?? 'Riwayat Izin Keluar Anda' }}
             </h3>
             <div class="flex items-center gap-2 w-full sm:w-auto">
-                @if(in_array($user->role, ['keamanan', 'admin']))
+                @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                     <div class="relative w-full sm:w-64">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i data-lucide="search" class="w-4 h-4 text-muted-foreground"></i>
@@ -24,7 +24,7 @@
                         <input type="text" id="searchInput" class="bg-background border border-border text-foreground text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-9 p-2" placeholder="Cari nama panitia...">
                     </div>
                 @endif
-                @if(in_array($user->role, ['keamanan', 'admin']) && isset($exit_permissions) && $exit_permissions->count() > 0)
+                @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history') && isset($exit_permissions) && $exit_permissions->count() > 0)
                 <div x-data="{ openExport: false }" class="relative w-full sm:w-auto">
                     <button @click="openExport = !openExport" @click.away="openExport = false" class="w-full sm:w-auto inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground px-3 py-2 text-sm font-semibold transition-colors shadow-sm">
                         <i data-lucide="download" class="h-4 w-4 mr-2"></i> Export Data
@@ -68,7 +68,7 @@
                         <div class="p-4 space-y-3 hover:bg-muted/30 transition-colors permission-row" data-name="{{ strtolower($log->user->name) }}">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    @if(in_array($user->role, ['keamanan', 'admin']))
+                                    @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                         <p class="font-semibold text-sm">{{ $log->user->name }} <span class="text-xs font-normal text-muted-foreground">({{ $log->user->custom_id ?? $log->user->id }})</span></p>
                                     @endif
                                     <p class="text-xs text-muted-foreground flex items-center gap-1 mt-1">
@@ -82,7 +82,7 @@
                                     <p class="text-xs text-red-600 font-semibold mt-1">Belum Kembali</p>
                                     @endif
                                 </div>
-                                @if(in_array($user->role, ['keamanan', 'admin']))
+                                @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                 <form action="{{ route('keamanan.exit.destroy', $log->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus riwayat ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -97,7 +97,7 @@
                                 <p class="text-sm text-muted-foreground mt-1">{{ $log->reason }}</p>
                             </div>
                             
-                            @if(in_array($user->role, ['keamanan', 'admin']))
+                            @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                 @if(!$log->return_time)
                                 <button onclick="showQrModal('{{ $log->id }}')" class="w-full inline-flex items-center justify-center rounded-md border border-primary px-3 py-2 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-2">
                                     <i data-lucide="qr-code" class="h-4 w-4 mr-2"></i> Tampilkan QR Kembali
@@ -119,7 +119,7 @@
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border/50">
                             <tr>
-                                @if(in_array($user->role, ['keamanan', 'admin']))
+                                @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                     <th class="px-6 py-4 font-medium">Nama</th>
                                 @endif
                                 <th class="px-6 py-4 font-medium">Waktu Keluar</th>
@@ -131,7 +131,7 @@
                         <tbody class="divide-y divide-border/50" id="tableBody">
                             @foreach($exit_permissions as $log)
                                 <tr class="hover:bg-muted/30 transition-colors permission-row" data-name="{{ strtolower($log->user->name) }}">
-                                    @if(in_array($user->role, ['keamanan', 'admin']))
+                                    @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                         <td class="px-6 py-4">
                                             <div class="font-medium">{{ $log->user->name }}</div>
                                             <div class="text-xs text-muted-foreground">{{ $log->user->custom_id ?? $log->user->id }} • {{ ucfirst($log->user->role) }}</div>
@@ -156,7 +156,7 @@
                                     </td>
                                     <td class="px-6 py-4 text-right">
                                         <div class="inline-flex flex-col gap-2 min-w-[115px]">
-                                            @if(in_array($user->role, ['keamanan', 'admin']))
+                                            @if(in_array($user->role, ['keamanan', 'admin']) && !request()->routeIs('keamanan.exit.my-history'))
                                                 @if(!$log->return_time)
                                                 <button onclick="showQrModal('{{ $log->id }}')" class="w-full inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
                                                     <i data-lucide="qr-code" class="h-3.5 w-3.5 mr-1"></i> Tampilkan QR

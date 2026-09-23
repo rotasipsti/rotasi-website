@@ -32,6 +32,22 @@ class ExitPermissionController extends Controller
         return view('exit_permissions.index', compact('exit_permissions', 'title', 'user'));
     }
 
+    public function myHistory()
+    {
+        $user = auth()->user();
+        
+        if ($user->role !== 'keamanan') {
+            abort(403);
+        }
+
+        $exit_permissions = ExitPermission::where('user_id', $user->id)
+                            ->orderBy('exit_time', 'desc')
+                            ->paginate(15);
+        $title = "Riwayat Izin Keluar Anda";
+        
+        return view('exit_permissions.index', compact('exit_permissions', 'title', 'user'));
+    }
+
     public function getUserInfo($id)
     {
         // $id could be custom_id or database id

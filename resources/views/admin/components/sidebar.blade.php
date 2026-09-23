@@ -124,9 +124,13 @@
                     <i data-lucide="scan" class="mr-3 h-5 w-5"></i>
                     Scanner QR Code
                 </a>
+                <a wire:navigate href="{{ route('keamanan.exit.my-history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('keamanan.exit.my-history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="user-check" class="mr-3 h-5 w-5"></i>
+                    Riwayat Izin Individu
+                </a>
                 <a wire:navigate href="{{ route('keamanan.exit.history') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('keamanan.exit.history') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
-                    Riwayat Izin
+                    Riwayat Izin Panitia
                 </a>
                 <a wire:navigate href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>

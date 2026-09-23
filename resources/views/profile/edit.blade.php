@@ -293,6 +293,19 @@
                             </div>
                         </div>
 
+                        <div class="space-y-1">
+                            <label for="nim" class="block text-sm font-medium">NIM</label>
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                    <i data-lucide="id-card" class="h-4 w-4"></i>
+                                </div>
+                                <input type="text" id="nim" name="nim" value="{{ old('nim', $user->nim) }}" class="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" placeholder="Masukkan NIM (Opsional)">
+                            </div>
+                            @error('nim')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <div class="pt-4 border-t border-border/50 flex justify-end">
                             <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 py-2 shadow-sm">
                                 <i data-lucide="save" class="mr-2 h-4 w-4"></i> Simpan Profil
