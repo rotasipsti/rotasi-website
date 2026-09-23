@@ -13,9 +13,15 @@
         </div>
 
         <!-- Right side -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 md:gap-4">
             
-            <div class="h-6 w-px bg-border/50 mx-2"></div>
+            <!-- Theme Toggle -->
+            <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none" title="Ubah Tema">
+                <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
+                <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
+            </button>
+            
+            <div class="h-6 w-px bg-border/50 mx-1 md:mx-2"></div>
             
             <!-- User Dropdown -->
             <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
