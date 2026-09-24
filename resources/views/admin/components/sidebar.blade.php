@@ -17,7 +17,7 @@
 
                 <a wire:navigate href="{{ route('admin.cms.downloads.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.downloads.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
-                    Manajemen Unduhan
+                    Manajemen Link/File
                 </a>
 
                 <a wire:navigate href="{{ route('admin.cms.banners.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.cms.banners.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">

@@ -97,7 +97,7 @@
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.cms.downloads.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="download" class="h-5 w-5"></i>
                      </div>
-                     <span class="text-[10px] font-medium leading-tight">Unduhan</span>
+                     <span class="text-[10px] font-medium leading-tight">Link/File</span>
                  </a>
                  <a wire:navigate href="{{ route('admin.cms.banners.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.cms.banners.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.cms.banners.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
