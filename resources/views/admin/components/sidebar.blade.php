@@ -102,6 +102,10 @@
                     <i data-lucide="history" class="mr-3 h-5 w-5"></i>
                     Riwayat Izin
                 </a>
+                <a wire:navigate href="{{ route('acara.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('acara.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="link" class="mr-3 h-5 w-5"></i>
+                    Manajemen Link/File
+                </a>
                 <a wire:navigate href="{{ route('shared.downloads') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('shared.downloads') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="download" class="mr-3 h-5 w-5"></i>
                     Dokumen & Berkas

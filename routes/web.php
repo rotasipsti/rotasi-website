@@ -152,6 +152,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/divisi-acara/exit-history', [App\Http\Controllers\ExitPermissionController::class, 'history'])->name('acara.exit.history');
     Route::get('/accounts/divisi-acara/tasks', [DashboardController::class, 'acaraTasks'])->name('acara.tasks');
     Route::get('/accounts/divisi-acara/submissions', [DashboardController::class, 'acaraSubmissions'])->name('acara.submissions');
+    Route::get('/accounts/divisi-acara/downloads', [DashboardController::class, 'acaraDownloads'])->name('acara.downloads');
+    Route::post('/accounts/divisi-acara/download', [\App\Http\Controllers\Admin\CMSController::class, 'storeDownload'])->name('acara.download.store');
+    Route::delete('/accounts/divisi-acara/download/{download}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyDownload'])->name('acara.download.destroy');
     
     // Keamanan Routes
     Route::get('/accounts/divisi-keamanan/dashboard', [DashboardController::class, 'keamananDashboard'])->name('dashboard.keamanan');

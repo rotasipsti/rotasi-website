@@ -439,6 +439,15 @@ class DashboardController extends Controller
         return view('acara.tasks', $data);
     }
 
+    public function acaraDownloads()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'acara') abort(403);
+        
+        $downloads = \App\Models\Download::orderBy('order')->get();
+        return view('acara.downloads', compact('downloads'));
+    }
+
     public function acaraSubmissions()
     {
         $user = auth()->user();

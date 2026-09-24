@@ -211,6 +211,12 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Izin</span>
                  </a>
+                 <a wire:navigate href="{{ route('acara.downloads') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('acara.downloads') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('acara.downloads') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="link" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Link/File</span>
+                 </a>
                  <a wire:navigate href="{{ route('shared.downloads') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('shared.downloads') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('shared.downloads') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="download" class="h-5 w-5"></i>
