@@ -83,7 +83,7 @@
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.sektor.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="layers" class="h-5 w-5"></i>
                      </div>
-                     <span class="text-[10px] font-medium leading-tight">Sektor</span>
+                     <span class="text-[10px] font-medium leading-tight">Data Sektor</span>
                  </a>
                  <a wire:navigate href="{{ route($profileRouteName) }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs($profileRouteName) ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs($profileRouteName) ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
@@ -107,9 +107,9 @@
                  </a>
                  <a wire:navigate href="{{ route('admin.passwords.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.passwords.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.passwords.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
-                         <i data-lucide="key" class="h-5 w-5"></i>
+                         <i data-lucide="boxes" class="h-5 w-5"></i>
                      </div>
-                     <span class="text-[10px] font-medium leading-tight">Password</span>
+                     <span class="text-[10px] font-medium leading-tight">Sektor</span>
                  </a>
                  <a wire:navigate href="{{ route('admin.approvals.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.approvals.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.approvals.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">

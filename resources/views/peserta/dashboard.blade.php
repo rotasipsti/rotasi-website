@@ -26,9 +26,9 @@
                         <label for="sektor" class="text-sm font-medium">Pilih Sektor</label>
                         <select id="sektor" name="sektor" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-2" required>
                             <option value="" disabled selected>Pilih sektor</option>
-                            @for($i = 1; $i <= 10; $i++)
-                                <option value="{{ $i }}">Sektor {{ $i }}</option>
-                            @endfor
+                            @foreach($sektors as $sektor)
+                                <option value="{{ $sektor->sector_number }}">{{ $sektor->sector_name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     

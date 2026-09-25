@@ -10,7 +10,7 @@
 }">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-3xl font-bold">Manajemen Password Sektor</h1>
+            <h1 class="text-3xl font-bold">Manajemen Sektor</h1>
             <p class="text-muted-foreground">Kelola data sektor beserta password registrasinya</p>
         </div>
         <button @click="showAddModal = true" class="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium text-sm flex items-center justify-center transition-colors">

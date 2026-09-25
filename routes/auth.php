@@ -37,7 +37,10 @@ Route::middleware('guest')->group(function () {
     });
 
     Route::prefix('accounts/divisi-mentor')->group(function () {
-        Route::get('register', function () { return view('auth.mentor.register'); })->name('register.mentor');
+        Route::get('register', function () { 
+            $sektors = \App\Models\SectorPassword::orderBy('sector_number')->get();
+            return view('auth.mentor.register', compact('sektors')); 
+        })->name('register.mentor');
         Route::post('register', [RegisteredUserController::class, 'store']);
     });
 

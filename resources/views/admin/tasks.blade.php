@@ -289,9 +289,9 @@
                             <label class="text-sm font-medium">Target Sektor</label>
                             <select name="sector" x-model="sector" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1">
                                 <option value="0">Semua Sektor</option>
-                                @for($i=1; $i<=10; $i++)
-                                    <option value="{{ $i }}">Sektor {{ $i }}</option>
-                                @endfor
+                                @foreach($sektors as $sektor_item)
+                                    <option value="{{ $sektor_item->sector_number }}">{{ $sektor_item->sector_name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         

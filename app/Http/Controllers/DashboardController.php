@@ -28,6 +28,10 @@ class DashboardController extends Controller
         }
 
         $data = [];
+        if (is_null($user->sektor)) {
+            $data['sektors'] = \App\Models\SectorPassword::orderBy('sector_number')->get();
+        }
+
         if (!is_null($user->sektor) && $user->is_approved) {
             $data['tasks'] = Task::where('is_draft', false)
                                 ->where(function($query) use ($user) {
@@ -435,6 +439,7 @@ class DashboardController extends Controller
         $data['tasks'] = Task::withCount('submissions')
                             ->orderBy('created_at', 'desc')
                             ->paginate(15);
+        $data['sektors'] = \App\Models\SectorPassword::orderBy('sector_number')->get();
                             
         return view('acara.tasks', $data);
     }
@@ -508,6 +513,7 @@ class DashboardController extends Controller
         $data['tasks'] = Task::withCount('submissions')
                             ->orderBy('created_at', 'desc')
                             ->paginate(15);
+        $data['sektors'] = \App\Models\SectorPassword::orderBy('sector_number')->get();
                             
         return view('admin.tasks', $data);
     }

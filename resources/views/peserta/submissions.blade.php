@@ -18,9 +18,16 @@
                                 <h3 class="font-semibold">{{ $sub->task->title }}</h3>
                                 <p class="text-sm text-muted-foreground">Disubmit pada: {{ $sub->submitted_at->format('d M Y, H:i') }}</p>
                             </div>
-                            <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold {{ $sub->status === 'evaluated' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                                {{ ucfirst($sub->status) }}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                @if($sub->submitted_at > $sub->task->due_date)
+                                    <span class="inline-flex items-center rounded-full border border-red-200 bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
+                                        Terlambat
+                                    </span>
+                                @endif
+                                <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold {{ $sub->status === 'evaluated' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                    {{ ucfirst($sub->status) }}
+                                </span>
+                            </div>
                         </div>
                         
                         @if($sub->submission_text)

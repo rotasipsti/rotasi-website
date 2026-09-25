@@ -26,8 +26,8 @@
                 </a>
 
                 <a wire:navigate href="{{ route('admin.passwords.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.passwords.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
-                    <i data-lucide="key" class="mr-3 h-5 w-5"></i>
-                    Password Manajemen
+                    <i data-lucide="boxes" class="mr-3 h-5 w-5"></i>
+                    Manajemen Sektor
                 </a>
                 
                 <a wire:navigate href="{{ route('admin.approvals.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.approvals.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">

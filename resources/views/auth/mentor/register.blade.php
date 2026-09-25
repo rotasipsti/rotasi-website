@@ -40,9 +40,9 @@
                             <label for="sektor" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Pilih Sektor</label>
                             <select id="sektor" name="sektor" required class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2">
                                 <option value="" disabled selected>Pilih sektor</option>
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}">Sektor {{ $i }}</option>
-                                @endfor
+                                @foreach($sektors as $sektor)
+                                    <option value="{{ $sektor->sector_number }}">{{ $sektor->sector_name }}</option>
+                                @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('sektor')" class="mt-2" />
                         </div>
