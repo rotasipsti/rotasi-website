@@ -1,7 +1,22 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto" x-data="{
+    searchQuery: '{{ $search ?? '' }}',
+    doSearch() {
+        let url = new URL(window.location.href);
+        if (this.searchQuery) {
+            url.searchParams.set('search', this.searchQuery);
+        } else {
+            url.searchParams.delete('search');
+        }
+        if (typeof Livewire !== 'undefined') {
+            Livewire.navigate(url.toString());
+        } else {
+            window.location.href = url.toString();
+        }
+    }
+}">
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-2 text-2xl font-bold">
             <i data-lucide="users" class="h-6 w-6"></i>
@@ -22,6 +37,14 @@
                         </a>
                         @endforeach
                     </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-5 h-5 text-muted-foreground"></i>
+                    </div>
+                    <input type="text" x-model="searchQuery" @input.debounce.500ms="doSearch" class="bg-background border border-input text-foreground text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-3 shadow-sm transition-colors" placeholder="Cari nama, email, NIM, atau ID akun di semua role...">
                 </div>
 
                 <!-- Content Area -->
@@ -50,7 +73,7 @@
                                     <td class="px-6 py-4 font-medium">
                                         <div class="flex items-center gap-2 whitespace-nowrap">
                                             {{ $user->name }}
-                                            @if($activeRole === 'peserta' && $user->sektor)
+                                            @if($user->role === 'peserta' && $user->sektor)
                                                 <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-0.5 rounded border border-purple-400">Sektor {{ $user->sektor }}</span>
                                             @endif
                                         </div>

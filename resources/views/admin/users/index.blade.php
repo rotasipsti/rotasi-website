@@ -9,6 +9,20 @@
     showResetModal: false,
     resetUserId: null,
     resetUserName: '',
+    searchQuery: '{{ $search ?? '' }}',
+    doSearch() {
+        let url = new URL(window.location.href);
+        if (this.searchQuery) {
+            url.searchParams.set('search', this.searchQuery);
+        } else {
+            url.searchParams.delete('search');
+        }
+        if (typeof Livewire !== 'undefined') {
+            Livewire.navigate(url.toString());
+        } else {
+            window.location.href = url.toString();
+        }
+    },
     openResetModal(id, name) {
         this.resetUserId = id;
         this.resetUserName = name;
@@ -51,13 +65,21 @@
                         @endforeach
                     </div>
                 </div>
+                
+                <!-- Search Bar -->
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-5 h-5 text-muted-foreground"></i>
+                    </div>
+                    <input type="text" x-model="searchQuery" @input.debounce.500ms="doSearch" class="bg-background border border-input text-foreground text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-3 shadow-sm transition-colors" placeholder="Cari nama, email, NIM, atau ID akun di semua role...">
+                </div>
 
                 <!-- Content Area -->
                 <div class="flex-1 bg-background rounded-lg border border-border/50 p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div class="flex items-center gap-4">
                             <h3 class="text-lg font-bold capitalize">Daftar Akun: {{ str_replace('_', ' ', $activeRole) }}</h3>
-                            @if(count($users) > 0 && $activeRole !== 'admin')
+                            @if(count($users) > 0 && $activeRole !== 'admin' && $activeRole !== 'semua')
                                 <div x-show="selectionMode" x-transition style="display: none;" class="flex items-center gap-2 bg-card border border-border/50 px-3 py-1.5 rounded-md shadow-sm">
                                     <input type="checkbox" id="selectAll" class="rounded border-input text-primary focus:ring-primary h-4 w-4 cursor-pointer" @click="toggleAll()" :checked="selectAll">
                                     <label for="selectAll" class="text-sm font-medium cursor-pointer">Pilih Semua</label>
@@ -65,7 +87,7 @@
                             @endif
                         </div>
                         
-                        @if($activeRole !== 'admin')
+                        @if($activeRole !== 'admin' && $activeRole !== 'semua')
                         <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
                             <button @click="showCreateModal = true" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none border border-transparent bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 shadow" x-show="!selectionMode">
                                 <i data-lucide="plus" class="mr-2 h-4 w-4"></i> Tambah Akun
@@ -128,7 +150,7 @@
                                     <td class="px-6 py-4 font-medium">
                                         <div class="flex items-center gap-2 whitespace-nowrap">
                                             {{ $user->name }}
-                                            @if($activeRole === 'peserta' && $user->sektor)
+                                            @if($user->role === 'peserta' && $user->sektor)
                                                 <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-0.5 rounded border border-purple-400">Sektor {{ $user->sektor }}</span>
                                             @endif
                                         </div>

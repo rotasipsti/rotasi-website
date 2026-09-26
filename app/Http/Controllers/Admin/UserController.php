@@ -10,10 +10,24 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = collect(['admin', 'panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
-        $activeRole = $request->input('role', 'peserta');
+        $roles = collect(['semua', 'admin', 'panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
+        $activeRole = $request->input('role', 'semua');
+        $search = $request->input('search');
 
-        $query = User::where('role', $activeRole);
+        $query = User::query();
+
+        if ($activeRole !== 'semua') {
+            $query->where('role', $activeRole);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%")
+                  ->orWhere('custom_id', 'like', "%{$search}%");
+            });
+        }
         
         if ($activeRole === 'peserta') {
             $query->orderBy('sektor', 'asc');
@@ -26,8 +40,10 @@ class UserController extends Controller
         $roleCounts = User::select('role', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
                           ->groupBy('role')
                           ->pluck('total', 'role');
+        
+        $roleCounts['semua'] = User::count();
 
-        return view('admin.users.index', compact('roles', 'activeRole', 'users', 'roleCounts'));
+        return view('admin.users.index', compact('roles', 'activeRole', 'users', 'roleCounts', 'search'));
     }
 
     public function destroy($id)
@@ -173,14 +189,30 @@ class UserController extends Controller
     }
     public function stakeholderIndex(Request $request)
     {
-        $roles = collect(['panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
-        $activeRole = $request->input('role', 'peserta');
+        $roles = collect(['semua', 'panitia', 'keamanan', 'acara', 'mentor', 'peserta', 'stakeholder']);
+        $activeRole = $request->input('role', 'semua');
+        $search = $request->input('search');
 
         if ($activeRole === 'admin') {
             abort(403);
         }
 
-        $query = User::where('role', $activeRole);
+        $query = User::query();
+
+        if ($activeRole !== 'semua') {
+            $query->where('role', $activeRole);
+        } else {
+            $query->where('role', '!=', 'admin');
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%")
+                  ->orWhere('custom_id', 'like', "%{$search}%");
+            });
+        }
         
         if ($activeRole === 'peserta') {
             $query->orderBy('sektor', 'asc');
@@ -194,7 +226,9 @@ class UserController extends Controller
                           ->where('role', '!=', 'admin')
                           ->groupBy('role')
                           ->pluck('total', 'role');
+                          
+        $roleCounts['semua'] = User::where('role', '!=', 'admin')->count();
 
-        return view('stakeholder.users.index', compact('roles', 'activeRole', 'users', 'roleCounts'));
+        return view('stakeholder.users.index', compact('roles', 'activeRole', 'users', 'roleCounts', 'search'));
     }
 }
