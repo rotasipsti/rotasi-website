@@ -14,6 +14,7 @@
         if ($role === 'acara') $targetRoles[] = 'acara';
         if ($role === 'keamanan') $targetRoles[] = 'keamanan';
         if ($role === 'panitia') $targetRoles[] = 'panitia';
+        if ($role === 'stakeholder') $targetRoles[] = 'stakeholder';
     }
 
     $banners = \App\Models\Banner::where('is_active', true)

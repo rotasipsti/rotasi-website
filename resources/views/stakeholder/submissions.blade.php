@@ -7,6 +7,73 @@
         <p class="text-muted-foreground">Detail seluruh peserta yang mengumpulkan tugas dari semua sektor</p>
     </div>
 
+    <!-- Filter Form -->
+    <div class="bg-card border border-border/50 rounded-xl p-4 mb-6 shadow-sm">
+        <form action="{{ route('stakeholder.submissions') }}" method="GET" id="filterForm">
+            <div class="flex flex-col md:flex-row gap-4 items-end">
+                <!-- Search by Name/NIM -->
+                <div class="w-full md:flex-1">
+                    <label for="search" class="block text-sm font-medium mb-1">Cari Peserta</label>
+                    <div class="relative">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari nama atau NIM..." class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-9">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"></i>
+                    </div>
+                </div>
+
+                <!-- Filter by Task Type -->
+                <div class="w-full md:flex-1">
+                    <label for="task_type" class="block text-sm font-medium mb-1">Kategori Tugas</label>
+                    <select name="task_type" id="task_type" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                        <option value="">Semua Kategori</option>
+                        @foreach($task_types as $key => $label)
+                            <option value="{{ $key }}" {{ request('task_type') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Filter by Status -->
+                <div class="w-full md:flex-1">
+                    <label for="status" class="block text-sm font-medium mb-1">Status Keterlambatan</label>
+                    <select name="status" id="status" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                        <option value="">Semua Status</option>
+                        <option value="tepat_waktu" {{ request('status') == 'tepat_waktu' ? 'selected' : '' }}>Tepat Waktu</option>
+                        <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>Terlambat</option>
+                    </select>
+                </div>
+
+                @if(request('search') || request('task_type') || request('status'))
+                <div class="w-full md:w-auto">
+                    <a href="{{ route('stakeholder.submissions') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full text-center">
+                        Reset
+                    </a>
+                </div>
+                @endif
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('filterForm');
+            const selects = form.querySelectorAll('select');
+            const searchInput = document.getElementById('search');
+
+            selects.forEach(select => {
+                select.addEventListener('change', () => {
+                    form.submit();
+                });
+            });
+
+            let timeout = null;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    form.submit();
+                }, 500);
+            });
+        });
+    </script>
+
     <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow mb-6">
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">

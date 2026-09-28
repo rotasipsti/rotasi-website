@@ -418,16 +418,52 @@ class DashboardController extends Controller
         return view('acara.dashboard', $data);
     }
 
-    public function adminSubmissions()
+    public function adminSubmissions(Request $request)
     {
         $user = auth()->user();
         if ($user->role !== 'admin') abort(403);
         
-        $submissions = TaskSubmission::with(['task', 'participant'])
-                            ->orderBy('submitted_at', 'desc')
-                            ->paginate(15);
+        $query = TaskSubmission::with(['task', 'participant']);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('participant', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->has('task_type') && $request->task_type != '') {
+            $taskType = $request->task_type;
+            $query->whereHas('task', function($q) use ($taskType) {
+                $q->where('task_type', $taskType);
+            });
+        }
+        
+        if ($request->has('status') && $request->status == 'terlambat') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '>', 'tasks.due_date');
+        }
+        
+        if ($request->has('status') && $request->status == 'tepat_waktu') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '<=', 'tasks.due_date');
+        }
+
+        $submissions = $query->orderBy('task_submissions.submitted_at', 'desc')->paginate(15)->appends($request->all());
+        
+        $search = $request->search;
+        $task_type_filter = $request->task_type;
+        $status_filter = $request->status;
+        $task_types = [
+            'individu' => 'Individu',
+            'per_sektor' => 'Per Sektor',
+            'angkatan' => 'Satu Angkatan'
+        ];
                             
-        return view('admin.submissions', compact('submissions'));
+        return view('admin.submissions', compact('submissions', 'search', 'task_type_filter', 'status_filter', 'task_types'));
     }
 
     public function acaraTasks()
@@ -534,15 +570,51 @@ class DashboardController extends Controller
         return view('stakeholder.dashboard', $data);
     }
 
-    public function stakeholderSubmissions()
+    public function stakeholderSubmissions(Request $request)
     {
         if (auth()->user()->role !== 'stakeholder') abort(403);
         
-        $submissions = TaskSubmission::with(['task', 'participant'])
-                            ->orderBy('submitted_at', 'desc')
-                            ->paginate(15);
+        $query = TaskSubmission::with(['task', 'participant']);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('participant', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->has('task_type') && $request->task_type != '') {
+            $taskType = $request->task_type;
+            $query->whereHas('task', function($q) use ($taskType) {
+                $q->where('task_type', $taskType);
+            });
+        }
+        
+        if ($request->has('status') && $request->status == 'terlambat') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '>', 'tasks.due_date');
+        }
+        
+        if ($request->has('status') && $request->status == 'tepat_waktu') {
+            $query->select('task_submissions.*')
+                  ->join('tasks', 'task_submissions.task_id', '=', 'tasks.id')
+                  ->whereColumn('task_submissions.submitted_at', '<=', 'tasks.due_date');
+        }
+
+        $submissions = $query->orderBy('task_submissions.submitted_at', 'desc')->paginate(15)->appends($request->all());
+        
+        $search = $request->search;
+        $task_type_filter = $request->task_type;
+        $status_filter = $request->status;
+        $task_types = [
+            'individu' => 'Individu',
+            'per_sektor' => 'Per Sektor',
+            'angkatan' => 'Satu Angkatan'
+        ];
                             
-        return view('stakeholder.submissions', compact('submissions'));
+        return view('stakeholder.submissions', compact('submissions', 'search', 'task_type_filter', 'status_filter', 'task_types'));
     }
 
     public function stakeholderTasks()

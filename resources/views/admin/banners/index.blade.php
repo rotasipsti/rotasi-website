@@ -54,7 +54,8 @@
                                         'acara' => 'Acara',
                                         'keamanan' => 'Keamanan',
                                         'panitia' => 'Panitia',
-                                        'semua_panitia' => 'Semua Panitia (Luar Peserta)'
+                                        'semua_panitia' => 'Semua Panitia (Luar Peserta)',
+                                        'stakeholder' => 'Stakeholder'
                                     ];
                                 @endphp
                                 <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">
@@ -124,6 +125,7 @@
                         <option value="acara">Divisi Acara</option>
                         <option value="keamanan">Divisi Keamanan</option>
                         <option value="panitia">Panitia (Umum)</option>
+                        <option value="stakeholder">Stakeholder</option>
                     </select>
                 </div>
                 
@@ -233,6 +235,7 @@
                         <option value="acara">Divisi Acara Saja</option>
                         <option value="keamanan">Divisi Keamanan Saja</option>
                         <option value="panitia">Panitia (Umum) Saja</option>
+                        <option value="stakeholder">Stakeholder Saja</option>
                     </select>
                 </div>
                 
