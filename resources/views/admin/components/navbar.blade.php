@@ -15,6 +15,9 @@
         <!-- Right side -->
         <div class="flex items-center gap-2 md:gap-4">
             
+            <!-- Network Status Indicator -->
+            <x-network-status />
+
             <!-- Theme Toggle -->
             <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none" title="Ubah Tema">
                 <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
