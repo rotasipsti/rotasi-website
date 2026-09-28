@@ -31,7 +31,7 @@
 
         <button @click="forceCheck()" :disabled="isChecking" class="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-xs font-medium transition-colors disabled:opacity-50">
             <i data-lucide="refresh-cw" class="h-3 w-3" :class="{'animate-spin': isChecking}"></i>
-            <span x-text="isChecking ? 'Menguji...' : 'Uji Ulang Ping'"></span>
+            <span x-text="isChecking ? 'Menguji...' : 'Refresh'"></span>
         </button>
     </div>
 </div>
