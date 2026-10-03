@@ -7,6 +7,7 @@
             <h1 class="text-3xl font-bold">Dashboard Admin</h1>
             <p class="text-muted-foreground">Selamat datang, <span class="font-bold">{{ auth()->user()->name }}</span> 👋</p>
         </div>
+        <x-pwa-install-button />
     </div>
 
 

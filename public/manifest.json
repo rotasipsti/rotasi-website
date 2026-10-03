@@ -1,0 +1,21 @@
+{
+  "name": "ROTASI Digital",
+  "short_name": "ROTASI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e11d48",
+  "description": "Aplikasi ROTASI PSTI",
+  "icons": [
+    {
+      "src": "/rotasi logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/rotasi logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

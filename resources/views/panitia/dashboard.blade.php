@@ -11,6 +11,7 @@
             <h1 class="text-3xl font-bold">Dashboard Panitia</h1>
             <p class="text-muted-foreground mt-1">Selamat datang, <span class="font-bold">{{ auth()->user()->name }}</span> 👋</p>
         </div>
+        <x-pwa-install-button />
     </div>
 
     <!-- Summary Cards -->

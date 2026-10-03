@@ -16,6 +16,7 @@
             <h1 class="text-3xl font-bold uppercase">Dashboard Mentor</h1>
             <p class="text-muted-foreground">Selamat datang, <span class="font-bold">{{ auth()->user()->name }}</span> 👋</p>
         </div>
+        <x-pwa-install-button />
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
