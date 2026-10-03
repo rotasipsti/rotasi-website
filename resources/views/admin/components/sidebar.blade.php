@@ -6,7 +6,7 @@
             
             <a wire:navigate href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard*') || request()->routeIs('admin.dashboard') || request()->routeIs('stakeholder.dashboard') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                 <i data-lucide="layout-dashboard" class="mr-3 h-5 w-5"></i>
-                Dashboard
+                Beranda
             </a>
 
             @if(auth()->user()->role === 'admin')
