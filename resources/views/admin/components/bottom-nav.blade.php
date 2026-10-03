@@ -62,7 +62,7 @@
                  <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('dashboard*') || request()->routeIs('admin.dashboard') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                      <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
                  </div>
-                 <span class="text-[10px] font-medium leading-tight">Dashboard</span>
+                 <span class="text-[10px] font-medium leading-tight">Beranda</span>
              </a>
 
              @if(auth()->user()->role === 'admin')
