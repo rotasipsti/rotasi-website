@@ -206,6 +206,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/tasks', [DashboardController::class, 'adminTasks'])->name('tasks');
         
         Route::get('/system-info', [\App\Http\Controllers\Admin\SystemInfoController::class, 'index'])->name('system-info.index');
+        Route::get('/system-info/stats', [\App\Http\Controllers\Admin\SystemInfoController::class, 'stats'])->name('system-info.stats');
         Route::get('/submissions', [DashboardController::class, 'adminSubmissions'])->name('submissions');
         Route::get('/passwords', [\App\Http\Controllers\Admin\SectorPasswordController::class, 'index'])->name('passwords.index');
         Route::post('/passwords', [\App\Http\Controllers\Admin\SectorPasswordController::class, 'store'])->name('passwords.store');

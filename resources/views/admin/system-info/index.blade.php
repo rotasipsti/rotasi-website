@@ -11,7 +11,7 @@
 
 
     <!-- Hardware & Resource Info -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div x-data="systemInfo()" x-init="init()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Penyimpanan Server -->
         <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow flex flex-col">
@@ -31,11 +31,11 @@
                         <!-- Background track -->
                         <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="text-secondary" stroke-linecap="round" pathLength="100"></path>
                         <!-- Value track -->
-                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="{{ $diskUsagePercent > 80 ? 'text-destructive' : 'text-primary' }} transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $diskUsagePercent }}"></path>
+                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" :class="disk.percent > 80 ? 'text-destructive' : 'text-primary'" class="transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" :stroke-dashoffset="100 - disk.percent"></path>
                     </svg>
                     <!-- Percentage Text -->
                     <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-end h-full pb-1">
-                        <span class="text-4xl font-bold font-bebas-neue tracking-wider {{ $diskUsagePercent > 80 ? 'text-destructive' : 'text-primary' }}">{{ $diskUsagePercent }}%</span>
+                        <span class="text-4xl font-bold font-bebas-neue tracking-wider" :class="disk.percent > 80 ? 'text-destructive' : 'text-primary'" x-text="disk.percent + '%'"></span>
                         <span class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider leading-none">Terpakai</span>
                     </div>
                 </div>
@@ -43,10 +43,10 @@
                 <!-- Info Detail -->
                 <div class="text-center mt-2 space-y-1">
                     <p class="text-sm font-medium text-foreground">
-                        <span class="font-bold">{{ $formatBytes($usedDisk) }}</span> dari <span class="font-bold">{{ $formatBytes($totalDisk) }}</span> digunakan
+                        <span class="font-bold" x-text="disk.used"></span> dari <span class="font-bold" x-text="disk.total"></span> digunakan
                     </p>
                     <p class="text-sm text-muted-foreground">
-                        sisa : <span class="font-semibold">{{ $formatBytes($freeDisk) }}</span>
+                        sisa : <span class="font-semibold" x-text="disk.free"></span>
                     </p>
                 </div>
             </div>
@@ -64,47 +64,37 @@
                 </div>
             </div>
             <div class="p-6 flex-1 flex flex-col justify-center items-center">
-                @php
-                    $memLimitStr = ini_get('memory_limit');
-                    $memLimitBytes = -1;
-                    if (preg_match('/^(\d+)(.)$/i', trim($memLimitStr), $matches)) {
-                        $val = (int)$matches[1];
-                        $unit = strtoupper($matches[2]);
-                        if ($unit == 'M') $memLimitBytes = $val * 1024 * 1024;
-                        elseif ($unit == 'G') $memLimitBytes = $val * 1024 * 1024 * 1024;
-                        elseif ($unit == 'K') $memLimitBytes = $val * 1024;
-                    }
-                    $memPercent = $memLimitBytes > 0 ? min(round(($memoryUsage / $memLimitBytes) * 100, 1), 100) : 100;
-                    $isMemWarning = $memPercent > 80;
-                @endphp
                 <div class="relative w-56 h-28 mx-auto mb-4">
                     <svg viewBox="0 0 100 50" class="w-full h-full drop-shadow-sm overflow-visible">
                         <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="text-secondary" stroke-linecap="round" pathLength="100"></path>
-                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="{{ $isMemWarning ? 'text-destructive' : 'text-orange-500' }} transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $memPercent }}"></path>
+                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" :class="mem.percent > 80 ? 'text-destructive' : 'text-orange-500'" class="transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" :stroke-dashoffset="100 - mem.percent"></path>
                     </svg>
                     <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-end h-full pb-1">
-                        <span class="text-4xl font-bold font-bebas-neue tracking-wider {{ $isMemWarning ? 'text-destructive' : 'text-orange-500' }}">
-                            {{ $memLimitBytes > 0 ? $memPercent.'%' : 'N/A' }}
-                        </span>
+                        <span class="text-4xl font-bold font-bebas-neue tracking-wider" :class="mem.percent > 80 ? 'text-destructive' : 'text-orange-500'" x-text="mem.hasLimit ? mem.percent + '%' : 'N/A'"></span>
                         <span class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider leading-none">Terpakai</span>
                     </div>
                 </div>
                 <div class="text-center mt-2 space-y-1">
-                    @if($memLimitBytes > 0)
-                        <p class="text-sm font-medium text-foreground">
-                            <span class="font-bold">{{ $formatBytes($memoryUsage) }}</span> dari <span class="font-bold">{{ $formatBytes($memLimitBytes) }}</span> digunakan
-                        </p>
-                        <p class="text-sm text-muted-foreground">
-                            sisa : <span class="font-semibold">{{ $formatBytes(max($memLimitBytes - $memoryUsage, 0)) }}</span>
-                        </p>
-                    @else
-                        <p class="text-sm font-medium text-foreground">
-                            <span class="font-bold">{{ $formatBytes($memoryUsage) }}</span> digunakan
-                        </p>
-                        <p class="text-sm text-muted-foreground">
-                            sisa : <span class="font-semibold">Tidak Terbatas</span>
-                        </p>
-                    @endif
+                    <template x-if="mem.hasLimit">
+                        <div>
+                            <p class="text-sm font-medium text-foreground">
+                                <span class="font-bold" x-text="mem.used"></span> dari <span class="font-bold" x-text="mem.total"></span> digunakan
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                sisa : <span class="font-semibold" x-text="mem.free"></span>
+                            </p>
+                        </div>
+                    </template>
+                    <template x-if="!mem.hasLimit">
+                        <div>
+                            <p class="text-sm font-medium text-foreground">
+                                <span class="font-bold" x-text="mem.used"></span> digunakan
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                sisa : <span class="font-semibold">Tidak Terbatas</span>
+                            </p>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -121,40 +111,38 @@
                 </div>
             </div>
             <div class="p-6 flex-1 flex flex-col justify-center items-center">
-                @php
-                    $cpuSupported = $cpuLoad !== null;
-                    $cpuPercentVal = $cpuSupported ? min(round((float)$cpuLoad * 100, 1), 100) : 0;
-                    $isCpuWarning = $cpuPercentVal > 80;
-                @endphp
                 <div class="relative w-56 h-28 mx-auto mb-4">
                     <svg viewBox="0 0 100 50" class="w-full h-full drop-shadow-sm overflow-visible">
                         <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="text-secondary" stroke-linecap="round" pathLength="100"></path>
-                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" class="{{ $isCpuWarning ? 'text-destructive' : 'text-primary' }} transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $cpuPercentVal }}"></path>
+                        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="currentColor" stroke-width="10" :class="cpu.percent > 80 ? 'text-destructive' : 'text-primary'" class="transition-all duration-1000 ease-out" stroke-linecap="round" pathLength="100" stroke-dasharray="100" :stroke-dashoffset="100 - cpu.percent"></path>
                     </svg>
                     <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-end h-full pb-1">
-                        <span class="text-4xl font-bold font-bebas-neue tracking-wider {{ $isCpuWarning ? 'text-destructive' : ($cpuSupported ? 'text-primary' : 'text-muted-foreground') }}">
-                            {{ $cpuSupported ? $cpuPercentVal.'%' : 'N/A' }}
-                        </span>
+                        <span class="text-4xl font-bold font-bebas-neue tracking-wider" :class="cpu.percent > 80 ? 'text-destructive' : (cpu.supported ? 'text-primary' : 'text-muted-foreground')" x-text="cpu.supported ? cpu.percent + '%' : 'N/A'"></span>
                         <span class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider leading-none">Terpakai</span>
                     </div>
                 </div>
                 
                 <div class="text-center mt-2 space-y-1">
-                    @if($cpuSupported)
-                        <p class="text-sm font-medium text-foreground">
-                            <span class="font-bold">{{ $cpuPercentVal }}%</span> dari <span class="font-bold">100%</span> kapasitas
-                        </p>
-                        <p class="text-sm text-muted-foreground">
-                            sisa : <span class="font-semibold">{{ 100 - $cpuPercentVal }}%</span>
-                        </p>
-                    @else
-                        <p class="text-sm font-medium text-foreground">
-                            <span class="font-bold">OS Tidak Didukung</span>
-                        </p>
-                        <p class="text-sm text-muted-foreground">
-                            sisa : <span class="font-semibold">N/A</span>
-                        </p>
-                    @endif
+                    <template x-if="cpu.supported">
+                        <div>
+                            <p class="text-sm font-medium text-foreground">
+                                <span class="font-bold" x-text="cpu.percent + '%'"></span> dari <span class="font-bold">100%</span> kapasitas
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                sisa : <span class="font-semibold" x-text="(100 - cpu.percent).toFixed(1) + '%'"></span>
+                            </p>
+                        </div>
+                    </template>
+                    <template x-if="!cpu.supported">
+                        <div>
+                            <p class="text-sm font-medium text-foreground">
+                                <span class="font-bold">OS Tidak Didukung</span>
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                                sisa : <span class="font-semibold">N/A</span>
+                            </p>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -218,4 +206,80 @@
         </div>
     </div>
 </div>
+
+<script>
+    function systemInfo() {
+        return {
+            disk: {
+                percent: {{ $diskUsagePercent }},
+                used: '{{ $formatBytes($usedDisk) }}',
+                total: '{{ $formatBytes($totalDisk) }}',
+                free: '{{ $formatBytes($freeDisk) }}'
+            },
+            mem: {
+                percent: {{ isset($memPercent) ? $memPercent : 0 }},
+                used: '{{ $formatBytes($memoryUsage) }}',
+                total: '{{ isset($memLimitBytes) && $memLimitBytes > 0 ? $formatBytes($memLimitBytes) : "Tidak Terbatas" }}',
+                free: '{{ isset($memLimitBytes) && $memLimitBytes > 0 ? $formatBytes(max($memLimitBytes - $memoryUsage, 0)) : "Tidak Terbatas" }}',
+                hasLimit: {{ isset($memLimitBytes) && $memLimitBytes > 0 ? 'true' : 'false' }}
+            },
+            cpu: {
+                percent: {{ isset($cpuPercentVal) ? $cpuPercentVal : 0 }},
+                supported: {{ isset($cpuSupported) && $cpuSupported ? 'true' : 'false' }}
+            },
+            
+            init() {
+                // Determine initial values for variables missing from blade because PHP was removed
+                @php
+                    $memLimitStr = ini_get('memory_limit');
+                    $memLimitBytes = -1;
+                    if (preg_match('/^(\d+)(.)$/i', trim($memLimitStr), $matches)) {
+                        $val = (int)$matches[1];
+                        $unit = strtoupper($matches[2]);
+                        if ($unit == 'M') $memLimitBytes = $val * 1024 * 1024;
+                        elseif ($unit == 'G') $memLimitBytes = $val * 1024 * 1024 * 1024;
+                        elseif ($unit == 'K') $memLimitBytes = $val * 1024;
+                    }
+                    $memPercent = $memLimitBytes > 0 ? min(round(($memoryUsage / $memLimitBytes) * 100, 1), 100) : 100;
+                    
+                    $cpuSupported = $cpuLoad !== null;
+                    $cpuPercentVal = $cpuSupported ? min(round((float)$cpuLoad * 100, 1), 100) : 0;
+                @endphp
+                
+                // Set initial data
+                this.mem.percent = {{ $memPercent }};
+                this.mem.total = '{{ $memLimitBytes > 0 ? $formatBytes($memLimitBytes) : "Tidak Terbatas" }}';
+                this.mem.free = '{{ $memLimitBytes > 0 ? $formatBytes(max($memLimitBytes - $memoryUsage, 0)) : "Tidak Terbatas" }}';
+                this.mem.hasLimit = {{ $memLimitBytes > 0 ? 'true' : 'false' }};
+                
+                this.cpu.percent = {{ $cpuPercentVal }};
+                this.cpu.supported = {{ $cpuSupported ? 'true' : 'false' }};
+
+                // Polling every 3 seconds
+                setInterval(() => {
+                    this.fetchStats();
+                }, 3000);
+            },
+            
+            async fetchStats() {
+                try {
+                    const response = await fetch('{{ route("admin.system-info.stats") }}', {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.disk = data.disk;
+                        this.mem = data.mem;
+                        this.cpu = data.cpu;
+                    }
+                } catch (error) {
+                    // silently fail on network error, will try again next interval
+                }
+            }
+        }
+    }
+</script>
 @endsection
