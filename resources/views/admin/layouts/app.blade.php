@@ -37,6 +37,7 @@
     @livewireStyles
 </head>
 <body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-0" x-data="{ sidebarOpen: false }">
+    <x-announcement />
     
     <!-- Admin Navbar -->
     @include('admin.components.navbar')

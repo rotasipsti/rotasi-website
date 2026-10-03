@@ -225,6 +225,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/approvals/{id}/approve', [\App\Http\Controllers\Admin\ApprovalController::class, 'approve'])->name('approvals.approve');
         Route::delete('/approvals/{id}/reject', [\App\Http\Controllers\Admin\ApprovalController::class, 'reject'])->name('approvals.reject');
 
+        Route::resource('/announcements', \App\Http\Controllers\AnnouncementController::class);
 
         Route::prefix('cms')->name('cms.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CMSController::class, 'index'])->name('index');

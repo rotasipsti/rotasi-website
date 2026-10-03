@@ -105,6 +105,12 @@
                      </div>
                      <span class="text-[10px] font-medium leading-tight">Banner</span>
                  </a>
+                 <a wire:navigate href="{{ route('admin.announcements.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.announcements.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
+                     <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.announcements.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
+                         <i data-lucide="bell" class="h-5 w-5"></i>
+                     </div>
+                     <span class="text-[10px] font-medium leading-tight">Pengumuman</span>
+                 </a>
                  <a wire:navigate href="{{ route('admin.passwords.index') }}" class="flex flex-col items-center justify-start text-center {{ request()->routeIs('admin.passwords.*') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }}">
                      <div class="h-11 w-11 rounded-[14px] flex items-center justify-center mb-1.5 {{ request()->routeIs('admin.passwords.*') ? 'bg-primary/10 shadow-sm' : 'bg-muted/50' }}">
                          <i data-lucide="boxes" class="h-5 w-5"></i>

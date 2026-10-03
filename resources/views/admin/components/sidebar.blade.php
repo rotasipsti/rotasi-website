@@ -25,9 +25,24 @@
                     Manajemen Banner
                 </a>
 
+                <a wire:navigate href="{{ route('admin.announcements.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.announcements.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="bell" class="mr-3 h-5 w-5"></i>
+                    Manajemen Pengumuman
+                </a>
+
                 <a wire:navigate href="{{ route('admin.passwords.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.passwords.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="boxes" class="mr-3 h-5 w-5"></i>
                     Manajemen Sektor
+                </a>
+
+                <a wire:navigate href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="users" class="mr-3 h-5 w-5"></i>
+                    Manajemen Akun
+                </a>
+
+                <a wire:navigate href="{{ route('admin.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
+                    Manajemen Tugas
                 </a>
                 
                 <a wire:navigate href="{{ route('admin.approvals.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.approvals.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
@@ -35,19 +50,10 @@
                     Persetujuan Akun
                 </a>
                 
-                <a wire:navigate href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
-                    <i data-lucide="users" class="mr-3 h-5 w-5"></i>
-                    Data Akun
-                </a>
-                
+
                 <a wire:navigate href="{{ route('admin.sektor.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.sektor.*') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
                     <i data-lucide="layers" class="mr-3 h-5 w-5"></i>
                     Data Sektor
-                </a>
-                
-                <a wire:navigate href="{{ route('admin.tasks') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.tasks') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">
-                    <i data-lucide="file-text" class="mr-3 h-5 w-5"></i>
-                    Manajemen Tugas
                 </a>
                 
                 <a wire:navigate href="{{ route('admin.submissions') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent hover:text-accent-foreground' }}">

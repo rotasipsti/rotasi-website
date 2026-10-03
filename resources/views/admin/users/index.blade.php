@@ -47,7 +47,7 @@
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-2 text-2xl font-bold">
             <i data-lucide="users" class="h-6 w-6"></i>
-            Data Akun
+            Manajemen Akun
         </div>
     </div>
 
