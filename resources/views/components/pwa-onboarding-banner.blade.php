@@ -65,7 +65,7 @@
                 <div class="pr-4">
                     <h3 class="font-bold text-foreground text-base">Install ROTASI Digital</h3>
                     <p class="text-sm text-muted-foreground mt-1 leading-relaxed">
-                        Install ROTASI Digital di perangkat Anda untuk akses yang lebih cepat.
+                        Install ROTASI Digital di perangkat Anda untuk akses ROTASI yang lebih cepat.
                     </p>
                     <div class="mt-4 flex gap-2">
                         <button @click="installApp()" class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex-1 shadow-sm">

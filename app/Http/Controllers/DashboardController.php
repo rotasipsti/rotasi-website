@@ -13,6 +13,10 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
+        if (session()->has('login_success')) {
+            session()->keep(['login_success']);
+        }
+        
         if ($user->role === 'mentor') {
             return redirect()->route('dashboard.mentor');
         } elseif ($user->role === 'acara') {

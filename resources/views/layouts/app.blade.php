@@ -113,5 +113,41 @@
                 });
             }
         </script>
+
+        <!-- Toast Login Success -->
+        @if(session('login_success'))
+        <div x-data="{ show: true, progress: 100 }"
+             x-init="
+                setTimeout(() => show = false, 3000);
+                let interval = setInterval(() => {
+                    progress -= 1;
+                    if(progress <= 0) clearInterval(interval);
+                }, 30);
+             "
+             x-show="show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-full md:translate-y-0 md:translate-x-full"
+             x-transition:enter-end="opacity-100 translate-y-0 md:translate-x-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 translate-y-0 md:translate-x-0"
+             x-transition:leave-end="opacity-0 -translate-y-full md:translate-y-0 md:translate-x-full"
+             class="fixed top-4 left-4 right-4 z-[100] w-auto md:w-80 md:top-20 md:left-auto md:right-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden"
+             style="display: none;"
+        >
+            <div class="p-4 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-gray-100 text-sm">Berhasil Masuk</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Selamat datang kembali di ROTASI!</p>
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="h-1 bg-gray-100 dark:bg-gray-700 w-full">
+                <div class="h-full bg-green-500 transition-all duration-75 ease-linear" :style="`width: ${progress}%`"></div>
+            </div>
+        </div>
+        @endif
     </body>
 </html>

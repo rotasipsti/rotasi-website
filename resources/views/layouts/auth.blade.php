@@ -30,6 +30,9 @@
     
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="font-sans bg-background theme-transition text-foreground antialiased" x-data="{
     scrolled: false,
@@ -130,8 +133,5 @@
             });
         }
     </script>
-
-    <!-- Global PWA Onboarding Banner -->
-    <x-pwa-onboarding-banner />
 </body>
 </html>

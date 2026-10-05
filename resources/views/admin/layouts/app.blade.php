@@ -252,5 +252,41 @@
 
     <!-- Global PWA Onboarding Banner -->
     <x-pwa-onboarding-banner />
+
+    <!-- Toast Login Success -->
+    @if(session('login_success'))
+    <div x-data="{ show: true, progress: 100 }"
+         x-init="
+            setTimeout(() => show = false, 3000);
+            let interval = setInterval(() => {
+                progress -= 1;
+                if(progress <= 0) clearInterval(interval);
+            }, 30);
+         "
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-y-full md:translate-y-0 md:translate-x-full"
+         x-transition:enter-end="opacity-100 translate-y-0 md:translate-x-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 translate-y-0 md:translate-x-0"
+         x-transition:leave-end="opacity-0 -translate-y-full md:translate-y-0 md:translate-x-full"
+         class="fixed top-4 left-4 right-4 z-[100] w-auto md:w-80 md:top-20 md:left-auto md:right-4 bg-card border border-border/50 rounded-xl shadow-lg overflow-hidden"
+         style="display: none;"
+    >
+        <div class="p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500">
+                <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-foreground text-sm">Berhasil Masuk</h4>
+                <p class="text-xs text-muted-foreground mt-0.5">Selamat datang kembali di ROTASI!</p>
+            </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="h-1 bg-secondary w-full">
+            <div class="h-full bg-green-500 transition-all duration-75 ease-linear" :style="`width: ${progress}%`"></div>
+        </div>
+    </div>
+    @endif
 </body>
 </html>

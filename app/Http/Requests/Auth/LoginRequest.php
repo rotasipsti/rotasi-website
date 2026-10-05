@@ -30,6 +30,17 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'cf-turnstile-response' => ['required', new \App\Rules\TurnstileRule()],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     */
+    public function messages(): array
+    {
+        return [
+            'cf-turnstile-response.required' => 'Harap centang kotak verifikasi keamanan terlebih dahulu.',
         ];
     }
 
