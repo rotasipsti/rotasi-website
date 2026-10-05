@@ -319,5 +319,8 @@
             });
         }
     </script>
+
+    <!-- Global PWA Onboarding Banner -->
+    <x-pwa-onboarding-banner />
 </body>
 </html>

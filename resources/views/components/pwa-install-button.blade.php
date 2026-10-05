@@ -20,6 +20,7 @@
         this.showInstallBtn = false;
     }
 }" class="w-full sm:w-auto">
+    <!-- Tombol Asli (Sejajar dengan Judul Dashboard) -->
     <button 
         x-show="showInstallBtn" 
         style="display: none;"
