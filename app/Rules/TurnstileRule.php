@@ -13,7 +13,7 @@ class TurnstileRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $secretKey = env('TURNSTILE_SECRET_KEY', '1x0000000000000000000000000000000AA'); // Default to testing key
+        $secretKey = config('services.turnstile.secret_key');
 
         $http = Http::asForm();
         
