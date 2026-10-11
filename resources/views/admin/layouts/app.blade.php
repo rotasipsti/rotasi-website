@@ -26,13 +26,30 @@
 
     <!-- Theme Initialization -->
     <script>
-        const storedTheme = localStorage.getItem('theme') || 'dark';
-        if (storedTheme === 'light') {
-            document.documentElement.classList.remove('dark');
-            document.cookie = "theme=light; path=/; max-age=31536000";
-        } else {
-            document.documentElement.classList.add('dark');
-            document.cookie = "theme=dark; path=/; max-age=31536000";
+        function getSystemTheme() {
+            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            const effective = theme === 'system' ? getSystemTheme() : theme;
+            if (effective === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.cookie = "theme=light; path=/; max-age=31536000";
+            } else {
+                document.documentElement.classList.add('dark');
+                document.cookie = "theme=dark; path=/; max-age=31536000";
+            }
+        }
+
+        const initialTheme = localStorage.getItem('theme') || 'system';
+        applyTheme(initialTheme);
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if ((localStorage.getItem('theme') || 'system') === 'system') {
+                    applyTheme('system');
+                }
+            });
         }
     </script>
 
@@ -222,6 +239,15 @@
     @endif
 
     <script>
+        function setTheme(theme) {
+            localStorage.setItem('theme', theme);
+            applyTheme(theme);
+            window.dispatchEvent(new CustomEvent('theme-changed', { detail: theme }));
+            if (window.lucide) {
+                setTimeout(() => window.lucide.createIcons(), 50);
+            }
+        }
+
         function toggleTheme() {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');

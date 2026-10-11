@@ -18,11 +18,93 @@
             <!-- Network Status Indicator -->
             <x-network-status />
 
-            <!-- Theme Toggle -->
-            <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none" title="Ubah Tema">
-                <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
-                <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
-            </button>
+            <!-- Theme Selector Dropdown (By Sistem, Gelap, Terang) -->
+            <div class="relative" 
+                 x-data="{ 
+                     open: false, 
+                     theme: localStorage.getItem('theme') || 'system' 
+                 }" 
+                 x-init="
+                     window.addEventListener('theme-changed', (e) => { 
+                         theme = e.detail; 
+                         $nextTick(() => { if (window.lucide) window.lucide.createIcons(); });
+                     });
+                 ">
+                <button @click="open = !open; $nextTick(() => { if (window.lucide) window.lucide.createIcons(); })" 
+                        type="button"
+                        class="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus:outline-none flex items-center justify-center relative" 
+                        title="Ubah Tema"
+                        :aria-expanded="open">
+                    <span x-show="theme === 'system'" class="flex items-center">
+                        <i data-lucide="monitor" class="h-5 w-5"></i>
+                    </span>
+                    <span x-show="theme === 'dark'" style="display: none;" class="flex items-center text-blue-400">
+                        <i data-lucide="moon" class="h-5 w-5"></i>
+                    </span>
+                    <span x-show="theme === 'light'" style="display: none;" class="flex items-center text-amber-500">
+                        <i data-lucide="sun" class="h-5 w-5"></i>
+                    </span>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div x-show="open" 
+                     @click.away="open = false" 
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-100"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="absolute right-0 top-11 mt-1 w-44 rounded-xl shadow-xl bg-card border border-border/60 py-1.5 z-50 overflow-hidden" 
+                     style="display: none;">
+                    
+                    <div class="px-3 py-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider border-b border-border/40 mb-1">
+                        Pilih Tema
+                    </div>
+
+                    <!-- By Sistem -->
+                    <button type="button" 
+                            @click="setTheme('system'); open = false;" 
+                            class="w-full flex items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-accent text-foreground text-left"
+                            :class="{ 'bg-accent/70 font-medium text-primary': theme === 'system' }">
+                        <div class="flex items-center gap-2.5">
+                            <i data-lucide="monitor" class="h-4 w-4 text-muted-foreground"></i>
+                            <span>Perangkat</span>
+                        </div>
+                        <span x-show="theme === 'system'" class="flex items-center">
+                            <i data-lucide="check" class="h-4 w-4 text-primary"></i>
+                        </span>
+                    </button>
+
+                    <!-- Gelap -->
+                    <button type="button" 
+                            @click="setTheme('dark'); open = false;" 
+                            class="w-full flex items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-accent text-foreground text-left"
+                            :class="{ 'bg-accent/70 font-medium text-primary': theme === 'dark' }">
+                        <div class="flex items-center gap-2.5">
+                            <i data-lucide="moon" class="h-4 w-4 text-blue-400"></i>
+                            <span>Gelap</span>
+                        </div>
+                        <span x-show="theme === 'dark'" style="display: none;" class="flex items-center">
+                            <i data-lucide="check" class="h-4 w-4 text-primary"></i>
+                        </span>
+                    </button>
+
+                    <!-- Terang -->
+                    <button type="button" 
+                            @click="setTheme('light'); open = false;" 
+                            class="w-full flex items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-accent text-foreground text-left"
+                            :class="{ 'bg-accent/70 font-medium text-primary': theme === 'light' }">
+                        <div class="flex items-center gap-2.5">
+                            <i data-lucide="sun" class="h-4 w-4 text-amber-500"></i>
+                            <span>Terang</span>
+                        </div>
+                        <span x-show="theme === 'light'" style="display: none;" class="flex items-center">
+                            <i data-lucide="check" class="h-4 w-4 text-primary"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
             
             <div class="h-6 w-px bg-border/50 mx-1 md:mx-2"></div>
             
