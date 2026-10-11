@@ -108,7 +108,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10 h-9 px-3">
-                                                    <i data-lucide="rotate-ccw" class="mr-1.5 h-4 w-4"></i> Batalkan Pengiriman
+                                                    <i data-lucide="rotate-ccw" class="mr-1.5 h-4 w-4"></i> Batalkan Pengumpulan
                                                 </button>
                                             </form>
                                         @endif
