@@ -10,15 +10,26 @@ class SubmissionController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'task_id' => 'required|exists:tasks,id',
-            'submission_text' => 'nullable|string',
-            'file' => 'nullable|file|max:51200', // Max 50MB
-        ]);
-
         $submission = TaskSubmission::where('task_id', $request->task_id)
                                     ->where('participant_id', auth()->id())
                                     ->first();
+
+        // Wajib jika belum pernah mengumpulkan atau submission belum memiliki file
+        $isFileRequired = !$submission || empty($submission->file_url);
+
+        $request->validate([
+            'task_id' => 'required|exists:tasks,id',
+            'submission_text' => 'nullable|string',
+            'file' => ($isFileRequired ? 'required' : 'nullable') . '|file|max:51200', // Max 50MB
+        ], [
+            'task_id.required' => 'ID tugas tidak valid.',
+            'task_id.exists' => 'Tugas tidak ditemukan.',
+            'file.required' => 'File tugas wajib dilampirkan.',
+            'file.file' => 'File yang diunggah tidak valid.',
+            'file.max' => 'Ukuran file tidak boleh melebihi 50MB.',
+        ]);
+
+        $isNew = !$submission;
 
         if (!$submission) {
             $submission = new TaskSubmission();
@@ -29,11 +40,19 @@ class SubmissionController extends Controller
         $submission->submission_text = $request->submission_text;
         
         if ($request->hasFile('file')) {
-            // Delete old file if exists
+            // Hapus file lama jika ada
             if ($submission->file_url) {
-                // Parse storage path from URL
-                $oldPath = str_replace(asset('storage/'), '', $submission->file_url);
-                Storage::disk('public')->delete($oldPath);
+                // Parse storage path dari URL atau relative path
+                $parsed = parse_url($submission->file_url, PHP_URL_PATH);
+                if ($parsed && str_contains($parsed, '/storage/')) {
+                    $oldPath = substr($parsed, strpos($parsed, '/storage/') + strlen('/storage/'));
+                } else {
+                    $oldPath = str_replace(asset('storage/'), '', $submission->file_url);
+                }
+
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
 
             $file = $request->file('file');
@@ -45,19 +64,63 @@ class SubmissionController extends Controller
         }
 
         $submission->submitted_at = \Carbon\Carbon::now();
-        // keep status evaluated if already evaluated, else submitted
+        // Pertahankan status evaluated jika sudah dinilai, selain itu submitted
         if ($submission->status !== 'evaluated') {
             $submission->status = 'submitted';
         }
         
         $submission->save();
 
+        $message = $isNew ? 'Tugas berhasil diupload.' : 'Tugas berhasil diperbarui.';
+
         if ($request->ajax() || $request->wantsJson()) {
-            session()->flash('success', 'Tugas berhasil diupload.');
-            return response()->json(['success' => true]);
+            session()->flash('success', $message);
+            return response()->json(['success' => true, 'message' => $message]);
         }
 
-        return redirect()->back()->with('success', 'Tugas berhasil diupload.');
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function destroy(Request $request, TaskSubmission $submission)
+    {
+        // Pastikan hanya pemilik tugas atau admin yang dapat membatalkan
+        if ($submission->participant_id !== auth()->id() && auth()->user()->role !== 'admin') {
+            abort(403, 'Anda tidak memiliki hak akses untuk membatalkan pengiriman tugas ini.');
+        }
+
+        // Tugas yang sudah dinilai tidak dapat dibatalkan
+        if ($submission->status === 'evaluated') {
+            $errorMsg = 'Tugas yang sudah dinilai tidak dapat dibatalkan.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->with('error', $errorMsg);
+        }
+
+        // Hapus file dari storage jika ada
+        if ($submission->file_url) {
+            $parsed = parse_url($submission->file_url, PHP_URL_PATH);
+            if ($parsed && str_contains($parsed, '/storage/')) {
+                $filePath = substr($parsed, strpos($parsed, '/storage/') + strlen('/storage/'));
+            } else {
+                $filePath = str_replace(asset('storage/'), '', $submission->file_url);
+            }
+
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
+
+        $submission->delete();
+
+        $message = 'Pengiriman tugas berhasil dibatalkan.';
+
+        if ($request->ajax() || $request->wantsJson()) {
+            session()->flash('success', $message);
+            return response()->json(['success' => true, 'message' => $message]);
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     public function evaluate(Request $request, TaskSubmission $submission)

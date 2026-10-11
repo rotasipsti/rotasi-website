@@ -114,6 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
         
         Route::post('/submissions', [SubmissionController::class, 'store'])->name('submissions.store');
+        Route::delete('/submissions/{submission}', [SubmissionController::class, 'destroy'])->name('submissions.destroy');
         Route::post('/submissions/{submission}/evaluate', [SubmissionController::class, 'evaluate'])->name('submissions.evaluate');
 
         // Peserta Routes

@@ -88,15 +88,30 @@
                                     @endif
                                 </div>
                                 
-                                <div class="w-full sm:w-auto">
+                                <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
                                     @if($status === 'not_submitted')
-                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
+                                        <button @click="openModal({{ $task->id }}, false)" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
                                             <i data-lucide="upload" class="mr-2 h-4 w-4"></i> Upload Tugas
                                         </button>
                                     @else
-                                        <button @click="uploadDialog = true; selectedTask = {{ $task->id }}" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                        @php
+                                            $hasFile = $submission && !empty($submission->file_url);
+                                            $existingText = $submission->submission_text ?? '';
+                                            $existingFile = $submission->file_name ?? '';
+                                            $isEvaluated = $submission && $submission->status === 'evaluated';
+                                        @endphp
+                                        <button @click="openModal({{ $task->id }}, true, {{ \Illuminate\Support\Js::from($existingText) }}, {{ \Illuminate\Support\Js::from($existingFile) }}, {{ $hasFile ? 'true' : 'false' }})" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
                                             <i data-lucide="edit" class="mr-2 h-4 w-4"></i> Edit Tugas
                                         </button>
+                                        @if(!$isEvaluated)
+                                            <form action="{{ route('submissions.destroy', $submission->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengiriman tugas ini? File dan keterangan yang telah dikirim akan dihapus.')" class="w-full sm:w-auto inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10 h-9 px-3">
+                                                    <i data-lucide="rotate-ccw" class="mr-1.5 h-4 w-4"></i> Batalkan Pengiriman
+                                                </button>
+                                            </form>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -110,17 +125,17 @@
             </div>
         </div>
 
-        <!-- Upload Modal -->
+        <!-- Upload / Edit Modal -->
         <div x-show="uploadDialog" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div @click.away="uploadDialog = false" class="bg-card w-full max-w-md rounded-xl shadow-lg border border-border/50 p-6 relative">
-                <button @click="uploadDialog = false" class="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
+            <div @click.away="closeModal()" class="bg-card w-full max-w-md rounded-xl shadow-lg border border-border/50 p-6 relative">
+                <button @click="closeModal()" type="button" class="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
                     <i data-lucide="x" class="h-5 w-5"></i>
                 </button>
                 
-                <h2 class="text-lg font-semibold mb-1">Kirim / Edit Tugas</h2>
-                <p class="text-sm text-muted-foreground mb-4">Pilih atau tarik file yang ingin diupload.</p>
+                <h2 class="text-lg font-semibold mb-1" x-text="isEdit ? 'Edit Tugas' : 'Upload Tugas'">Kirim / Edit Tugas</h2>
+                <p class="text-sm text-muted-foreground mb-4" x-text="isEdit ? (hasExistingFile ? 'Perbarui keterangan atau unggah file baru untuk mengganti file sebelumnya.' : 'Tugas belum memiliki file. Silakan lampirkan file tugas.') : 'Pilih atau tarik file tugas yang ingin diupload.'"></p>
                 
-                <div x-show="errorMessage" style="display: none;" class="mb-4 p-3 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+                <div x-show="errorMessage" style="display: none;" class="mb-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-start gap-2">
                     <i data-lucide="alert-circle" class="h-4 w-4 mt-0.5 shrink-0"></i>
                     <span x-text="errorMessage"></span>
                 </div>
@@ -132,24 +147,84 @@
                     <div class="space-y-4">
                         <div>
                             <label class="text-sm font-medium">Deskripsi Tugas (Opsional)</label>
-                            <textarea name="submission_text" class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 min-h-24"></textarea>
+                            <textarea name="submission_text" x-model="submissionText" placeholder="Tambahkan catatan atau keterangan tugas (opsional)..." class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 min-h-24 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"></textarea>
                         </div>
                         
                         <div>
-                            <label class="text-sm font-medium">Upload File (Maks 50MB)</label>
-                            <div class="mt-2 w-full">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-sm font-medium">
+                                    Upload File 
+                                    <span x-show="!isEdit || !hasExistingFile" class="text-red-500 font-bold">*</span>
+                                    <span class="text-xs text-muted-foreground font-normal">(Maks 50MB)</span>
+                                </label>
+                                <span x-show="isEdit && hasExistingFile" class="text-xs text-muted-foreground">Opsional</span>
+                                <span x-show="!isEdit || !hasExistingFile" class="text-xs text-red-500 font-medium">Wajib</span>
+                            </div>
+
+                            <!-- File yang sudah tersimpan saat ini jika mode edit -->
+                            <div x-show="isEdit && hasExistingFile && existingFileName" class="mb-2 p-2.5 rounded-lg bg-muted/40 border border-border/50 text-xs flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <i data-lucide="paperclip" class="w-4 h-4 text-primary shrink-0"></i>
+                                    <div class="min-w-0">
+                                        <p class="text-muted-foreground text-[11px]">File saat ini:</p>
+                                        <p class="font-medium text-foreground truncate" x-text="existingFileName"></p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-secondary text-secondary-foreground px-2 py-0.5 rounded font-medium shrink-0">Tersimpan</span>
+                            </div>
+                            
+                            <div class="w-full">
                                 <label for="file-upload" 
-                                    class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors"
+                                    class="flex flex-col items-center justify-center w-full min-h-32 py-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors"
                                     :class="isDragging ? 'border-primary bg-primary/5' : 'border-border/50 bg-muted/30 hover:bg-muted/50'"
                                     @dragover.prevent="isDragging = true"
                                     @dragleave.prevent="isDragging = false"
-                                    @drop.prevent="isDragging = false; const files = $event.dataTransfer.files; if(files.length > 0) { $refs.fileInput.files = files; fileName = files[0].name; }">
+                                    @drop.prevent="
+                                        isDragging = false; 
+                                        const files = $event.dataTransfer.files; 
+                                        if(files.length > 0) { 
+                                            if (files[0].size > 50 * 1024 * 1024) {
+                                                errorMessage = 'Ukuran file melebihi batas maksimal 50MB.';
+                                                $refs.fileInput.value = '';
+                                                fileName = '';
+                                            } else {
+                                                $refs.fileInput.files = files; 
+                                                fileName = files[0].name; 
+                                                errorMessage = ''; 
+                                            }
+                                        }
+                                    ">
                                     
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4" x-show="!isUploading">
-                                        <i data-lucide="upload-cloud" class="w-8 h-8 mb-3 transition-colors" :class="isDragging ? 'text-primary' : 'text-muted-foreground'"></i>
-                                        <p class="mb-1 text-sm text-muted-foreground" x-show="!fileName"><span class="font-semibold">Klik untuk upload</span> atau tarik file ke sini</p>
-                                        <p class="text-xs text-muted-foreground" x-show="!fileName">Semua jenis file didukung</p>
-                                        <p class="text-sm font-medium text-primary break-all" x-show="fileName" x-text="fileName"></p>
+                                    <div class="flex flex-col items-center justify-center text-center px-4" x-show="!isUploading">
+                                        <i data-lucide="upload-cloud" class="w-8 h-8 mb-2 transition-colors" :class="isDragging ? 'text-primary' : 'text-muted-foreground'"></i>
+                                        
+                                        <div x-show="!fileName">
+                                            <p class="mb-1 text-sm text-muted-foreground">
+                                                <span class="font-semibold text-foreground" x-text="(isEdit && hasExistingFile) ? 'Klik untuk ganti file' : 'Klik untuk upload'"></span> atau tarik file ke sini
+                                            </p>
+                                            <p class="text-xs text-muted-foreground" x-show="isEdit && hasExistingFile">
+                                                Biarkan kosong jika tidak ingin mengubah file saat ini
+                                            </p>
+                                            <p class="text-xs text-muted-foreground" x-show="!isEdit || !hasExistingFile">
+                                                <span class="text-red-500 font-medium">Wajib melampirkan file</span> • Semua jenis file didukung
+                                            </p>
+                                        </div>
+
+                                        <div x-show="fileName" class="space-y-1 w-full max-w-xs">
+                                            <p class="text-sm font-semibold text-primary break-all" x-text="fileName"></p>
+                                            <p class="text-[11px] text-muted-foreground" x-show="isEdit && hasExistingFile">
+                                                File baru ini akan menggantikan file sebelumnya
+                                            </p>
+                                            <p class="text-[11px] text-muted-foreground" x-show="!isEdit || !hasExistingFile">
+                                                File siap diupload (klik lagi untuk mengganti)
+                                            </p>
+                                            <button type="button" 
+                                                x-show="isEdit && hasExistingFile"
+                                                @click.stop.prevent="fileName = ''; if($refs.fileInput) $refs.fileInput.value = '';" 
+                                                class="mt-1 text-xs text-red-500 hover:underline inline-block">
+                                                Batal ganti file
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4 w-full h-full" x-show="isUploading" style="display: none;">
@@ -164,20 +239,35 @@
                                             </div>
                                             
                                             <!-- File Name Display -->
-                                            <p class="text-[10px] sm:text-xs text-muted-foreground truncate w-full" x-text="fileName"></p>
+                                            <p class="text-[10px] sm:text-xs text-muted-foreground truncate w-full" x-text="fileName || existingFileName"></p>
                                         </div>
                                     </div>
-                                    <input id="file-upload" x-ref="fileInput" name="file" type="file" class="hidden" @change="fileName = $event.target.files.length > 0 ? $event.target.files[0].name : ''" />
+                                    <input id="file-upload" x-ref="fileInput" name="file" type="file" class="hidden" 
+                                        @change="
+                                            if ($event.target.files.length > 0) {
+                                                const f = $event.target.files[0];
+                                                if (f.size > 50 * 1024 * 1024) {
+                                                    errorMessage = 'Ukuran file melebihi batas maksimal 50MB.';
+                                                    $refs.fileInput.value = '';
+                                                    fileName = '';
+                                                } else {
+                                                    fileName = f.name;
+                                                    errorMessage = '';
+                                                }
+                                            } else {
+                                                fileName = '';
+                                            }
+                                        " />
                                 </label>
                             </div>
                         </div>
                         
                         <div class="pt-4 flex justify-end gap-2">
-                            <button type="button" @click="uploadDialog = false; fileName = ''; $refs.fileInput.value = ''" :disabled="isUploading" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent h-9 px-4 disabled:opacity-50">
+                            <button type="button" @click="closeModal()" :disabled="isUploading" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent h-9 px-4 disabled:opacity-50">
                                 Batal
                             </button>
                             <button type="submit" :disabled="isUploading" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 disabled:opacity-50 min-w-[100px]">
-                                <span x-show="!isUploading">Upload</span>
+                                <span x-show="!isUploading" x-text="isEdit ? 'Simpan' : 'Upload'">Upload</span>
                                 <span x-show="isUploading" class="flex items-center gap-2">
                                     <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     Menyimpan...
@@ -196,13 +286,61 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('taskUpload', () => ({
         uploadDialog: false,
         selectedTask: null,
+        isEdit: false,
+        hasExistingFile: false,
+        existingFileName: '',
+        submissionText: '',
         isUploading: false,
         isDragging: false,
         fileName: '',
         uploadProgress: 0,
         errorMessage: '',
         
+        openModal(taskId, isEdit = false, text = '', currentFileName = '', hasFile = false) {
+            this.selectedTask = taskId;
+            this.isEdit = isEdit;
+            this.submissionText = text || '';
+            this.existingFileName = currentFileName || '';
+            this.hasExistingFile = hasFile;
+            this.fileName = '';
+            this.errorMessage = '';
+            this.uploadProgress = 0;
+            this.isUploading = false;
+            if (this.$refs.fileInput) {
+                this.$refs.fileInput.value = '';
+            }
+            this.uploadDialog = true;
+            this.$nextTick(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+        },
+        
+        closeModal() {
+            if (this.isUploading) return;
+            this.uploadDialog = false;
+            this.fileName = '';
+            this.errorMessage = '';
+            this.submissionText = '';
+            this.selectedTask = null;
+            this.isEdit = false;
+            this.hasExistingFile = false;
+            this.existingFileName = '';
+            if (this.$refs.fileInput) {
+                this.$refs.fileInput.value = '';
+            }
+        },
+
         submitForm(e) {
+            const isFileRequired = !this.isEdit || !this.hasExistingFile;
+            const hasSelectedFile = this.$refs.fileInput && this.$refs.fileInput.files.length > 0;
+            
+            if (isFileRequired && !hasSelectedFile) {
+                this.errorMessage = 'File tugas wajib dilampirkan.';
+                return;
+            }
+
             this.isUploading = true;
             this.errorMessage = '';
             this.uploadProgress = 0;
@@ -229,7 +367,12 @@ document.addEventListener('alpine:init', () => {
                     this.uploadProgress = 0;
                     try {
                         let res = JSON.parse(xhr.responseText);
-                        this.errorMessage = res.message || 'Terjadi kesalahan saat mengupload.';
+                        if (res.errors && typeof res.errors === 'object') {
+                            let firstErr = Object.values(res.errors)[0];
+                            this.errorMessage = Array.isArray(firstErr) ? firstErr[0] : (res.message || 'Terjadi kesalahan saat mengupload.');
+                        } else {
+                            this.errorMessage = res.message || 'Terjadi kesalahan saat mengupload.';
+                        }
                     } catch(err) {
                         this.errorMessage = 'Terjadi kesalahan pada server.';
                     }

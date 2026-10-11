@@ -42,10 +42,33 @@
                                     <i data-lucide="file-archive" class="h-4 w-4 flex-shrink-0 text-muted-foreground"></i>
                                     <span class="text-sm truncate">{{ $sub->file_name }}</span>
                                 </div>
-                                <a href="{{ $sub->file_url }}" download="{{ $sub->file_name }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
-                                    <i data-lucide="download" class="mr-2 h-4 w-4"></i> Download
-                                </a>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <a href="{{ $sub->file_url }}" download="{{ $sub->file_name }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
+                                        <i data-lucide="download" class="mr-2 h-4 w-4"></i> Download
+                                    </a>
+                                    @if($sub->status !== 'evaluated')
+                                        <form action="{{ route('submissions.destroy', $sub->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengiriman tugas ini? File dan keterangan yang telah dikirim akan dihapus.')" class="w-full sm:w-auto inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10 h-9 px-3">
+                                                <i data-lucide="rotate-ccw" class="mr-1.5 h-4 w-4"></i> Batalkan
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
+                        @else
+                            @if($sub->status !== 'evaluated')
+                                <div class="flex justify-end mb-3">
+                                    <form action="{{ route('submissions.destroy', $sub->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengiriman tugas ini? File dan keterangan yang telah dikirim akan dihapus.')" class="w-full sm:w-auto inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10 h-9 px-3">
+                                            <i data-lucide="rotate-ccw" class="mr-1.5 h-4 w-4"></i> Batalkan
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 @empty
