@@ -8,16 +8,40 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller
 {
     /**
+     * Dapatkan callback redirect URL yang aman dan sesuai skema.
+     */
+    protected function getRedirectUrl(): string
+    {
+        $redirectUrl = config('services.google.redirect');
+
+        if (empty($redirectUrl) || Str::startsWith($redirectUrl, '/')) {
+            $redirectUrl = url($redirectUrl ?: '/auth/google/callback');
+        }
+
+        // Jika app.url HTTPS atau lingkungan production, pastikan callback URL memakai https://
+        if ((app()->environment('production') || Str::startsWith(config('app.url'), 'https://')) && Str::startsWith($redirectUrl, 'http://')) {
+            $redirectUrl = 'https://' . substr($redirectUrl, 7);
+        }
+
+        return $redirectUrl;
+    }
+
+    /**
      * Redirect pengguna ke halaman otorisasi Google OAuth.
      */
     public function redirectToGoogle(): RedirectResponse
     {
-        return Socialite::driver('google')->redirect();
+        /** @var \Laravel\Socialite\Two\GoogleProvider $driver */
+        $driver = Socialite::driver('google');
+
+        return $driver->redirectUrl($this->getRedirectUrl())
+            ->redirect();
     }
 
     /**
@@ -26,7 +50,11 @@ class GoogleAuthController extends Controller
     public function handleGoogleCallback(Request $request): RedirectResponse
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            /** @var \Laravel\Socialite\Two\GoogleProvider $driver */
+            $driver = Socialite::driver('google');
+
+            $googleUser = $driver->redirectUrl($this->getRedirectUrl())
+                ->user();
         } catch (\Throwable $e) {
             Log::warning('Google OAuth Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error_alert', 'Autentikasi Google dibatalkan atau gagal. Silakan coba lagi.');
