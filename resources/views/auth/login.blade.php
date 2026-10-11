@@ -71,7 +71,7 @@
                             <span class="w-full border-t border-border"></span>
                         </div>
                         <div class="relative flex justify-center text-xs uppercase">
-                            <span class="bg-card px-2 text-muted-foreground font-medium">atau lanjutkan dengan</span>
+                            <span class="bg-card px-2 text-muted-foreground font-medium">atau</span>
                         </div>
                     </div>
 
