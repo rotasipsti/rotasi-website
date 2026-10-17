@@ -51,14 +51,117 @@
                 }
             });
         }
+
+        // Sidebar Initial State (prevents sliding animation on load/refresh)
+        if (localStorage.getItem('sidebarOpen') === 'false') {
+            document.documentElement.classList.add('sidebar-collapsed');
+        }
     </script>
+    <style>
+        @media (min-width: 768px) {
+            /* Initial load and collapsed state */
+            html.sidebar-collapsed #main-content-wrapper {
+                margin-left: 4rem !important;
+            }
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) {
+                width: 4rem !important;
+            }
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) nav,
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) .sidebar-nav {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) .sidebar-link {
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) .sidebar-link svg,
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) .sidebar-link i {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+            html.sidebar-collapsed #admin-sidebar:not(.sidebar-expanded) .sidebar-text {
+                display: none !important;
+            }
+
+            /* Collapsed mini rail rules when NOT hovered */
+            #admin-sidebar:not(.sidebar-expanded) nav,
+            #admin-sidebar:not(.sidebar-expanded) .sidebar-nav {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            #admin-sidebar:not(.sidebar-expanded) .sidebar-link {
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            #admin-sidebar:not(.sidebar-expanded) .sidebar-link svg,
+            #admin-sidebar:not(.sidebar-expanded) .sidebar-link i {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+            #admin-sidebar:not(.sidebar-expanded) .sidebar-text {
+                display: none !important;
+            }
+
+            /* Expanded sidebar rules (NORMAL or HOVER PREVIEW) */
+            #admin-sidebar.sidebar-expanded nav,
+            #admin-sidebar.sidebar-expanded .sidebar-nav {
+                padding-left: 0.75rem !important; /* px-3 (12px) */
+                padding-right: 0.75rem !important; /* px-3 (12px) */
+            }
+            #admin-sidebar.sidebar-expanded .sidebar-link {
+                justify-content: flex-start !important;
+                padding-left: 0.75rem !important; /* px-3 (12px) */
+                padding-right: 0.75rem !important; /* px-3 (12px) */
+            }
+            #admin-sidebar.sidebar-expanded .sidebar-link svg,
+            #admin-sidebar.sidebar-expanded .sidebar-link i {
+                margin-right: 0.75rem !important; /* mr-3 (12px) space between icon and text */
+                margin-left: 0 !important;
+                flex-shrink: 0 !important;
+                width: 1.25rem !important; /* 20px */
+                height: 1.25rem !important; /* 20px */
+            }
+            #admin-sidebar.sidebar-expanded .sidebar-text {
+                display: inline !important;
+                white-space: nowrap !important;
+                animation: sidebarTextFadeIn 0.2s ease-in-out;
+            }
+
+            @keyframes sidebarTextFadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+        }
+    </style>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
     @livewireStyles
 </head>
-<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-0" x-data="{ sidebarOpen: false }">
+<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-0" 
+      x-data="{ 
+          sidebarOpen: localStorage.getItem('sidebarOpen') !== null ? localStorage.getItem('sidebarOpen') === 'true' : true,
+          sidebarHovered: false,
+          isReady: false,
+          get isExpanded() {
+              return this.sidebarOpen || this.sidebarHovered;
+          },
+          toggleSidebar() {
+              this.isReady = true;
+              this.sidebarOpen = !this.sidebarOpen;
+              this.sidebarHovered = false;
+              localStorage.setItem('sidebarOpen', this.sidebarOpen);
+              if (this.sidebarOpen) {
+                  document.documentElement.classList.remove('sidebar-collapsed');
+              } else {
+                  document.documentElement.classList.add('sidebar-collapsed');
+              }
+          }
+      }">
     <x-announcement />
     
     <!-- Admin Navbar -->
@@ -69,7 +172,13 @@
         @include('admin.components.sidebar')
 
         <!-- Main Content Wrapper -->
-        <div class="flex-1 flex flex-col w-full md:ml-64 transition-all duration-300 min-h-[calc(100vh-4rem)]">
+        <div id="main-content-wrapper"
+             class="flex-1 flex flex-col w-full md:ml-64 min-h-[calc(100vh-4rem)]"
+             :class="{
+                 'transition-all duration-300 ease-in-out': isReady,
+                 'md:ml-64': sidebarOpen,
+                 'md:ml-16': !sidebarOpen
+             }">
             
             <!-- Main Content Area -->
             <main class="flex-1 p-4 md:p-8 relative"

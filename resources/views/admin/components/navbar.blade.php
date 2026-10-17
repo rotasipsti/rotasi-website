@@ -2,9 +2,13 @@
     <div class="flex items-center justify-between h-full px-4 md:px-6">
         
         <!-- Left side -->
-        <div class="flex items-center gap-4">
-            <button @click="sidebarOpen = !sidebarOpen" class="hidden text-muted-foreground hover:text-foreground">
-                <i data-lucide="menu" class="h-6 w-6"></i>
+        <div class="flex items-center gap-2 md:gap-3">
+            <button @click="toggleSidebar()" 
+                    type="button"
+                    class="hidden md:inline-flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors focus:outline-none"
+                    :title="sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'"
+                    :aria-label="sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'">
+                <i data-lucide="menu" class="h-5 w-5"></i>
             </button>
             <a wire:navigate href="{{ route('dashboard') }}" class="flex items-center gap-2">
                 <img src="/rotasi logo.png" alt="ROTASI Logo" class="h-8 w-auto" />
