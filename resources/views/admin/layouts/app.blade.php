@@ -21,6 +21,10 @@
         :root {
             --font-inter: 'Inter', sans-serif;
             --font-bebas-neue: 'Bebas Neue', sans-serif;
+            color-scheme: light;
+        }
+        .dark {
+            color-scheme: dark;
         }
     </style>
 
@@ -134,6 +138,44 @@
                 from { opacity: 0; }
                 to { opacity: 1; }
             }
+        }
+
+        /* Modern Minimalist Scrollbar for Sidebar */
+        #admin-sidebar * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(156, 163, 175, 0.25) transparent;
+        }
+        .dark #admin-sidebar * {
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        #admin-sidebar ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        #admin-sidebar ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #admin-sidebar ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+        #admin-sidebar ::-webkit-scrollbar-button {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+        #admin-sidebar ::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.25);
+            border-radius: 9999px;
+            transition: background-color 0.2s ease;
+        }
+        #admin-sidebar ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(156, 163, 175, 0.45);
+        }
+        .dark #admin-sidebar ::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.18);
+        }
+        .dark #admin-sidebar ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.38);
         }
     </style>
 

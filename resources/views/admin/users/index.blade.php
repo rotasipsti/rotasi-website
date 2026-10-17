@@ -44,10 +44,81 @@
         this.selectAll = !this.selectAll;
     }
 }">
-    <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-2 text-2xl font-bold">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-2 text-2xl font-bold text-foreground">
             <i data-lucide="users" class="h-6 w-6"></i>
-            Manajemen Akun
+            <span>Manajemen Akun</span>
+        </div>
+
+        <!-- Export Dropdown -->
+        <div class="relative w-full sm:w-auto" x-data="{ exportOpen: false }" @click.outside="exportOpen = false">
+            <button @click="exportOpen = !exportOpen" 
+                    type="button" 
+                    class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-border/70 bg-card hover:bg-accent text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="download" class="h-4 w-4 text-primary"></i>
+                    <span>Export Data</span>
+                </div>
+                <span class="inline-flex items-center transition-transform duration-200" :class="exportOpen ? 'rotate-180' : ''">
+                    <i data-lucide="chevron-down" class="h-4 w-4 text-muted-foreground"></i>
+                </span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div x-show="exportOpen" 
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                 style="display: none;"
+                 class="absolute right-0 mt-2 w-full sm:w-56 rounded-xl bg-card border border-border/70 shadow-2xl z-40 py-1.5 overflow-hidden backdrop-blur-md">
+                
+                <div class="px-3.5 py-1.5 border-b border-border/40 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    Pilih Format Export
+                </div>
+
+                <!-- Export PDF -->
+                <a :href="'{{ route('admin.users.export.pdf') }}' + window.location.search" 
+                   target="_blank"
+                   @click="exportOpen = false"
+                   class="flex items-center gap-3 px-3.5 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors group">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/10 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors shrink-0">
+                        <i data-lucide="file-text" class="h-4 w-4"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-medium text-foreground">Export PDF</span>
+                        <span class="text-xs text-muted-foreground">Format Dokumen (.pdf)</span>
+                    </div>
+                </a>
+
+                <!-- Export Excel -->
+                <a :href="'{{ route('admin.users.export.excel') }}' + window.location.search" 
+                   @click="exportOpen = false"
+                   class="flex items-center gap-3 px-3.5 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors group">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors shrink-0">
+                        <i data-lucide="sheet" class="h-4 w-4"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-medium text-foreground">Export Excel</span>
+                        <span class="text-xs text-muted-foreground">Format Spreadsheet (.xlsx)</span>
+                    </div>
+                </a>
+
+                <!-- Export CSV -->
+                <a :href="'{{ route('admin.users.export.csv') }}' + window.location.search" 
+                   @click="exportOpen = false"
+                   class="flex items-center gap-3 px-3.5 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors group">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors shrink-0">
+                        <i data-lucide="file-spreadsheet" class="h-4 w-4"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-medium text-foreground">Export CSV</span>
+                        <span class="text-xs text-muted-foreground">Format Data (.csv)</span>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 

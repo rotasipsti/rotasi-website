@@ -231,4 +231,148 @@ class UserController extends Controller
 
         return view('stakeholder.users.index', compact('roles', 'activeRole', 'users', 'roleCounts', 'search'));
     }
+
+    protected function getFilteredUsersQuery(Request $request)
+    {
+        $activeRole = $request->input('role', 'semua');
+        $search = $request->input('search');
+
+        $query = User::query();
+
+        if ($activeRole && $activeRole !== 'semua') {
+            $query->where('role', $activeRole);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%")
+                  ->orWhere('custom_id', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($activeRole === 'peserta') {
+            $query->orderBy('sektor', 'asc');
+        }
+
+        return $query->orderBy('name', 'asc');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $activeRole = $request->input('role', 'semua');
+        $users = $this->getFilteredUsersQuery($request)->get();
+        $roleLabel = $activeRole === 'semua' ? 'semua_role' : $activeRole;
+        $fileName = 'data_akun_' . $roleLabel . '_' . date('Ymd_His') . '.xlsx';
+
+        $writer = new \OpenSpout\Writer\XLSX\Writer();
+
+        return response()->streamDownload(function () use ($writer, $users) {
+            $writer->openToFile('php://output');
+
+            // Header
+            $headerRow = \OpenSpout\Common\Entity\Row::fromValues([
+                'No', 'ID Akun', 'Nama Lengkap', 'NIM', 'Email', 'Role', 'Sektor', 'Status Akun', 'Bergabung Sejak'
+            ]);
+            $writer->addRow($headerRow);
+
+            $i = 1;
+            foreach ($users as $user) {
+                $status = $user->role === 'admin' ? 'Sistem' : ($user->is_approved ? 'Disetujui' : 'Pending');
+                $sektor = ($user->role === 'peserta' && $user->sektor) ? 'Sektor ' . $user->sektor : '-';
+
+                $row = \OpenSpout\Common\Entity\Row::fromValues([
+                    $i++,
+                    $user->custom_id ?? $user->id,
+                    $user->name,
+                    $user->nim ?? '-',
+                    $user->email,
+                    ucfirst($user->role),
+                    $sektor,
+                    $status,
+                    $user->created_at ? $user->created_at->format('d M Y, H:i') : '-'
+                ]);
+                $writer->addRow($row);
+            }
+
+            $writer->close();
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $activeRole = $request->input('role', 'semua');
+        $users = $this->getFilteredUsersQuery($request)->get();
+        $roleLabel = $activeRole === 'semua' ? 'semua_role' : $activeRole;
+        $fileName = 'data_akun_' . $roleLabel . '_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Expires'             => '0',
+            'Pragma'              => 'public'
+        ];
+
+        $callback = function () use ($users) {
+            $file = fopen('php://output', 'w');
+            // UTF-8 BOM for Excel compatibility
+            fputs($file, "\xEF\xBB\xBF");
+
+            fputcsv($file, [
+                'No', 'ID Akun', 'Nama Lengkap', 'NIM', 'Email', 'Role', 'Sektor', 'Status Akun', 'Bergabung Sejak'
+            ]);
+
+            $i = 1;
+            foreach ($users as $user) {
+                $status = $user->role === 'admin' ? 'Sistem' : ($user->is_approved ? 'Disetujui' : 'Pending');
+                $sektor = ($user->role === 'peserta' && $user->sektor) ? 'Sektor ' . $user->sektor : '-';
+
+                fputcsv($file, [
+                    $i++,
+                    $user->custom_id ?? $user->id,
+                    $user->name,
+                    $user->nim ?? '-',
+                    $user->email,
+                    ucfirst($user->role),
+                    $sektor,
+                    $status,
+                    $user->created_at ? $user->created_at->format('d M Y, H:i') : '-'
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $activeRole = $request->input('role', 'semua');
+        $users = $this->getFilteredUsersQuery($request)->get();
+        $roleLabel = $activeRole === 'semua' ? 'Semua Role' : ucfirst(str_replace('_', ' ', $activeRole));
+        $fileName = 'data_akun_' . ($activeRole === 'semua' ? 'semua_role' : $activeRole) . '_' . date('Ymd_His') . '.pdf';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.users.pdf', compact('users', 'activeRole', 'roleLabel'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download($fileName);
+    }
 }

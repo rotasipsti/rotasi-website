@@ -215,6 +215,9 @@ Route::middleware('auth')->group(function () {
         Route::delete('/passwords/{id}', [\App\Http\Controllers\Admin\SectorPasswordController::class, 'destroy'])->name('passwords.destroy');
 
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::get('/users/export/excel', [\App\Http\Controllers\Admin\UserController::class, 'exportExcel'])->name('users.export.excel');
+        Route::get('/users/export/csv', [\App\Http\Controllers\Admin\UserController::class, 'exportCsv'])->name('users.export.csv');
+        Route::get('/users/export/pdf', [\App\Http\Controllers\Admin\UserController::class, 'exportPdf'])->name('users.export.pdf');
         Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
         Route::put('/users/{id}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
         Route::delete('/users/bulk-delete', [\App\Http\Controllers\Admin\UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');

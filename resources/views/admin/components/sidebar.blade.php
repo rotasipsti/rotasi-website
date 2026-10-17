@@ -9,7 +9,7 @@
            'shadow-2xl ring-1 ring-border/50': sidebarHovered && !sidebarOpen
        }">
     
-    <div class="py-4 overflow-y-auto overflow-x-hidden h-full">
+    <div class="py-4 overflow-y-auto overflow-x-hidden h-full custom-scrollbar">
         <nav class="sidebar-nav space-y-1 px-3">
             
             <a wire:navigate href="{{ route('dashboard') }}" 
