@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Data Akun Website ROTASI {{ now()->format('Y') }}</title>
+    <title>Data Akun ROTASI {{ now()->format('Y') }}</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -129,7 +129,7 @@
                 <td class="meta-label">Total Akun:</td>
                 <td>{{ count($users) }} Akun</td>
                 <td class="meta-label" style="text-align: right;">Diunduh Oleh:</td>
-                <td style="text-align: right;">{{ auth()->user()->name }} ({{ ucfirst(auth()->user()->role) }})</td>
+                <td style="text-align: right;">{{ auth()->user()->name }}</td>
             </tr>
         </table>
     </div>
@@ -144,7 +144,7 @@
                 <th>Email</th>
                 <th style="width: 70px;">Role</th>
                 <th style="width: 65px;">Sektor</th>
-                <th style="width: 70px;" class="text-center">Status</th>
+                <!-- <th style="width: 70px;" class="text-center">Status</th> -->
                 <th style="width: 95px;">Bergabung</th>
             </tr>
         </thead>
@@ -164,7 +164,7 @@
                             -
                         @endif
                     </td>
-                    <td class="text-center">
+                    <!-- <td class="text-center">
                         @if($u->role === 'admin')
                             <span class="badge badge-info">Sistem</span>
                         @elseif($u->is_approved)
@@ -172,7 +172,7 @@
                         @else
                             <span class="badge badge-warning">Pending</span>
                         @endif
-                    </td>
+                    </td> -->
                     <td>{{ $u->created_at ? $u->created_at->format('d M Y, H:i') : '-' }}</td>
                 </tr>
             @empty

@@ -56,10 +56,9 @@
             });
         }
 
-        // Sidebar Initial State (prevents sliding animation on load/refresh)
-        if (localStorage.getItem('sidebarOpen') === 'false') {
-            document.documentElement.classList.add('sidebar-collapsed');
-        }
+        // Sidebar default state: always active and expanded (not collapsed/hidden)
+        localStorage.removeItem('sidebarOpen');
+        document.documentElement.classList.remove('sidebar-collapsed');
     </script>
     <style>
         @media (min-width: 768px) {
@@ -186,7 +185,7 @@
 </head>
 <body class="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen flex flex-col pb-0" 
       x-data="{ 
-          sidebarOpen: localStorage.getItem('sidebarOpen') !== null ? localStorage.getItem('sidebarOpen') === 'true' : true,
+          sidebarOpen: true,
           sidebarHovered: false,
           isReady: false,
           get isExpanded() {
@@ -196,7 +195,6 @@
               this.isReady = true;
               this.sidebarOpen = !this.sidebarOpen;
               this.sidebarHovered = false;
-              localStorage.setItem('sidebarOpen', this.sidebarOpen);
               if (this.sidebarOpen) {
                   document.documentElement.classList.remove('sidebar-collapsed');
               } else {

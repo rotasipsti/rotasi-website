@@ -267,8 +267,9 @@ class UserController extends Controller
 
         $activeRole = $request->input('role', 'semua');
         $users = $this->getFilteredUsersQuery($request)->get();
-        $roleLabel = $activeRole === 'semua' ? 'semua_role' : $activeRole;
-        $fileName = 'data_akun_' . $roleLabel . '_' . date('Ymd_His') . '.xlsx';
+        $year = date('Y');
+        $roleLabel = $activeRole === 'semua' ? 'Semua Role' : ucfirst(str_replace('_', ' ', $activeRole));
+        $fileName = 'DATA AKUN ROTASI ' . $year . ' - ' . $roleLabel . '.xlsx';
 
         $writer = new \OpenSpout\Writer\XLSX\Writer();
 
@@ -315,8 +316,9 @@ class UserController extends Controller
 
         $activeRole = $request->input('role', 'semua');
         $users = $this->getFilteredUsersQuery($request)->get();
-        $roleLabel = $activeRole === 'semua' ? 'semua_role' : $activeRole;
-        $fileName = 'data_akun_' . $roleLabel . '_' . date('Ymd_His') . '.csv';
+        $year = date('Y');
+        $roleLabel = $activeRole === 'semua' ? 'Semua Role' : ucfirst(str_replace('_', ' ', $activeRole));
+        $fileName = 'DATA AKUN ROTASI ' . $year . ' - ' . $roleLabel . '.csv';
 
         $headers = [
             'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
@@ -367,8 +369,9 @@ class UserController extends Controller
 
         $activeRole = $request->input('role', 'semua');
         $users = $this->getFilteredUsersQuery($request)->get();
+        $year = date('Y');
         $roleLabel = $activeRole === 'semua' ? 'Semua Role' : ucfirst(str_replace('_', ' ', $activeRole));
-        $fileName = 'data_akun_' . ($activeRole === 'semua' ? 'semua_role' : $activeRole) . '_' . date('Ymd_His') . '.pdf';
+        $fileName = 'DATA AKUN ROTASI ' . $year . ' - ' . $roleLabel . '.pdf';
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.users.pdf', compact('users', 'activeRole', 'roleLabel'))
             ->setPaper('a4', 'landscape');
