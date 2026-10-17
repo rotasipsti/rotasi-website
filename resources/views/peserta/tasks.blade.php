@@ -6,11 +6,58 @@
     <div x-data="taskUpload">
         <div class="rounded-xl border border-border/50 bg-card text-card-foreground shadow">
             <div class="p-6">
-                <div class="flex items-center gap-2 text-lg font-semibold mb-1">
-                    <i data-lucide="file-text" class="h-5 w-5"></i>
-                    Tugas Sektor {{ auth()->user()->sektor }}
+                @php
+                    $totalTasks = $tasks->count();
+                    $submittedCount = $tasks->filter(function($task) use ($submissions) {
+                        return $submissions->contains('task_id', $task->id);
+                    })->count();
+                    $percentage = $totalTasks > 0 ? round(($submittedCount / $totalTasks) * 100) : 0;
+                @endphp
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <div class="flex items-center gap-2.5 text-lg font-semibold mb-1">
+                            <i data-lucide="file-text" class="h-5 w-5 text-foreground"></i>
+                            <span>Tugas Sektor {{ auth()->user()->sektor }}</span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $submittedCount === $totalTasks && $totalTasks > 0 ? 'bg-green-100 text-green-800 dark:bg-green-950/50 dark:text-green-400' : 'bg-primary/10 text-primary' }}">
+                                {{ $percentage }}%
+                            </span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">Daftar tugas yang harus dikumpulkan</p>
+                    </div>
+
+                    <!-- Progress Bar Total Pengumpulan Tugas -->
+                    <div class="w-full sm:w-72 md:w-80 bg-muted/40 dark:bg-muted/20 border border-border/60 rounded-xl p-3 sm:p-3.5 shadow-xs shrink-0">
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-medium text-muted-foreground flex items-center gap-1.5">
+                                <i data-lucide="{{ $submittedCount === $totalTasks && $totalTasks > 0 ? 'check-circle-2' : 'upload' }}" class="h-3.5 w-3.5 {{ $submittedCount === $totalTasks && $totalTasks > 0 ? 'text-green-600 dark:text-green-500' : 'text-primary' }}"></i>
+                                Progres Pengumpulan
+                            </span>
+                            <span class="font-bold text-foreground">
+                                {{ $submittedCount }}/{{ $totalTasks }}
+                                <span class="text-muted-foreground font-normal">({{ $percentage }}%)</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Progress Bar Track -->
+                        <div class="w-full bg-secondary/80 rounded-full h-2.5 overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-500 ease-out {{ $submittedCount === $totalTasks && $totalTasks > 0 ? 'bg-green-600 dark:bg-green-500' : 'bg-primary' }}"
+                                 style="width: {{ $percentage }}%"></div>
+                        </div>
+
+                        <div class="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
+                            @if($totalTasks == 0)
+                                <span>Belum ada tugas</span>
+                            @elseif($submittedCount === $totalTasks)
+                                <span class="text-green-600 dark:text-green-500 font-medium flex items-center gap-1">
+                                    <i data-lucide="check" class="h-3 w-3"></i> Semua tugas telah dikumpulkan
+                                </span>
+                            @else
+                                <span>{{ $totalTasks - $submittedCount }} tugas belum dikumpulkan</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <p class="text-sm text-muted-foreground mb-6">Daftar tugas yang harus dikumpulkan</p>
                 
                 <div class="space-y-4">
                     @forelse($tasks as $task)
@@ -126,13 +173,30 @@
         </div>
 
         <!-- Upload / Edit Modal -->
-        <div x-show="uploadDialog" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div @click.away="closeModal()" class="bg-card w-full max-w-md rounded-xl shadow-lg border border-border/50 p-6 relative">
+        <div x-show="uploadDialog" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @keydown.escape.window="closeModal()"
+             style="display: none;" 
+             class="fixed inset-0 z-[70] overflow-y-auto bg-black/60 backdrop-blur-xs p-4 flex items-center justify-center">
+            
+            <div @click.away="closeModal()" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="bg-card w-full max-w-md rounded-xl shadow-2xl border border-border/50 p-5 sm:p-6 relative my-auto max-h-[calc(100dvh-2rem)] overflow-y-auto">
                 <button @click="closeModal()" type="button" class="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
                     <i data-lucide="x" class="h-5 w-5"></i>
                 </button>
                 
-                <h2 class="text-lg font-semibold mb-1" x-text="isEdit ? 'Edit Tugas' : 'Upload Tugas'">Kirim / Edit Tugas</h2>
+                <h2 class="text-lg font-semibold mb-1 pr-6" x-text="isEdit ? 'Edit Tugas' : 'Upload Tugas'">Kirim / Edit Tugas</h2>
                 <p class="text-sm text-muted-foreground mb-4" x-text="isEdit ? (hasExistingFile ? 'Perbarui keterangan atau unggah file baru untuk mengganti file sebelumnya.' : 'Tugas belum memiliki file. Silakan lampirkan file tugas.') : 'Pilih atau tarik file tugas yang ingin diupload.'"></p>
                 
                 <div x-show="errorMessage" style="display: none;" class="mb-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-start gap-2">
@@ -310,6 +374,7 @@ document.addEventListener('alpine:init', () => {
                 this.$refs.fileInput.value = '';
             }
             this.uploadDialog = true;
+            document.body.classList.add('overflow-hidden');
             this.$nextTick(() => {
                 if (window.lucide) {
                     window.lucide.createIcons();
@@ -320,6 +385,7 @@ document.addEventListener('alpine:init', () => {
         closeModal() {
             if (this.isUploading) return;
             this.uploadDialog = false;
+            document.body.classList.remove('overflow-hidden');
             this.fileName = '';
             this.errorMessage = '';
             this.submissionText = '';

@@ -249,7 +249,7 @@
         </div>
 
         <!-- Create/Edit Task Modal -->
-        <div x-show="dialogOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div x-show="dialogOpen" style="display: none;" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 p-4">
             <div @click.away="dialogOpen = false" class="bg-card w-full max-w-lg rounded-xl shadow-lg border border-border/50 p-6 relative max-h-[90vh] overflow-y-auto">
                 <button @click="dialogOpen = false" class="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
                     <i data-lucide="x" class="h-5 w-5"></i>

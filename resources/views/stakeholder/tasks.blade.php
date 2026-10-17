@@ -113,7 +113,7 @@
     </div>
 
     <!-- Modal Status Pengumpulan -->
-    <div x-show="modalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div x-show="modalOpen" style="display: none;" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 p-4">
         <div @click.away="modalOpen = false" class="bg-card w-full max-w-2xl rounded-xl shadow-lg border border-border/50 p-6 relative max-h-[90vh] flex flex-col">
             <button @click="modalOpen = false" class="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
                 <i data-lucide="x" class="h-5 w-5"></i>
